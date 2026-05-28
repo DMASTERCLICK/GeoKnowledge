@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoKnowledge — Divulgación Geológica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown-dark:   #4A2E1A;
+      --brown-mid:    #7A5C3A;
+      --brown-light:  #9E7B56;
+      --sand:         #C4A46B;
+      --cream:        #FAF3E8;
+      --cream-dark:   #F0E4CC;
+      --stone:        #6B5D52;
+      --text-primary: #1A1208;
+      --text-muted:   #7A6A5A;
+      --border:       rgba(122,92,58,0.18);
+      --white:        #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--cream);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250,243,232,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+      padding: 0 2.5rem;
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--brown-mid);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--cream); font-size: 16px;
+    }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .nav-logo-text span { color: var(--brown-light); }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 400;
+      color: var(--text-muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta {
+      font-size: 12px; font-weight: 600;
+      background: var(--brown-mid); color: var(--cream);
+      padding: 7px 18px; border-radius: 99px;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--brown-dark); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 7rem 2.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 40%, rgba(196,164,107,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(122,92,58,0.10) 0%, transparent 60%);
+    }
+    .strata-bg {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 8px; display: flex;
+    }
+    .strata-bg div { flex: 1; }
+    .hero-content { position: relative; z-index: 1; max-width: 680px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--brown-mid);
+      background: rgba(122,92,58,0.10);
+      border: 0.5px solid rgba(122,92,58,0.25);
+      padding: 5px 12px; border-radius: 99px;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 900; line-height: 1.08;
+      letter-spacing: -2px;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+    .hero-title em { font-style: italic; color: var(--brown-light); }
+    .hero-lead {
+      font-size: 18px; font-weight: 300; line-height: 1.7;
+      color: var(--text-muted); max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--brown-mid); color: var(--cream);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px; font-weight: 600;
+      padding: 12px 24px; border-radius: 99px;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: var(--brown-dark); transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: transparent; color: var(--text-muted);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px; font-weight: 400;
+      padding: 12px 24px; border-radius: 99px;
+      border: 0.5px solid var(--border); cursor: pointer;
+      text-decoration: none; transition: all .2s;
+    }
+    .btn-ghost:hover { color: var(--text-primary); border-color: var(--brown-light); }
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      padding-top: 2rem; border-top: 0.5px solid var(--border);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 900; color: var(--brown-mid);
+    }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── SECCIONES ── */
+    section { padding: 5rem 2.5rem; }
+
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--brown-light);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900; letter-spacing: -1px;
+      color: var(--text-primary); line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 16px; font-weight: 300;
+      color: var(--text-muted); max-width: 520px; line-height: 1.7;
+    }
+
+    /* ── MÓDULOS GRID ── */
+    #modulos { background: var(--white); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 0.5px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      margin-top: 3rem;
+    }
+    .module-card {
+      background: var(--white);
+      padding: 2rem;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: background .15s;
+    }
+    .module-card:hover { background: var(--cream); }
+    .module-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .module-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .module-desc {
+      font-size: 14px; color: var(--text-muted);
+      line-height: 1.6; flex: 1;
+    }
+    .module-link {
+      font-size: 12px; font-weight: 600; color: var(--brown-mid);
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ── ARTÍCULOS ── */
+    #articulos { background: var(--cream-dark); }
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .article-card {
+      background: var(--white);
+      border: 0.5px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+      text-decoration: none; color: inherit;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .article-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(74,46,26,0.10); }
+    .article-cat {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--brown-mid);
+    }
+    .article-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--text-primary); line-height: 1.35;
+    }
+    .article-excerpt {
+      font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1;
+    }
+    .article-meta {
+      font-size: 11px; color: var(--text-muted);
+      border-top: 0.5px solid var(--border); padding-top: 0.75rem;
+    }
+
+    /* ── ARGENTINA ── */
+    #argentina { background: var(--brown-dark); color: var(--cream); }
+    #argentina .section-label { color: var(--sand); }
+    #argentina .section-title { color: var(--cream); }
+    #argentina .section-sub { color: rgba(250,243,232,0.65); }
+    .arg-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: rgba(250,243,232,0.1);
+      border: 0.5px solid rgba(250,243,232,0.1);
+      border-radius: 14px; overflow: hidden; margin-top: 2.5rem;
+    }
+    .arg-card {
+      background: rgba(250,243,232,0.05);
+      padding: 1.75rem;
+      text-decoration: none; color: inherit;
+      transition: background .15s;
+    }
+    .arg-card:hover { background: rgba(250,243,232,0.10); }
+    .arg-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 700; color: var(--sand);
+      margin-bottom: 0.4rem;
+    }
+    .arg-card-desc {
+      font-size: 13px; color: rgba(250,243,232,0.6); line-height: 1.55;
+    }
+    .arg-card-tag {
+      display: inline-block; margin-top: 0.75rem;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+      text-transform: uppercase; color: var(--brown-light);
+      background: rgba(196,164,107,0.15);
+      padding: 3px 8px; border-radius: 99px;
+    }
+
+    /* ── MINERALES CTA ── */
+    #minerales-cta {
+      background: var(--cream);
+      display: flex; align-items: center;
+      gap: 4rem; flex-wrap: wrap;
+    }
+    .cta-text { flex: 1; min-width: 280px; }
+    .cta-visual {
+      flex: 0 0 320px;
+      height: 200px;
+      background: #0A0A12;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; color: rgba(255,255,255,0.35);
+      border: 0.5px solid var(--border);
+      overflow: hidden; position: relative;
+    }
+    .crystal-preview {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--brown-dark);
+      color: rgba(250,243,232,0.5);
+      padding: 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      border-top: 0.5px solid rgba(250,243,232,0.1);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 700; color: var(--cream);
+    }
+    .footer-logo span { color: var(--sand); }
+    .footer-text { font-size: 12px; }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 12px; color: rgba(250,243,232,0.4); text-decoration: none; }
+    .footer-links a:hover { color: var(--cream); }
+
+    /* ── ANIMACIONES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content > * {
+      animation: fadeUp .7s ease both;
+    }
+    .hero-eyebrow { animation-delay: .05s; }
+    .hero-title   { animation-delay: .15s; }
+    .hero-lead    { animation-delay: .25s; }
+    .hero-actions { animation-delay: .35s; }
+    .hero-stats   { animation-delay: .45s; }
+
+    @media (max-width: 680px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .hero { padding: 6rem 1.25rem 3rem; }
+      section { padding: 3.5rem 1.25rem; }
+      .arg-grid { grid-template-columns: 1fr; }
+      #minerales-cta { gap: 2rem; }
+      .cta-visual { flex: 0 0 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">⛰</div>
+    <span class="nav-logo-text">Geo<span>Knowledge</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales 3D</a></li>
+    <li><a href="tiempo-geologico.html">Escala del tiempo</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+  <a class="nav-cta" href="enciclopedia.html">Explorar →</a>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="strata-bg">
+    <div style="background:#B4813A"></div><div style="background:#8B6239"></div>
+    <div style="background:#C4A46B"></div><div style="background:#7A5C3A"></div>
+    <div style="background:#D4B97A"></div><div style="background:#9E7B56"></div>
+    <div style="background:#6B4C2E"></div><div style="background:#E8D4A0"></div>
+    <div style="background:#B4813A"></div><div style="background:#C4A46B"></div>
+    <div style="background:#D4B97A"></div><div style="background:#8B6239"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      ◈ Divulgación · Enciclopedia · Recursos académicos
+    </div>
+    <h1 class="hero-title">
+      La Tierra como<br><em>nunca la viste</em><br>en internet.
+    </h1>
+    <p class="hero-lead">
+      Información geológica profunda, rigurosa y accesible.
+      Desde la formación del planeta hasta la lectura de un perfil estratigráfico.
+      Un proyecto estudiantil de la Licenciatura en Ciencias Geológicas.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="enciclopedia.html">Explorar la enciclopedia →</a>
+      <a class="btn-ghost" href="tiempo-geologico.html">Ver escala del tiempo</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">4.600</div>
+        <div class="stat-label">Millones de años de historia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Módulos temáticos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">+50</div>
+        <div class="stat-label">Minerales con ficha 3D</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── MÓDULOS ── -->
+<section id="modulos">
+  <div class="section-label">Contenidos</div>
+  <h2 class="section-title">Todo sobre la Tierra,<br>en un solo lugar.</h2>
+  <p class="section-sub">Cada módulo está pensado para estudiantes y para cualquier persona curiosa sobre cómo funciona el planeta.</p>
+
+  <div class="modules-grid">
+    <a class="module-card" href="tiempo-geologico.html">
+      <div class="module-icon" style="background:#FFF3E0; color:#7A5C3A">⏳</div>
+      <div class="module-name">Escala del tiempo</div>
+      <div class="module-desc">4.600 millones de años en una línea interactiva. Desde el Hadeano hasta el Cuaternario, con eventos clave de Argentina.</div>
+      <div class="module-link">Explorar →</div>
+    </a>
+    <a class="module-card" href="minerales.html">
+      <div class="module-icon" style="background:#E8F5E9; color:#2E7D32">💎</div>
+      <div class="module-name">Minerales 3D</div>
+      <div class="module-desc">Visualizador tridimensional interactivo. Forma cristalina, color, brillo y propiedades físicas de cada mineral.</div>
+      <div class="module-link">Ver minerales →</div>
+    </a>
+    <a class="module-card" href="argentina.html">
+      <div class="module-icon" style="background:#E3F2FD; color:#1565C0">🗺</div>
+      <div class="module-name">Geología Argentina</div>
+      <div class="module-desc">Provincias geológicas, formaciones clave, dinosaurios, recursos naturales y la historia geológica del territorio nacional.</div>
+      <div class="module-link">Descubrir →</div>
+    </a>
+    <a class="module-card" href="enciclopedia.html">
+      <div class="module-icon" style="background:#F3E5F5; color:#6A1B9A">📖</div>
+      <div class="module-name">Enciclopedia</div>
+      <div class="module-desc">Petrología, tectónica de placas, geofísica, hidrogeología y geología histórica. Artículos rigurosos en español.</div>
+      <div class="module-link">Leer artículos →</div>
+    </a>
+  </div>
+</section>
+
+<!-- ── ARTÍCULOS ── -->
+<section id="articulos">
+  <div class="section-label">Artículos recientes</div>
+  <h2 class="section-title">Últimas publicaciones</h2>
+
+  <div class="articles-grid">
+    <a class="article-card" href="enciclopedia.html">
+      <div class="article-cat">Petrología</div>
+      <div class="article-title">El ciclo de las rocas: de la cámara magmática a la corteza</div>
+      <div class="article-excerpt">Las rocas no son eternas. Se forman, transforman y reciclan en ciclos de millones de años. Entendé cómo una roca ígnea puede convertirse en metamórfica y luego en sedimentaria.</div>
+      <div class="article-meta">8 min de lectura · Nivel introductorio</div>
+    </a>
+    <a class="article-card" href="enciclopedia.html">
+      <div class="article-cat">Tectónica de placas</div>
+      <div class="article-title">Zonas de subducción: cómo una placa desaparece bajo otra</div>
+      <div class="article-excerpt">El proceso más violento de la geología terrestre. Cuando dos placas colisionan y una desciende hacia el manto, se generan volcanes, sismos y cadenas montañosas.</div>
+      <div class="article-meta">12 min de lectura · Nivel intermedio</div>
+    </a>
+    <a class="article-card" href="argentina.html">
+      <div class="article-cat">Geología Argentina</div>
+      <div class="article-title">La Patagonia como archivo del tiempo: sedimentitas mesozoicas</div>
+      <div class="article-excerpt">Las rocas sedimentarias patagónicas guardaron secretos por más de 65 millones de años. Dinosaurios, mares epicontinentales y la historia de Gondwana escrita en piedra.</div>
+      <div class="article-meta">15 min de lectura · Nivel avanzado</div>
+    </a>
+  </div>
+</section>
+
+<!-- ── ARGENTINA ── -->
+<section id="argentina">
+  <div class="section-label">Historia local</div>
+  <h2 class="section-title">Argentina, laboratorio<br>geológico natural.</h2>
+  <p class="section-sub">Nuestro país tiene una de las historias geológicas más ricas del mundo. Desde los dinosaurios más grandes hasta los Andes más jóvenes.</p>
+
+  <div class="arg-grid">
+    <a class="arg-card" href="argentina.html">
+      <div class="arg-card-name">Cuenca Neuquina</div>
+      <div class="arg-card-desc">Uno de los registros jurásico-cretácicos más completos del mundo. Dinosaurios gigantes y petróleo no convencional de Vaca Muerta.</div>
+      <span class="arg-card-tag">Mesozoico · Neuquén</span>
+    </a>
+    <a class="arg-card" href="argentina.html">
+      <div class="arg-card-name">Valle de Ischigualasto</div>
+      <div class="arg-card-desc">Los dinosaurios más antiguos conocidos. El Eoraptor y el Herrerasaurus vivieron aquí hace 230 millones de años. Patrimonio UNESCO.</div>
+      <span class="arg-card-tag">Triásico · San Juan</span>
+    </a>
+    <a class="arg-card" href="argentina.html">
+      <div class="arg-card-name">Precordillera de Cuyo</div>
+      <div class="arg-card-desc">Antiguo microcontiente de origen lauréntico. Registro cámbrico-ordovícico de clase mundial con trilobites y graptolites.</div>
+      <span class="arg-card-tag">Paleozoico · San Juan / Mendoza</span>
+    </a>
+    <a class="arg-card" href="argentina.html">
+      <div class="arg-card-name">Sierras Pampeanas</div>
+      <div class="arg-card-desc">Las rocas más antiguas de Argentina. Basamento cristalino de hasta 2.000 millones de años que forma el corazón del continente.</div>
+      <span class="arg-card-tag">Proterozoico · Córdoba / San Luis</span>
+    </a>
+  </div>
+</section>
+
+<!-- ── MINERALES CTA ── -->
+<section id="minerales-cta">
+  <div class="cta-text">
+    <div class="section-label">Visualizador 3D</div>
+    <h2 class="section-title">Rotá, explorá,<br>aprendé.</h2>
+    <p class="section-sub" style="margin-bottom:1.75rem">Cada mineral en tres dimensiones. Forma cristalina real, propiedades ópticas y ficha completa con su presencia en Argentina.</p>
+    <a class="btn-primary" href="minerales.html">Abrir visualizador 3D →</a>
+  </div>
+  <div class="cta-visual">
+    <canvas id="preview-canvas" style="width:100%;height:100%"></canvas>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <div class="footer-logo">Geo<span>Knowledge</span></div>
+    <div class="footer-text" style="margin-top:4px">Un proyecto estudiantil de divulgación geológica · Argentina</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+</footer>
+
+<!-- ── PREVIEW 3D EN LA CTA ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  const canvas = document.getElementById('preview-canvas');
+  const wrap   = canvas.parentElement;
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(W, H);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.3;
+
+  const scene  = new THREE.Scene();
+  scene.background = new THREE.Color(0x080810);
+
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+  camera.position.set(0, 0, 5);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const key = new THREE.DirectionalLight(0xfff8e8, 2);
+  key.position.set(4, 5, 5); scene.add(key);
+  const fill = new THREE.DirectionalLight(0xC8E8FF, 0.7);
+  fill.position.set(-4, 1, 2); scene.add(fill);
+
+  // Pirita
+  const geo = new THREE.BoxGeometry(1.6, 1.6, 1.6, 2, 2, 2);
+  const mat = new THREE.MeshStandardMaterial({ color: 0xC8A832, roughness: 0.15, metalness: 0.95 });
+  const cube = new THREE.Mesh(geo, mat);
+  scene.add(cube);
+
+  let t = 0;
+  (function animate() {
+    requestAnimationFrame(animate);
+    t += 0.008;
+    cube.rotation.x = 0.3 + Math.sin(t * 0.4) * 0.15;
+    cube.rotation.y = t;
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
+
+</body>
+</html>
