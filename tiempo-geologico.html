@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escala del Tiempo Geológico — GeoKnowledge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --brown-dark:#4A2E1A;--brown-mid:#7A5C3A;--brown-light:#9E7B56;
+      --sand:#C4A46B;--cream:#FAF3E8;--cream-dark:#F0E4CC;
+      --text-primary:#1A1208;--text-muted:#7A6A5A;
+      --border:rgba(122,92,58,0.18);--white:#ffffff;
+      /* Eon colors */
+      --hadean:#2d1b4e;--archean:#1b3a4e;--proterozoic:#1b4e2d;
+      --paleozoic:#4e3a1b;--mesozoic:#2d4e1b;--cenozoic:#4e2d1b;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text-primary);overflow-x:hidden}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(250,243,232,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);padding:0 2.5rem;height:58px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .nav-logo-icon{width:32px;height:32px;border-radius:8px;background:var(--brown-mid);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:16px}
+    .nav-logo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text-primary)}
+    .nav-logo-text span{color:var(--brown-light)}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color .2s}
+    .nav-links a.active{color:var(--text-primary);font-weight:600}
+    .nav-cta{font-size:12px;font-weight:600;background:var(--brown-mid);color:var(--cream);padding:7px 18px;border-radius:99px;text-decoration:none}
+
+    /* ── HERO ── */
+    .page-hero{padding:7rem 2.5rem 3rem;background:var(--white);border-bottom:.5px solid var(--border);position:relative;overflow:hidden}
+    .page-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 95% 50%,rgba(196,164,107,0.14) 0%,transparent 65%),radial-gradient(ellipse 30% 50% at 0% 100%,rgba(122,92,58,0.08) 0%,transparent 60%)}
+    .strata-top{position:absolute;top:0;left:0;right:0;height:6px;display:flex}
+    .strata-top div{flex:1}
+    .hero-content{position:relative;z-index:1;max-width:760px}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-bottom:1.25rem}
+    .breadcrumb a{color:var(--brown-mid);text-decoration:none}
+    .page-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--brown-mid);background:rgba(122,92,58,0.10);border:.5px solid rgba(122,92,58,0.25);padding:5px 12px;border-radius:99px;margin-bottom:1.25rem}
+    .page-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,54px);font-weight:900;line-height:1.08;letter-spacing:-1.5px;margin-bottom:1rem}
+    .page-title em{font-style:italic;color:var(--brown-light)}
+    .page-lead{font-size:17px;font-weight:300;line-height:1.7;color:var(--text-muted);max-width:560px;margin-bottom:1.5rem}
+    .hero-stats{display:flex;gap:2rem;flex-wrap:wrap}
+    .hstat{display:flex;flex-direction:column;gap:2px}
+    .hstat-num{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--brown-mid)}
+    .hstat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+
+    /* ── VIEW TOGGLE ── */
+    .view-bar{padding:1.25rem 2.5rem;background:var(--cream-dark);border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .view-toggle{display:flex;gap:0;background:var(--white);border:.5px solid var(--border);border-radius:10px;overflow:hidden}
+    .vbtn{font-size:12px;font-weight:600;padding:7px 16px;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:all .15s;font-family:'Source Sans 3',sans-serif}
+    .vbtn.active{background:var(--brown-mid);color:var(--cream)}
+    .view-bar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .zoom-btn{width:32px;height:32px;border-radius:8px;border:.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .zoom-btn:hover{background:var(--cream-dark);border-color:var(--brown-light)}
+    .zoom-label{font-size:11px;color:var(--text-muted);font-family:'Space Mono',monospace;min-width:36px;text-align:center}
+
+    /* ── MAIN ── */
+    #view-timeline{display:block}
+    #view-wheel{display:none}
+    #view-list{display:none}
+
+    /* ══ TIMELINE VIEW ══ */
+    .timeline-wrap{overflow-x:auto;padding:2rem 2.5rem 3rem;background:var(--cream)}
+    .timeline-container{min-width:1100px;position:relative}
+
+    /* EON HEADER ROWS */
+    .timeline-eon-row{display:flex;height:44px;margin-bottom:2px;border-radius:8px;overflow:hidden;position:relative}
+    .eon-block{display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:.5px;cursor:default;transition:filter .2s;position:relative;overflow:hidden}
+    .eon-block::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.08) 0%,transparent 100%)}
+
+    .timeline-era-row{display:flex;height:36px;margin-bottom:2px}
+    .era-block{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);letter-spacing:.3px;cursor:pointer;transition:filter .18s;position:relative;overflow:hidden;margin-right:1px;border-radius:4px}
+    .era-block:hover{filter:brightness(1.2)}
+
+    .timeline-period-row{display:flex;height:52px;margin-bottom:3px}
+    .period-block{display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:10px;font-weight:600;color:rgba(255,255,255,0.9);cursor:pointer;transition:all .18s;margin-right:1px;border-radius:6px;padding:4px 2px;text-align:center;line-height:1.2;position:relative;overflow:hidden}
+    .period-block:hover{transform:scaleY(1.04);filter:brightness(1.18);z-index:2}
+    .period-block.selected{outline:2px solid rgba(255,255,255,0.8);z-index:3;transform:scaleY(1.06)}
+    .period-ma{font-size:8px;opacity:.65;font-family:'Space Mono',monospace;margin-top:2px}
+
+    /* TIME AXIS */
+    .time-axis{height:32px;position:relative;margin-top:4px}
+    .axis-line{position:absolute;top:12px;left:0;right:0;height:.5px;background:var(--border)}
+    .axis-tick{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+    .tick-line{width:.5px;height:12px;background:var(--text-muted);opacity:.4}
+    .tick-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-muted);white-space:nowrap}
+
+    /* EVENTS TRACK */
+    .events-track{position:relative;height:100px;margin-top:1rem}
+    .events-track-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.5rem}
+    .event-dot{position:absolute;top:24px;width:10px;height:10px;border-radius:50%;cursor:pointer;transform:translateX(-50%);transition:transform .15s,box-shadow .15s;z-index:2}
+    .event-dot:hover{transform:translateX(-50%) scale(1.5);box-shadow:0 0 0 4px rgba(255,255,255,0.3)}
+    .event-line{position:absolute;top:29px;width:.5px;background:var(--text-muted);opacity:.3}
+    .event-label{position:absolute;font-size:9px;color:var(--text-muted);white-space:nowrap;line-height:1.2;pointer-events:none}
+
+    /* LIFE TRACK */
+    .life-track{position:relative;margin-top:.5rem;height:80px}
+    .life-track-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.5rem}
+    .life-bar{position:absolute;height:18px;border-radius:9px;opacity:.75;top:20px;cursor:pointer;transition:opacity .15s,transform .15s}
+    .life-bar:hover{opacity:1;transform:scaleY(1.2)}
+    .life-bar-label{position:absolute;font-size:9px;color:var(--text-muted);top:42px;white-space:nowrap;transform:translateX(-50%)}
+
+    /* ── DETAIL PANEL ── */
+    .detail-panel{background:var(--white);border-top:.5px solid var(--border);padding:0}
+    .detail-inner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;max-width:1600px;margin:0 auto}
+    .detail-closed{display:flex;align-items:center;justify-content:center;padding:1.25rem;font-size:13px;color:var(--text-muted);border-bottom:.5px solid var(--border);gap:.5rem;cursor:default}
+    .detail-section{padding:2rem 2.5rem;border-right:.5px solid var(--border)}
+    .detail-section:last-child{border-right:none}
+    .ds-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.75rem}
+    .ds-period-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--text-primary);letter-spacing:-.5px;margin-bottom:.25rem}
+    .ds-period-ma{font-family:'Space Mono',monospace;font-size:14px;color:var(--brown-mid);margin-bottom:1rem}
+    .ds-desc{font-size:14px;line-height:1.75;color:var(--text-primary)}
+    .ds-props{display:flex;flex-direction:column;gap:.75rem}
+    .ds-prop{display:flex;flex-direction:column;gap:3px}
+    .ds-prop-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted)}
+    .ds-prop-val{font-size:13px;color:var(--text-primary);line-height:1.5}
+    .ds-events{display:flex;flex-direction:column;gap:.6rem}
+    .ds-event{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .75rem;border-radius:10px;font-size:13px}
+    .ds-event-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+    .ds-event-text{line-height:1.5;color:var(--text-primary)}
+
+    /* ══ WHEEL VIEW ══ */
+    .wheel-wrap{padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+    #wheel-canvas{max-width:700px;width:100%;cursor:pointer;border-radius:50%;box-shadow:0 20px 80px rgba(74,46,26,0.18)}
+    .wheel-legend{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;max-width:700px}
+    .wleg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted)}
+    .wleg-dot{width:10px;height:10px;border-radius:50%}
+    .wheel-info{max-width:600px;width:100%;background:var(--white);border:.5px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center}
+    .wheel-info-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text-primary);margin-bottom:.25rem}
+    .wheel-info-ma{font-family:'Space Mono',monospace;font-size:13px;color:var(--brown-mid)}
+    .wheel-info-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-top:.75rem}
+
+    /* ══ LIST VIEW ══ */
+    .list-wrap{padding:2rem 2.5rem;max-width:1000px;margin:0 auto}
+    .list-eon{margin-bottom:3rem}
+    .list-eon-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding:1rem 1.5rem;border-radius:12px}
+    .list-eon-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff}
+    .list-eon-ma{font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,0.55)}
+    .list-period-card{background:var(--white);border:.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:.75rem;cursor:pointer;transition:all .18s;display:grid;grid-template-columns:180px 1fr auto;gap:1.5rem;align-items:center}
+    .list-period-card:hover{box-shadow:0 6px 24px rgba(74,46,26,0.10);transform:translateX(3px)}
+    .lp-color{width:6px;height:100%;border-radius:3px;align-self:stretch;flex-shrink:0}
+    .lp-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+    .lp-era{font-size:11px;color:var(--text-muted)}
+    .lp-ma{font-family:'Space Mono',monospace;font-size:12px;color:var(--brown-mid);text-align:right;white-space:nowrap}
+    .lp-desc{font-size:13px;color:var(--text-muted);line-height:1.5;grid-column:1/-1;margin-top:.5rem;padding-top:.75rem;border-top:.5px solid var(--border)}
+    .lp-expanded{display:none}
+    .lp-expanded.open{display:block}
+
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(26,18,8,0.65);backdrop-filter:blur(8px);padding:2rem;overflow-y:auto;align-items:flex-start;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--white);border-radius:20px;max-width:680px;width:100%;margin:auto;overflow:hidden;box-shadow:0 32px 80px rgba(26,18,8,0.30);animation:mIn .25s ease}
+    @keyframes mIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .modal-header{padding:2rem 2.5rem;position:relative}
+    .modal-close{position:absolute;top:1.25rem;right:1.25rem;background:rgba(0,0,0,0.06);border:none;cursor:pointer;width:32px;height:32px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center}
+    .modal-eon{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem}
+    .modal-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);font-weight:900;letter-spacing:-.5px;margin-bottom:.25rem}
+    .modal-ma{font-family:'Space Mono',monospace;font-size:14px;color:var(--brown-mid)}
+    .modal-body{padding:0 2.5rem 2.5rem;display:flex;flex-direction:column;gap:1.5rem}
+    .modal-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.5rem}
+    .modal-desc{font-size:15px;line-height:1.8;color:var(--text-primary)}
+    .modal-props{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .mprop{background:var(--cream-dark);border-radius:10px;padding:.75rem 1rem}
+    .mprop-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:3px}
+    .mprop-val{font-size:13px;font-weight:600;color:var(--text-primary)}
+    .modal-events{display:flex;flex-direction:column;gap:.6rem}
+    .modal-event{display:flex;gap:.75rem;padding:.75rem 1rem;border-radius:10px;font-size:14px;align-items:flex-start}
+    .me-icon{font-size:18px;flex-shrink:0}
+    .me-text{line-height:1.6}
+
+    /* FOOTER */
+    footer{background:var(--brown-dark);color:rgba(250,243,232,0.5);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--cream)}
+    .footer-logo span{color:var(--sand)}
+    .footer-links{display:flex;gap:1.5rem;list-style:none}
+    .footer-links a{font-size:12px;color:rgba(250,243,232,0.4);text-decoration:none}
+    .footer-links a:hover{color:var(--cream)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .hero-content>*{animation:fadeUp .6s ease both}
+    .page-eyebrow{animation-delay:.05s}.page-title{animation-delay:.15s}.page-lead{animation-delay:.25s}.hero-stats{animation-delay:.35s}
+
+    @media(max-width:820px){
+      nav{padding:0 1.25rem}.nav-links{display:none}
+      .page-hero{padding:6rem 1.25rem 2.5rem}
+      .view-bar{padding:1.25rem}
+      .timeline-wrap{padding:1.25rem}
+      .detail-inner{grid-template-columns:1fr}
+      .detail-section{border-right:none;border-bottom:.5px solid var(--border)}
+      .list-wrap{padding:1.25rem}
+      .list-period-card{grid-template-columns:1fr auto}
+      .modal-overlay{padding:0}
+      .modal{border-radius:0;min-height:100vh}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">⛰</div>
+    <span class="nav-logo-text">Geo<span>Knowledge</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales 3D</a></li>
+    <li><a href="tiempo-geologico.html" class="active">Escala del tiempo</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+  <a class="nav-cta" href="enciclopedia.html">Explorar →</a>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="strata-top">
+    <div style="background:#2d1b4e"></div><div style="background:#1b3a4e"></div>
+    <div style="background:#1b4e2d"></div><div style="background:#4e3a1b"></div>
+    <div style="background:#2d4e1b"></div><div style="background:#4e2d1b"></div>
+    <div style="background:#8b4513"></div><div style="background:#c4a46b"></div>
+  </div>
+  <div class="hero-content">
+    <div class="breadcrumb"><a href="index.html">Inicio</a><span>/</span>Escala del tiempo</div>
+    <div class="page-eyebrow">⏳ Escala de tiempo geológico</div>
+    <h1 class="page-title">4.600 millones de años<br><em>en una sola página.</em></h1>
+    <p class="page-lead">Desde la formación de la Tierra hasta hoy. Eones, eras, períodos, extinciones masivas y la evolución de la vida. Interactivo y completo.</p>
+    <div class="hero-stats">
+      <div class="hstat"><span class="hstat-num">4.600</span><span class="hstat-label">Ma de historia</span></div>
+      <div class="hstat"><span class="hstat-num">4</span><span class="hstat-label">Eones</span></div>
+      <div class="hstat"><span class="hstat-num">12</span><span class="hstat-label">Períodos</span></div>
+      <div class="hstat"><span class="hstat-num">5</span><span class="hstat-label">Extinciones masivas</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="view-bar">
+  <div class="view-toggle">
+    <button class="vbtn active" data-view="timeline">📊 Línea de tiempo</button>
+    <button class="vbtn" data-view="wheel">🎯 Rueda geológica</button>
+    <button class="vbtn" data-view="list">📋 Lista detallada</button>
+  </div>
+  <div class="view-bar-right">
+    <button class="zoom-btn" id="zoom-out">−</button>
+    <span class="zoom-label" id="zoom-label">100%</span>
+    <button class="zoom-btn" id="zoom-in">+</button>
+  </div>
+</div>
+
+<!-- ══ TIMELINE VIEW ══ -->
+<div id="view-timeline">
+  <div class="timeline-wrap">
+    <div class="timeline-container" id="timeline-container"></div>
+  </div>
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-closed" id="detail-closed">⬆ Hacé click en un período para ver sus detalles</div>
+    <div class="detail-inner" id="detail-inner" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══ WHEEL VIEW ══ -->
+<div id="view-wheel">
+  <div class="wheel-wrap">
+    <canvas id="wheel-canvas" width="700" height="700"></canvas>
+    <div class="wheel-legend" id="wheel-legend"></div>
+    <div class="wheel-info" id="wheel-info">
+      <div class="wheel-info-name">Hacé click en un sector</div>
+      <div class="wheel-info-ma">para explorar ese período</div>
+      <div class="wheel-info-desc">La rueda geológica muestra la proporción real de cada período respecto a los 4.600 Ma de historia de la Tierra.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LIST VIEW ══ -->
+<div id="view-list">
+  <div class="list-wrap" id="list-wrap"></div>
+</div>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header" id="modal-header">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-eon" id="modal-eon"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-ma" id="modal-ma"></div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="footer-logo">Geo<span>Knowledge</span></div>
+    <div style="font-size:12px;margin-top:4px;color:rgba(250,243,232,0.4)">Un proyecto estudiantil de divulgación geológica · Argentina</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════
+const TOTAL_MA = 4600;
+
+const timescale = [
+  {
+    eon:'Hadeano', eonColor:'#3d2466', eonStart:4600, eonEnd:4000,
+    eras:[
+      { era:'Hadeano', color:'#3d2466', start:4600, end:4000,
+        periods:[
+          { name:'Hadeano', short:'Had.', color:'#4a2e7a', start:4600, end:4000,
+            climate:'Planeta en formación', life:'Sin evidencia de vida',
+            tectonics:'Corteza inestable, meteoritos frecuentes',
+            ocean:'Océanos primordiales formándose',
+            desc:'El período más oscuro y violento de la historia terrestre. La Tierra acababa de formarse por acreción de planetesimales. El planeta era un infierno de lava, impactos meteoríticos constantes (Bombardeo Intenso Tardío) y sin atmósfera estable. La Luna se formó por el impacto de Theia con la proto-Tierra hace ~4.500 Ma.',
+            events:[
+              {icon:'🌑', text:'Impacto de Theia: formación de la Luna (~4.500 Ma)'},
+              {icon:'☄️', text:'Gran Bombardeo Tardío: lluvia masiva de meteoritos (~4.100–3.800 Ma)'},
+              {icon:'💧', text:'Formación de los primeros océanos a partir de vapor de agua y cometas'},
+              {icon:'🌋', text:'Corteza terrestre en formación continua y refusión'},
+            ]}
+        ]}
+    ]
+  },
+  {
+    eon:'Arcaico', eonColor:'#1a4466', eonStart:4000, eonEnd:2500,
+    eras:[
+      { era:'Arcaico', color:'#1a4466', start:4000, end:2500,
+        periods:[
+          { name:'Eoarcaico', short:'Eo.', color:'#1a5080', start:4000, end:3600,
+            climate:'Muy caliente, atmósfera sin oxígeno libre', life:'Posibles primeras células procarióticas',
+            tectonics:'Primeros cratons continentales',
+            ocean:'Océanos ácidos y calientes',
+            desc:'El inicio del registro geológico preservado. Las rocas más antiguas conocidas datan de este período (Acasta Gneiss, 4.000 Ma). La atmósfera carecía de oxígeno libre. Posiblemente surgieron las primeras formas de vida en torno a fuentes hidrotermales submarinas.',
+            events:[
+              {icon:'🪨', text:'Rocas más antiguas: Acasta Gneiss (NW Canadá, ~4.000 Ma)'},
+              {icon:'🦠', text:'Posible origen de la vida en hidrotermales submarinas'},
+              {icon:'☀️', text:'El Sol brillaba un 70% menos que hoy'},
+            ]},
+          { name:'Paleoarcaico', short:'Pa.', color:'#1a5c8a', start:3600, end:3200,
+            climate:'Caliente, sin oxígeno, CO₂ elevado', life:'Primeros estromatolitos bacterianos',
+            tectonics:'Protocontinentes primitivos',
+            ocean:'Océanos reductores con hierro disuelto',
+            desc:'Aparecen los primeros estromatolitos, estructuras laminadas formadas por comunidades de cianobacterias. Son el registro fósil más antiguo de vida. Los mares contenían grandes cantidades de hierro disuelto, que empezaba a precipitarse.',
+            events:[
+              {icon:'🦠', text:'Estromatolitos de Dresser (Australia Occidental, ~3.500 Ma): vida confirmada'},
+              {icon:'⚗️', text:'Inicio de la fotosíntesis anoxigénica'},
+              {icon:'🌊', text:'Formaciones de Hierro Bandeado (BIF) en los océanos'},
+            ]},
+          { name:'Mesoarcaico', short:'Me.', color:'#1a6894', start:3200, end:2800,
+            climate:'Caliente, atmósfera en evolución', life:'Prokariotas diversificándose',
+            tectonics:'Primeros supercontinentes (Vaalbara)',
+            ocean:'Océanos con hierro aún reductores',
+            desc:'Se postula la existencia de Vaalbara, uno de los primeros supercontinentes de la Tierra. Las cianobacterias comenzaban a liberar oxígeno como subproducto de la fotosíntesis, aunque aún no se acumulaba en la atmósfera.',
+            events:[
+              {icon:'🌍', text:'Supercontinente Vaalbara (~3.100 Ma)'},
+              {icon:'🦠', text:'Diversificación de procariontes anaerobios'},
+              {icon:'⚗️', text:'Inicio de liberación de O₂ por fotosíntesis oxigénica'},
+            ]},
+          { name:'Neoarcaico', short:'Ne.', color:'#1a749e', start:2800, end:2500,
+            climate:'Caliente, primeros indicios de glaciaciones', life:'Máximo de estromatolitos',
+            tectonics:'Formación del supercontinente Kenorland',
+            ocean:'Inicio de oxidación oceánica superficial',
+            desc:'Período de máxima abundancia de estromatolitos. Al final de este eón ocurrió la Gran Oxidación (~2.400 Ma), cuando el oxígeno producido por cianobacterias superó la capacidad de absorción y comenzó a acumularse en la atmósfera, un evento catastrófico para los organismos anaerobios.',
+            events:[
+              {icon:'🌍', text:'Supercontinente Kenorland (~2.700 Ma)'},
+              {icon:'🦠', text:'Máxima proliferación de estromatolitos'},
+              {icon:'⚗️', text:'Preámbulo de la Gran Oxidación'},
+            ]}
+        ]}
+    ]
+  },
+  {
+    eon:'Proterozoico', eonColor:'#1a6634', eonStart:2500, eonEnd:538,
+    eras:[
+      { era:'Paleoproterozoico', color:'#1a7a3a', start:2500, end:1600,
+        periods:[
+          { name:'Sideriano', short:'Sid.', color:'#1a8040', start:2500, end:2300,
+            climate:'Gran Oxidación: catástrofe del O₂', life:'Crisis de organismos anaerobios',
+            tectonics:'Fractura de Kenorland',
+            ocean:'Oxidación masiva precipita hierro',
+            desc:'La Gran Oxidación Atmosférica (~2.400 Ma) fue el cambio más drástico en la química de la atmósfera terrestre. El O₂ producido por cianobacterias se acumuló masivamente. Fue una catástrofe para los organismos anaerobios, pero abrió el camino para la vida compleja.',
+            events:[
+              {icon:'💨', text:'Gran Oxidación Atmosférica: O₂ llega al 1-2% (~2.400 Ma)'},
+              {icon:'☠️', text:'Primera extinción masiva: colapso de organismos anaerobios'},
+              {icon:'🌨️', text:'Primeras glaciaciones globales (Tierra Bola de Nieve, ~2.300 Ma)'},
+            ]},
+          { name:'Riásico', short:'Ría.', color:'#1a8846', start:2300, end:2050,
+            climate:'Glaciaciones globales (Tierra Bola de Nieve)', life:'Eucariontes primitivos',
+            tectonics:'Cratonización continental',
+            ocean:'Océanos parcialmente oxidados',
+            desc:'Posiblemente el período más frío de la historia terrestre. La Tierra Bola de Nieve Huroniense cubrió el planeta casi completamente de hielo. Al final del período surgieron los primeros organismos eucariontes (células con núcleo).',
+            events:[
+              {icon:'🧊', text:'Glaciación Huroniense: hielo hasta el ecuador (~2.300–2.100 Ma)'},
+              {icon:'🦠', text:'Origen de la célula eucariota por endosimbiosis'},
+            ]},
+          { name:'Orosírico', short:'Oro.', color:'#1a9050', start:2050, end:1800,
+            climate:'Calentamiento post-glacial', life:'Eucariontes diversificándose',
+            tectonics:'Orogenia Transamazónica (América del Sur)',
+            ocean:'Estabilización química oceánica',
+            desc:'El calentamiento tras las glaciaciones permitió la diversificación de eucariontes. La orogenia Transamazónica formó parte del basamento del cratón sudamericano, incluyendo rocas que hoy afloran en el escudo brasileño y en partes de Argentina.',
+            events:[
+              {icon:'🏔️', text:'Orogenia Transamazónica: formación de rocas presentes en el escudo brasileño'},
+              {icon:'🦠', text:'Diversificación temprana de eucariontes'},
+              {icon:'🌍', text:'Ensamblado de Columbia / Nuna (~1.800 Ma)'},
+            ]},
+          { name:'Estatérico', short:'Est.', color:'#1a985a', start:1800, end:1600,
+            climate:'Estable y caluroso', life:'Primeros organismos multicelulares simples',
+            tectonics:'Supercontinente Columbia (Nuna)',
+            ocean:'Océanos euxínicos (sulfurosos) en profundidad',
+            desc:'El supercontinente Columbia (también llamado Nuna) estaba completamente ensamblado. Las primeras algas multicelulares comenzaron a aparecer. Los océanos profundos eran anóxicos y ricos en sulfuros.',
+            events:[
+              {icon:'🌍', text:'Supercontinente Columbia/Nuna plenamente formado'},
+              {icon:'🌿', text:'Primeras algas multicelulares (algas rojas)'},
+            ]}
+        ]},
+      { era:'Mesoproterozoico', color:'#2a8844', start:1600, end:1000,
+        periods:[
+          { name:'Calymmiano', short:'Cal.', color:'#2a9050', start:1600, end:1400,
+            climate:'Templado, estable', life:'Algas pluricelulares, hongos primitivos',
+            tectonics:'Fractura y reagrupamiento continental',
+            ocean:'Océanos intermedios',
+            desc:'Período de relativa estabilidad. Las algas pluricelulares colonizaron los océanos someros. Posiblemente surgieron los primeros hongos primitivos. La atmósfera alcanzó niveles de O₂ en torno al 4–8%.',
+            events:[
+              {icon:'🌿', text:'Proliferación de algas verdes y rojas pluricelulares'},
+              {icon:'🍄', text:'Posibles primeros hongos'},
+            ]},
+          { name:'Ectásico', short:'Ect.', color:'#2a9858', start:1400, end:1200,
+            climate:'Caluroso y estable', life:'Diversificación de eucariontes',
+            tectonics:'Extensión continental',
+            ocean:'Estratificación océanica',
+            desc:'Radiación de protistas eucariontes. Aparecen grupos que serán ancestrales de animales y plantas. El nombre "ectásico" hace referencia a la expansión de los cratons.',
+            events:[
+              {icon:'🦠', text:'Diversificación de protistas: ancestros de animales, plantas y hongos'},
+              {icon:'🌊', text:'Extensión y rifting continental'},
+            ]},
+          { name:'Esténico', short:'Est.', color:'#2aa060', start:1200, end:1000,
+            climate:'Caluroso', life:'Primeras algas verdes complejas',
+            tectonics:'Ensamblado de Rodinia',
+            ocean:'Océanos con estratificación pronunciada',
+            desc:'Formación del supercontinente Rodinia (~1.100 Ma), que reunió casi toda la masa continental en torno al ecuador y polo sur. Las primeras algas verdes complejas aparecieron en mares someros.',
+            events:[
+              {icon:'🌍', text:'Supercontinente Rodinia (~1.100 Ma)'},
+              {icon:'🌿', text:'Algas verdes complejas en mares someros'},
+            ]}
+        ]},
+      { era:'Neoproterozoico', color:'#1a6644', start:1000, end:538,
+        periods:[
+          { name:'Tónico', short:'Tón.', color:'#1a7a50', start:1000, end:720,
+            climate:'Caluroso a glacial al final', life:'Primeras algas verdes macroscópicas',
+            tectonics:'Fragmentación de Rodinia',
+            ocean:'Oceános cálidos',
+            desc:'Rodinia comenzó a fragmentarse (~800 Ma), abriendo nuevos océanos y generando rifts. Al final, la primera de las glaciaciones neoproterozoicas comenzó a desarrollarse. Las algas verdes colonizaron aguas someras.',
+            events:[
+              {icon:'🌍', text:'Fragmentación de Rodinia (~800 Ma)'},
+              {icon:'🌿', text:'Algas macroscópicas en mares someros'},
+              {icon:'🧊', text:'Inicio de las glaciaciones neoproterozoicas'},
+            ]},
+          { name:'Criogénico', short:'Cri.', color:'#1a7058', start:720, end:635,
+            climate:'Tierra Bola de Nieve: hielo hasta el ecuador', life:'Supervivencia en océanos tropicales',
+            tectonics:'Rifting continuo',
+            ocean:'Océanos casi completamente congelados',
+            desc:'Las glaciaciones Sturtiana (~717 Ma) y Marinoana (~635 Ma) cubrieron la Tierra casi completamente de hielo hasta el ecuador. La vida sobrevivió posiblemente en pequeños "refugios" oceánicos calentados por volcanes. Al descongelarse, explosiones evolutivas fueron posibles.',
+            events:[
+              {icon:'🧊', text:'Glaciación Sturtiana (~717 Ma): hielo hasta el ecuador'},
+              {icon:'🧊', text:'Glaciación Marinoana (~635 Ma): la más severa conocida'},
+              {icon:'🌊', text:'Océanos cubiertos de hielo de 1 a 3 km de espesor'},
+            ]},
+          { name:'Ediacárico', short:'Edi.', color:'#1a6860', start:635, end:538,
+            climate:'Templado post-glacial, CO₂ elevado', life:'Fauna de Ediacara: primeros animales complejos',
+            tectonics:'Orogenia Panafricana',
+            ocean:'Océanos oxigenados en superficie',
+            desc:'El Ediacárico es uno de los períodos más fascinantes. La fauna de Ediacara (~571 Ma) representa los primeros organismos macroscópicos multicelulares complejos. Aunque su afinidad con los animales modernos es debatida, son los ancestros directos de la explosión del Cámbrico.',
+            events:[
+              {icon:'🌊', text:'Fauna de Ediacara: primeros animales blandos macroscópicos (~571 Ma)'},
+              {icon:'🌍', text:'Orogenia Panafricana: ensamblado de Gondwana'},
+              {icon:'💨', text:'O₂ atmosférico supera el 10%'},
+              {icon:'🦑', text:'Primeros rastros de locomoción animal'},
+            ]}
+        ]}
+    ]
+  },
+  {
+    eon:'Fanerozoico', eonColor:'#7a3a10', eonStart:538, eonEnd:0,
+    eras:[
+      { era:'Paleozoico', color:'#8b4513', start:538, end:252,
+        periods:[
+          { name:'Cámbrico', short:'Cám.', color:'#7a3a10', start:538, end:485,
+            climate:'Cálido, CO₂ muy alto, sin casquetes polares', life:'Explosión del Cámbrico',
+            tectonics:'Gondwana, Laurencia, Báltica separados',
+            ocean:'Mares epicontinentales cálidos y someros',
+            desc:'La Explosión del Cámbrico (~538 Ma) es el evento evolutivo más extraordinario: en pocos millones de años surgieron casi todos los planes corporales animales modernos. Trilobites, braquiópodos, equinodermos y los primeros vertebrados aparecieron. El CO₂ era 16 veces mayor que hoy.',
+            events:[
+              {icon:'💥', text:'Explosión del Cámbrico: aparición de la mayoría de los filos animales'},
+              {icon:'🦐', text:'Fauna de Burgess Shale: diversidad excepcional preservada'},
+              {icon:'🌊', text:'Mares epicontinentales cubriendo los continentes'},
+              {icon:'🐟', text:'Primeros vertebrados sin mandíbula (agnatos)'},
+            ]},
+          { name:'Ordovícico', short:'Ord.', color:'#8a4520', start:485, end:443,
+            climate:'Cálido, luego glaciación al final', life:'Gran Biodiversificación Ordovícica',
+            tectonics:'Cierre del océano Iapetus',
+            ocean:'Nivel del mar muy alto',
+            desc:'La Gran Biodiversificación Ordovícica triplicó la diversidad marina. Aparecieron los primeros corales, briozoos y graptolitos. Al final, la glaciación Hirnantiana provocó la segunda extinción masiva (~85% de las especies), asociada al avance de los hielos sobre Gondwana.',
+            events:[
+              {icon:'🐚', text:'Gran Biodiversificación Ordovícica: triplicación de la diversidad marina'},
+              {icon:'🌿', text:'Primeras plantas terrestres (briofitas)'},
+              {icon:'☠️', text:'EXTINCIÓN MASIVA: 2ª más grande (~443 Ma), 85% especies'},
+              {icon:'🧊', text:'Glaciación Hirnantiana sobre Gondwana'},
+            ]},
+          { name:'Silúrico', short:'Sil.', color:'#9a5030', start:443, end:419,
+            climate:'Cálido y estable, sin glaciaciones', life:'Colonización terrestre: plantas vasculares y peces',
+            tectonics:'Cierre del Iapetus, orogenia Caledoniana',
+            ocean:'Nivel del mar alto, arrecifes extensos',
+            desc:'Recuperación espectacular post-extinción. Las primeras plantas vasculares conquistaron la tierra firme. Los primeros peces con mandíbula (gnatostomados) y los artrópodos terrestres (ciempiés, escorpiones) colonizaron la tierra. Los arrecifes de coral alcanzaron gran extensión.',
+            events:[
+              {icon:'🌿', text:'Primeras plantas vasculares terrestres (Cooksonia, ~425 Ma)'},
+              {icon:'🐟', text:'Primeros peces con mandíbula: placodermos y acantodios'},
+              {icon:'🦂', text:'Primeros artrópodos terrestres: miriápodos y escorpiones'},
+              {icon:'🌊', text:'Grandes arrecifes de stromatoporoides y corales'},
+            ]},
+          { name:'Devónico', short:'Dev.', color:'#aa5a38', start:419, end:359,
+            climate:'Cálido, húmedo en costas, árido en interior', life:'Edad de los Peces y bosques primitivos',
+            tectonics:'Orogenia Acadiana',
+            ocean:'Mares cálidos con arrecifes extensos',
+            desc:'La "Edad de los Peces". Explosión de peces: tiburones primitivos, peces acorazados (placodermos), peces óseos. Aparecen los primeros bosques (Archaeopteris). Los tetrápodos surgieron de peces de aletas lobuladas. Extinción masiva al final elimina los arrecifes.',
+            events:[
+              {icon:'🐠', text:'Diversificación masiva de peces: placodermos, tiburones, sarcopterigios'},
+              {icon:'🌳', text:'Primeros bosques: Archaeopteris (~385 Ma)'},
+              {icon:'🐸', text:'Primeros tetrápodos: Tiktaalik, Acanthostega (~375 Ma)'},
+              {icon:'☠️', text:'EXTINCIÓN: Devónico tardío, ~75% especies marinas'},
+            ]},
+          { name:'Carbonífero', short:'Car.', color:'#ba6440', start:359, end:299,
+            climate:'Cálido y húmedo, luego glaciaciones al final', life:'Bosques carboníferos y primeros reptiles',
+            tectonics:'Ensamblado de Pangea (inicio)',
+            ocean:'Nivel variable, mares epicontinentales',
+            desc:'Los grandes bosques pantanosos de helechos arborescentes y equisetos acumularon inmensas cantidades de carbono que hoy son los yacimientos de carbón. Los primeros reptiles aparecieron. Las libélulas gigantes (Meganeura) volaban con 75 cm de envergadura en atmósferas con 35% de O₂.',
+            events:[
+              {icon:'🌳', text:'Bosques de licópsidos gigantes: origen del carbón'},
+              {icon:'🦎', text:'Primeros reptiles: huevo amniótico (~312 Ma)'},
+              {icon:'🦟', text:'Insectos gigantes: Meganeura (75 cm envergadura)'},
+              {icon:'🧊', text:'Glaciación Gondwánica al final: formación de casquetes polares'},
+            ]},
+          { name:'Pérmico', short:'Pér.', color:'#ca6e48', start:299, end:252,
+            climate:'Árido, glaciaciones a cálido extremo al final', life:'Reptiles mamiferoides dominantes',
+            tectonics:'Pangea completa',
+            ocean:'Océano Panthalassa',
+            desc:'Pangea reunida en un único supercontinente. Los reptiles mamiferoides (sinápsidos) dominaban los ecosistemas terrestres. Al final, la extinción del Pérmico-Triásico (~252 Ma) fue la mayor catástrofe biológica: el 95% de las especies marinas y el 70% de las terrestres desaparecieron.',
+            events:[
+              {icon:'🌍', text:'Pangea completamente ensamblada'},
+              {icon:'🦎', text:'Reptiles mamiferoides: Dimetrodon, Lystrosaurus'},
+              {icon:'🌋', text:'Trampas Siberianas: vulcanismo masivo de 1 millón de km²'},
+              {icon:'☠️', text:'EXTINCIÓN P-T (~252 Ma): 95% de especies. La mayor de la historia'},
+            ]}
+        ]},
+      { era:'Mesozoico', color:'#3a7a20', start:252, end:66,
+        periods:[
+          { name:'Triásico', short:'Trí.', color:'#3a7a20', start:252, end:201,
+            climate:'Muy cálido, árido, sin casquetes polares', life:'Primeros dinosaurios y mamíferos',
+            tectonics:'Inicio de la fragmentación de Pangea',
+            ocean:'Océano de Tethys abriéndose',
+            desc:'Recuperación lenta tras la extinción P-T. Los dinosaurios surgieron (~230 Ma) como un grupo minoritario. Los primeros mamíferos (pequeños, nocturnos) aparecieron también. Al final, otra extinción masiva abrió el camino para el dominio dinosauriano.',
+            events:[
+              {icon:'🦕', text:'Primeros dinosaurios: Eoraptor, Herrerasaurus (~230 Ma)'},
+              {icon:'🐁', text:'Primeros mamíferos: pequeños, insectívoros, nocturnos (~225 Ma)'},
+              {icon:'🌊', text:'Abertura del océano de Tethys'},
+              {icon:'☠️', text:'EXTINCIÓN T-J (~201 Ma): 80% de especies'},
+            ]},
+          { name:'Jurásico', short:'Jur.', color:'#4a8a28', start:201, end:145,
+            climate:'Cálido y húmedo, CO₂ 5-7x actual', life:'Dinosaurios gigantes, primeras aves',
+            tectonics:'Fragmentación de Pangea, apertura Atlántico N.',
+            ocean:'Mares cálidos y poco profundos',
+            desc:'El mundo de los dinosaurios gigantes: Brachiosaurus, Stegosaurus, Allosaurus. Los primeros mamíferos planeadores y trepadores diversificaban. Archaeopteryx (~150 Ma), el primer pájaro conocido. La Argentina es clave: los saurópodos más grandes del mundo se encuentran en Patagonia.',
+            events:[
+              {icon:'🦕', text:'Saurópodos gigantes: Diplodocus, Brachiosaurus, Brontosaurus'},
+              {icon:'🐦', text:'Archaeopteryx: primer pájaro conocido (~150 Ma)'},
+              {icon:'🌊', text:'Apertura del Atlántico Norte (Laurasia vs Gondwana)'},
+              {icon:'🌿', text:'Bosques de coníferas, cicadáceas y helechos cubren la Tierra'},
+            ]},
+          { name:'Cretácico', short:'Cre.', color:'#5a9a30', start:145, end:66,
+            climate:'Muy cálido, sin casquetes polares, mar alto', life:'Dinosaurios en cúspide, primeras plantas con flor',
+            tectonics:'Fragmentación avanzada, apertura Atlántico S.',
+            ocean:'Nivel del mar 200 m más alto que hoy',
+            desc:'El Cretácico fue la edad dorada de los dinosaurios: Tyrannosaurus rex, Triceratops, Spinosaurus. En Argentina vivían los dinosaurios más grandes conocidos (Patagotitan). Las plantas con flor (angiospermas) conquistaron el planeta. Un asteroide de 10 km puso fin al período.',
+            events:[
+              {icon:'🦖', text:'T. rex, Triceratops, Spinosaurus: cúspide de los dinosaurios'},
+              {icon:'🦕', text:'Patagotitan mayorum (Argentina): el más grande conocido (~100 Ma)'},
+              {icon:'🌸', text:'Explosión de plantas con flor (angiospermas)'},
+              {icon:'☠️', text:'EXTINCIÓN K-Pg (~66 Ma): asteroide de Chicxulub, 75% de especies'},
+            ]}
+        ]},
+      { era:'Cenozoico', color:'#8b3a10', start:66, end:0,
+        periods:[
+          { name:'Paleógeno', short:'Pal.', color:'#9a4418', start:66, end:23,
+            climate:'Cálido al inicio, luego enfriamiento', life:'Radiación de mamíferos y aves',
+            tectonics:'Continentes acercándose a posición actual',
+            ocean:'Apertura del pasaje de Drake (~34 Ma)',
+            desc:'Tras la extinción K-Pg, los mamíferos y aves se diversificaron explosivamente para ocupar los nichos vacíos. Los mamíferos alcanzaron tamaños enormes (Paraceratherium, el mamífero terrestre más grande). En Argentina, los "terror birds" (Phorusrhacidae) dominaron como depredadores.',
+            events:[
+              {icon:'🐘', text:'Radiación adaptativa de mamíferos: caballos, ballenas, murciélagos, primates'},
+              {icon:'🦅', text:'Aves del terror (Phorusrhacidae) en Sudamérica'},
+              {icon:'🧊', text:'Apertura del pasaje de Drake: inicio de corriente circumpolar (~34 Ma)'},
+              {icon:'🌡️', text:'Máximo Térmico del Eoceno: +8°C respecto al presente'},
+            ]},
+          { name:'Neógeno', short:'Neo.', color:'#aa4e20', start:23, end:2.6,
+            climate:'Enfriamiento progresivo, glaciaciones polares', life:'Aparición de los grandes simios, homínidos',
+            tectonics:'Alzamiento de los Andes, cierre del istmo de Panamá',
+            ocean:'Corriente circumpolar antártica establecida',
+            desc:'El alzamiento de los Andes alcanzó su configuración moderna. El Gran Intercambio Biótico Americano conectó Norte y Sudamérica (~3 Ma). Los primeros homínidos aparecieron en África. Las praderas de gramíneas colonizaron continentes, dando lugar a los grandes herbívoros.',
+            events:[
+              {icon:'🏔️', text:'Alzamiento final de los Andes: configuración actual (~10-5 Ma)'},
+              {icon:'🌉', text:'Gran Intercambio Biótico Americano: cierre del istmo de Panamá (~3 Ma)'},
+              {icon:'🦍', text:'Australopithecus: primeros homínidos bípedos (~4 Ma)'},
+              {icon:'🐎', text:'Diversificación de caballos, jirafas, elefantes y grandes herbívoros'},
+            ]},
+          { name:'Cuaternario', short:'Cua.', color:'#ba5828', start:2.6, end:0,
+            climate:'Glaciaciones cíclicas (ciclos de Milankovitch)', life:'Homo sapiens, megafauna',
+            tectonics:'Continentes en posición actual',
+            ocean:'Nivel del mar varía ±120 m con glaciaciones',
+            desc:'Más de 20 ciclos glaciales e interglaciales. La especie humana evolucionó y se expandió por todos los continentes. La megafauna pleistocénica (mamuts, mastodontes, toxodontes, gliptodontes) se extinguió, parcialmente por caza humana. El Holoceno (últimos 11.700 años) es nuestro interglacial actual.',
+            events:[
+              {icon:'🧊', text:'Más de 20 glaciaciones cíclicas (ciclos de Milankovitch)'},
+              {icon:'🧑', text:'Homo sapiens: origen en África (~300.000 años)'},
+              {icon:'🦣', text:'Extinción de la megafauna: mamuts, toxodontes, gliptodontes'},
+              {icon:'🌾', text:'Revolución agrícola del Neolítico (~10.000 años)'},
+              {icon:'🏭', text:'Antropoceno: inicio de impacto humano global'},
+            ]}
+        ]}
+    ]
+  }
+];
+
+// Flatten periods
+const allPeriods = [];
+timescale.forEach(eon => {
+  eon.eras.forEach(era => {
+    era.periods.forEach(p => {
+      allPeriods.push({ ...p, eonName: eon.eon, eonColor: eon.eonColor, eraName: era.era, eraColor: era.color });
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// SCALE HELPERS
+// ═══════════════════════════════════════════════════════════════════
+let zoom = 1.0;
+const MIN_W = 1100;
+
+function maToPercent(ma) {
+  return ((TOTAL_MA - ma) / TOTAL_MA) * 100;
+}
+function durationToPct(start, end) {
+  return ((start - end) / TOTAL_MA) * 100;
+}
+function pctToWidth(pct) {
+  return (pct / 100) * (MIN_W * zoom);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TIMELINE BUILD
+// ═══════════════════════════════════════════════════════════════════
+let selectedPeriodId = null;
+
+function buildTimeline() {
+  const container = document.getElementById('timeline-container');
+  const totalW = MIN_W * zoom;
+  container.style.width = totalW + 'px';
+  container.innerHTML = '';
+
+  // EON ROW
+  const eonRow = document.createElement('div');
+  eonRow.className = 'timeline-eon-row';
+  eonRow.style.width = totalW + 'px';
+  timescale.forEach(eon => {
+    const w = pctToWidth(durationToPct(eon.eonStart, eon.eonEnd));
+    const b = document.createElement('div');
+    b.className = 'eon-block';
+    b.style.cssText = `width:${w}px;flex-shrink:0;background:${eon.eonColor}`;
+    b.textContent = eon.eon + ' (' + (eon.eonStart >= 1000 ? (eon.eonStart/1000).toFixed(1)+'Ga' : eon.eonStart+'Ma') + ')';
+    eonRow.appendChild(b);
+  });
+  container.appendChild(eonRow);
+
+  // ERA ROW
+  const eraRow = document.createElement('div');
+  eraRow.className = 'timeline-era-row';
+  eraRow.style.width = totalW + 'px';
+  timescale.forEach(eon => {
+    eon.eras.forEach(era => {
+      const w = pctToWidth(durationToPct(era.start, era.end));
+      const b = document.createElement('div');
+      b.className = 'era-block';
+      b.style.cssText = `width:${w}px;flex-shrink:0;background:${era.color}`;
+      b.textContent = w > 60 ? era.era : '';
+      if (w > 30) b.title = era.era + ' (' + era.start + '–' + era.end + ' Ma)';
+      eraRow.appendChild(b);
+    });
+  });
+  container.appendChild(eraRow);
+
+  // PERIOD ROW
+  const periodRow = document.createElement('div');
+  periodRow.className = 'timeline-period-row';
+  periodRow.style.width = totalW + 'px';
+  allPeriods.forEach((p, i) => {
+    const w = pctToWidth(durationToPct(p.start, p.end));
+    const b = document.createElement('div');
+    b.className = 'period-block' + (selectedPeriodId === i ? ' selected' : '');
+    b.style.cssText = `width:${w}px;flex-shrink:0;background:${p.color}`;
+    if (w > 40) { b.innerHTML = `<span>${w > 60 ? p.name : p.short}</span><span class="period-ma">${p.end === 0 ? '0' : p.end}–${p.start}</span>`; }
+    b.title = `${p.name} (${p.start}–${p.end} Ma)`;
+    b.addEventListener('click', () => { selectedPeriodId = i; buildTimeline(); showDetail(p); });
+    periodRow.appendChild(b);
+  });
+  container.appendChild(periodRow);
+
+  // TIME AXIS
+  const axisDiv = document.createElement('div');
+  axisDiv.className = 'time-axis';
+  axisDiv.style.width = totalW + 'px';
+  const axisLine = document.createElement('div'); axisLine.className = 'axis-line';
+  axisDiv.appendChild(axisLine);
+  const ticks = [4600,4000,3000,2500,2000,1500,1000,750,500,400,300,200,100,66,0];
+  ticks.forEach(ma => {
+    const pct = maToPercent(ma);
+    const left = (pct / 100) * totalW;
+    const tick = document.createElement('div');
+    tick.className = 'axis-tick';
+    tick.style.left = left + 'px';
+    tick.innerHTML = `<div class="tick-line"></div><div class="tick-label">${ma === 0 ? 'Hoy' : ma+'Ma'}</div>`;
+    axisDiv.appendChild(tick);
+  });
+  container.appendChild(axisDiv);
+
+  // MASS EXTINCTIONS
+  const extLabel = document.createElement('div'); extLabel.className = 'events-track-label';
+  extLabel.textContent = '💀 Extinciones masivas';
+  container.appendChild(extLabel);
+  const extTrack = document.createElement('div');
+  extTrack.className = 'events-track';
+  extTrack.style.width = totalW + 'px';
+  const extinctions = [
+    { ma:443, name:'Ordovícico–Silúrico', short:'O-S', desc:'Glaciación Hirnantiana. 85% especies. 2ª más grande.', color:'#e74c3c' },
+    { ma:375, name:'Devónico tardío', short:'Dev.', desc:'~75% especies marinas. Crisis de arrecifes.', color:'#e67e22' },
+    { ma:252, name:'Pérmico–Triásico', short:'P-T', desc:'95% especies. La mayor extinción. Trampas Siberianas.', color:'#9b59b6' },
+    { ma:201, name:'Triásico–Jurásico', short:'T-J', desc:'80% especies. Vulcanismo CAMP. Abrió paso a dinosaurios.', color:'#3498db' },
+    { ma:66,  name:'Cretácico–Paleógeno', short:'K-Pg', desc:'75% especies. Asteroide Chicxulub. Fin de dinosaurios no avianos.', color:'#e74c3c' },
+  ];
+  extinctions.forEach((ex, i) => {
+    const left = (maToPercent(ex.ma) / 100) * totalW;
+    const dot = document.createElement('div');
+    dot.className = 'event-dot';
+    dot.style.cssText = `left:${left}px;background:${ex.color};box-shadow:0 0 6px ${ex.color}`;
+    dot.title = `${ex.name}: ${ex.desc}`;
+    extTrack.appendChild(dot);
+    const line = document.createElement('div');
+    line.className = 'event-line';
+    line.style.cssText = `left:${left}px;height:${i%2===0?30:45}px;top:${i%2===0?0:0}px`;
+    extTrack.appendChild(line);
+    const label = document.createElement('div');
+    label.className = 'event-label';
+    label.style.cssText = `left:${left+6}px;top:${i%2===0?34:50}px`;
+    label.textContent = ex.short;
+    extTrack.appendChild(label);
+  });
+  container.appendChild(extTrack);
+
+  // LIFE EVOLUTION TRACK
+  const lifeLabel = document.createElement('div'); lifeLabel.className = 'life-track-label';
+  lifeLabel.textContent = '🌱 Evolución de la vida';
+  container.appendChild(lifeLabel);
+  const lifeTrack = document.createElement('div');
+  lifeTrack.className = 'life-track';
+  lifeTrack.style.width = totalW + 'px';
+  const lifeBars = [
+    { start:3800, end:0, label:'Procariontes', color:'#27ae60' },
+    { start:2100, end:0, label:'Eucariontes', color:'#2980b9' },
+    { start:700,  end:0, label:'Multicelulares', color:'#8e44ad' },
+    { start:538,  end:0, label:'Animales', color:'#e67e22' },
+    { start:475,  end:0, label:'Plantas terrestres', color:'#27ae60', offset:1 },
+    { start:370,  end:0, label:'Tetrápodos', color:'#e74c3c', offset:2 },
+    { start:225,  end:0, label:'Mamíferos', color:'#f39c12', offset:3 },
+    { start:150,  end:0, label:'Aves', color:'#1abc9c', offset:4 },
+    { start:130,  end:0, label:'Angiospermas', color:'#16a085', offset:5 },
+    { start:0.3,  end:0, label:'Homo sapiens', color:'#c0392b', offset:6 },
+  ];
+  lifeBars.forEach(lb => {
+    const l = (maToPercent(lb.start) / 100) * totalW;
+    const r = (maToPercent(lb.end) / 100) * totalW;
+    const w = r - l;
+    const bar = document.createElement('div');
+    bar.className = 'life-bar';
+    bar.style.cssText = `left:${l}px;width:${w}px;background:${lb.color};top:${20 + (lb.offset||0)*0}px`;
+    bar.title = lb.label + ' (~' + lb.start + ' Ma → hoy)';
+    lifeTrack.appendChild(bar);
+    if (w > 40) {
+      const lbl = document.createElement('div');
+      lbl.className = 'life-bar-label';
+      lbl.style.cssText = `left:${l + w/2}px`;
+      lbl.textContent = lb.label;
+      lifeTrack.appendChild(lbl);
+    }
+  });
+  container.appendChild(lifeTrack);
+}
+
+function showDetail(p) {
+  document.getElementById('detail-closed').style.display = 'none';
+  const di = document.getElementById('detail-inner');
+  di.style.display = 'grid';
+
+  const cc = p.eonColor || '#7a5c3a';
+  di.innerHTML = `
+    <div class="detail-section">
+      <div class="ds-label">Período geológico</div>
+      <div class="ds-period-name" style="color:${p.color}">${p.name}</div>
+      <div class="ds-period-ma">${p.start} – ${p.end === 0 ? 'Hoy (0)' : p.end} Ma · duración: ${(p.start - p.end).toFixed(1)} Ma</div>
+      <div class="ds-desc">${p.desc}</div>
+    </div>
+    <div class="detail-section">
+      <div class="ds-label">Condiciones del planeta</div>
+      <div class="ds-props">
+        <div class="ds-prop"><div class="ds-prop-key">🌡 Clima</div><div class="ds-prop-val">${p.climate}</div></div>
+        <div class="ds-prop"><div class="ds-prop-key">🌊 Océanos</div><div class="ds-prop-val">${p.ocean}</div></div>
+        <div class="ds-prop"><div class="ds-prop-key">🏔 Tectónica</div><div class="ds-prop-val">${p.tectonics}</div></div>
+        <div class="ds-prop"><div class="ds-prop-key">🌿 Vida</div><div class="ds-prop-val">${p.life}</div></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="ds-label">Eventos clave</div>
+      <div class="ds-events">
+        ${p.events.map(e => `<div class="ds-event" style="background:rgba(0,0,0,0.03)"><span class="ds-event-icon">${e.icon}</span><span class="ds-event-text">${e.text}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+
+  // Scroll detail into view
+  document.getElementById('detail-panel').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// WHEEL VIEW
+// ═══════════════════════════════════════════════════════════════════
+function buildWheel() {
+  const canvas = document.getElementById('wheel-canvas');
+  const size = Math.min(canvas.parentElement.clientWidth - 48, 700);
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const cx = size / 2, cy = size / 2;
+  const R = size / 2 - 8;
+
+  ctx.clearRect(0, 0, size, size);
+
+  // Background
+  ctx.fillStyle = '#0a0a14';
+  ctx.beginPath(); ctx.arc(cx, cy, R + 8, 0, Math.PI * 2); ctx.fill();
+
+  const rings = [
+    // [innerR%, outerR%, data_array, label_threshold]
+    { ir: 0.10, or: 0.35, data: timescale.map(e => ({ name: e.eon, dur: e.eonStart - e.eonEnd, color: e.eonColor, eonName: e.eon })), labelMin: 0.06 },
+    { ir: 0.36, or: 0.62, data: timescale.flatMap(eon => eon.eras.map(e => ({ name: e.era, dur: e.start - e.end, color: e.color, eonName: eon.eon }))), labelMin: 0.04 },
+    { ir: 0.63, or: 0.95, data: allPeriods.map(p => ({ name: p.name, dur: p.start - p.end, color: p.color, eonName: p.eonName, period: p })), labelMin: 0.02 },
+  ];
+
+  const wedgeData = [];
+  const startAngle = -Math.PI / 2;
+
+  rings.forEach(ring => {
+    const ir = ring.ir * R, or = ring.or * R;
+    const total = ring.data.reduce((s, d) => s + d.dur, 0);
+    let angle = startAngle;
+    ring.data.forEach(d => {
+      const sweep = (d.dur / total) * Math.PI * 2;
+      // Draw wedge
+      ctx.beginPath();
+      ctx.moveTo(cx + ir * Math.cos(angle), cy + ir * Math.sin(angle));
+      ctx.arc(cx, cy, or, angle, angle + sweep);
+      ctx.arc(cx, cy, ir, angle + sweep, angle, true);
+      ctx.closePath();
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Label
+      if (d.dur / total > ring.labelMin) {
+        const midA = angle + sweep / 2;
+        const midR = (ir + or) / 2;
+        const tx = cx + midR * Math.cos(midA);
+        const ty = cy + midR * Math.sin(midA);
+        ctx.save();
+        ctx.translate(tx, ty);
+        ctx.rotate(midA + Math.PI / 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.font = `bold ${Math.max(8, (or - ir) * 0.28)}px 'Source Sans 3', sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const label = d.dur / total > 0.08 ? d.name : (d.name.slice(0, 4) + '.');
+        ctx.fillText(label, 0, 0);
+        ctx.restore();
+      }
+
+      wedgeData.push({ angle, sweep, ir, or, ...d });
+      angle += sweep;
+    });
+  });
+
+  // Center label
+  ctx.fillStyle = '#0a0a14';
+  ctx.beginPath(); ctx.arc(cx, cy, ring.ir * R * 0.97 - 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = `bold 13px 'Playfair Display', serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('4.600 Ma', cx, cy - 8);
+  ctx.font = `10px 'Source Sans 3', sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.fillText('Historia de la Tierra', cx, cy + 8);
+
+  // Store for click
+  canvas._wedgeData = wedgeData;
+  canvas._cx = cx; canvas._cy = cy; canvas._R = R;
+
+  // Legend
+  const legend = document.getElementById('wheel-legend');
+  legend.innerHTML = timescale.map(eon => `<div class="wleg-item"><div class="wleg-dot" style="background:${eon.eonColor}"></div>${eon.eon} (${eon.eonStart >= 1000 ? (eon.eonStart/1000).toFixed(1)+'Ga' : eon.eonStart+'Ma'})</div>`).join('');
+}
+
+document.getElementById('wheel-canvas').addEventListener('click', function(e) {
+  if (!this._wedgeData) return;
+  const rect = this.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const dx = mx - this._cx, dy = my - this._cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  let angle = Math.atan2(dy, dx);
+  if (angle < -Math.PI/2) angle += 2*Math.PI;
+
+  // Normalize to startAngle = -PI/2
+  let normAngle = angle + Math.PI/2;
+  if (normAngle < 0) normAngle += 2*Math.PI;
+  if (normAngle > 2*Math.PI) normAngle -= 2*Math.PI;
+
+  for (const w of this._wedgeData) {
+    if (dist >= w.ir && dist <= w.or) {
+      let sa = w.angle + Math.PI/2;
+      if (sa < 0) sa += 2*Math.PI;
+      let ea = sa + w.sweep;
+      if (normAngle >= sa && normAngle <= ea && w.period) {
+        showWheelInfo(w.period);
+        return;
+      }
+    }
+  }
+});
+
+function showWheelInfo(p) {
+  const wi = document.getElementById('wheel-info');
+  wi.innerHTML = `
+    <div class="wheel-info-name" style="color:${p.color}">${p.name}</div>
+    <div class="wheel-info-ma">${p.start} – ${p.end === 0 ? 'Hoy' : p.end} Ma · ${(p.start-p.end).toFixed(1)} Ma de duración</div>
+    <div class="wheel-info-desc">${p.desc}</div>
+    <button onclick="openModal(${allPeriods.findIndex(x=>x.name===p.name)})" style="margin-top:1rem;background:${p.color};color:#fff;border:none;padding:8px 18px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif">Ver ficha completa →</button>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LIST VIEW
+// ═══════════════════════════════════════════════════════════════════
+function buildList() {
+  const wrap = document.getElementById('list-wrap');
+  wrap.innerHTML = '';
+  timescale.forEach(eon => {
+    const eonDiv = document.createElement('div');
+    eonDiv.className = 'list-eon';
+    const header = document.createElement('div');
+    header.className = 'list-eon-header';
+    header.style.background = eon.eonColor;
+    header.innerHTML = `<span class="list-eon-name">${eon.eon}</span><span class="list-eon-ma">${eon.eonStart >= 1000 ? (eon.eonStart/1000).toFixed(1)+'Ga' : eon.eonStart+'Ma'} – ${eon.eonEnd === 0 ? 'Hoy' : eon.eonEnd+'Ma'}</span>`;
+    eonDiv.appendChild(header);
+
+    eon.eras.forEach(era => {
+      era.periods.forEach(p => {
+        const idx = allPeriods.findIndex(x => x.name === p.name);
+        const card = document.createElement('div');
+        card.className = 'list-period-card';
+        card.innerHTML = `
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:6px;min-height:40px;border-radius:3px;background:${p.color};align-self:stretch"></div>
+            <div><div class="lp-name">${p.name}</div><div class="lp-era">${era.era}</div></div>
+          </div>
+          <div class="lp-ma">${p.start >= 1000 ? (p.start/1000).toFixed(1)+'Ga' : p.start+'Ma'} – ${p.end === 0 ? 'Hoy' : p.end+'Ma'}</div>
+        `;
+        card.addEventListener('click', () => openModal(idx));
+        eonDiv.appendChild(card);
+      });
+    });
+    wrap.appendChild(eonDiv);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════════
+function openModal(idx) {
+  const p = allPeriods[idx];
+  if (!p) return;
+  const overlay = document.getElementById('modal-overlay');
+  document.getElementById('modal-header').style.background = p.color;
+  document.getElementById('modal-eon').innerHTML = `<span style="color:rgba(255,255,255,0.6)">${p.eonName} › ${p.eraName}</span>`;
+  document.getElementById('modal-title').style.color = '#fff';
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-ma').textContent = `${p.start} – ${p.end === 0 ? 'Hoy (0)' : p.end} Ma · Duración: ${(p.start - p.end).toFixed(1)} Ma`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div>
+      <div class="modal-section-title">Descripción</div>
+      <div class="modal-desc">${p.desc}</div>
+    </div>
+    <div>
+      <div class="modal-section-title">Condiciones del planeta</div>
+      <div class="modal-props">
+        <div class="mprop"><div class="mprop-key">🌡 Clima</div><div class="mprop-val">${p.climate}</div></div>
+        <div class="mprop"><div class="mprop-key">🌊 Océanos</div><div class="mprop-val">${p.ocean}</div></div>
+        <div class="mprop"><div class="mprop-key">🏔 Tectónica</div><div class="mprop-val">${p.tectonics}</div></div>
+        <div class="mprop"><div class="mprop-key">🌿 Vida</div><div class="mprop-val">${p.life}</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="modal-section-title">Eventos clave</div>
+      <div class="modal-events">
+        ${p.events.map(e => `<div class="modal-event" style="background:rgba(0,0,0,0.04)"><span class="me-icon">${e.icon}</span><span class="me-text">${e.text}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('modal-close').addEventListener('click', () => {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+});
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow = ''; } });
+
+// ═══════════════════════════════════════════════════════════════════
+// VIEW TOGGLE + ZOOM
+// ═══════════════════════════════════════════════════════════════════
+let currentView = 'timeline';
+document.querySelectorAll('.vbtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    document.getElementById('view-timeline').style.display = currentView === 'timeline' ? 'block' : 'none';
+    document.getElementById('view-wheel').style.display    = currentView === 'wheel'    ? 'block' : 'none';
+    document.getElementById('view-list').style.display     = currentView === 'list'     ? 'block' : 'none';
+    document.getElementById('zoom-in').style.visibility    = currentView === 'timeline' ? 'visible' : 'hidden';
+    document.getElementById('zoom-out').style.visibility   = currentView === 'timeline' ? 'visible' : 'hidden';
+    document.getElementById('zoom-label').style.visibility = currentView === 'timeline' ? 'visible' : 'hidden';
+    if (currentView === 'wheel') buildWheel();
+    if (currentView === 'list')  buildList();
+  });
+});
+
+document.getElementById('zoom-in').addEventListener('click', () => { zoom = Math.min(zoom + 0.25, 4); updateZoom(); });
+document.getElementById('zoom-out').addEventListener('click', () => { zoom = Math.max(zoom - 0.25, 0.75); updateZoom(); });
+function updateZoom() {
+  document.getElementById('zoom-label').textContent = Math.round(zoom * 100) + '%';
+  buildTimeline();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+buildTimeline();
+
+window.openModal = openModal;
+window.addEventListener('resize', () => { if (currentView === 'wheel') buildWheel(); });
+</script>
+</body>
+</html>
