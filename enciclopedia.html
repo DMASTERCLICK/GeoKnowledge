@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enciclopedia — GeoKnowledge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown-dark:   #4A2E1A;
+      --brown-mid:    #7A5C3A;
+      --brown-light:  #9E7B56;
+      --sand:         #C4A46B;
+      --cream:        #FAF3E8;
+      --cream-dark:   #F0E4CC;
+      --stone:        #6B5D52;
+      --text-primary: #1A1208;
+      --text-muted:   #7A6A5A;
+      --border:       rgba(122,92,58,0.18);
+      --white:        #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--cream);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250,243,232,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+      padding: 0 2.5rem;
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--brown-mid);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--cream); font-size: 16px;
+    }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .nav-logo-text span { color: var(--brown-light); }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 400;
+      color: var(--text-muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-links a.active { font-weight: 600; }
+    .nav-cta {
+      font-size: 12px; font-weight: 600;
+      background: var(--brown-mid); color: var(--cream);
+      padding: 7px 18px; border-radius: 99px;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--brown-dark); }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      padding: 7rem 2.5rem 3.5rem;
+      background: var(--white);
+      border-bottom: 0.5px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 80% at 95% 50%, rgba(196,164,107,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 30% 50% at 0% 100%, rgba(122,92,58,0.08) 0%, transparent 60%);
+    }
+    .strata-top {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 6px; display: flex;
+    }
+    .strata-top div { flex: 1; }
+    .page-hero-content { position: relative; z-index: 1; max-width: 760px; }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .breadcrumb a { color: var(--brown-mid); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { opacity: 0.4; }
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--brown-mid);
+      background: rgba(122,92,58,0.10);
+      border: 0.5px solid rgba(122,92,58,0.25);
+      padding: 5px 12px; border-radius: 99px;
+      margin-bottom: 1.25rem;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 5vw, 54px);
+      font-weight: 900; line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .page-title em { font-style: italic; color: var(--brown-light); }
+    .page-lead {
+      font-size: 17px; font-weight: 300; line-height: 1.7;
+      color: var(--text-muted); max-width: 560px;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-bar-wrap {
+      padding: 1.75rem 2.5rem;
+      background: var(--cream-dark);
+      border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1; min-width: 240px;
+      display: flex; align-items: center; gap: 10px;
+      background: var(--white);
+      border: 0.5px solid var(--border);
+      border-radius: 99px;
+      padding: 10px 18px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-box:focus-within {
+      border-color: var(--brown-light);
+      box-shadow: 0 0 0 3px rgba(158,123,86,0.12);
+    }
+    .search-box input {
+      border: none; outline: none; background: transparent;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px; color: var(--text-primary);
+      width: 100%;
+    }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-icon { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+    .filter-chips {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .chip {
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 99px;
+      border: 0.5px solid var(--border);
+      background: var(--white); color: var(--text-muted);
+      cursor: pointer; transition: all .15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--brown-light); color: var(--text-primary); }
+    .chip.active {
+      background: var(--brown-mid); color: var(--cream);
+      border-color: var(--brown-mid);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .enc-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 0;
+      min-height: 70vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .enc-sidebar {
+      background: var(--white);
+      border-right: 0.5px solid var(--border);
+      padding: 2rem 0;
+      position: sticky; top: 58px; align-self: start;
+      max-height: calc(100vh - 58px); overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: 1.75rem; }
+    .sidebar-heading {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--brown-light);
+      padding: 0 1.5rem; margin-bottom: 0.5rem;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 1.5rem;
+      font-size: 13px; color: var(--text-muted);
+      text-decoration: none; cursor: pointer;
+      transition: background .12s, color .12s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-link:hover {
+      background: var(--cream); color: var(--text-primary);
+    }
+    .sidebar-link.active {
+      background: var(--cream-dark); color: var(--brown-dark);
+      border-left-color: var(--brown-mid); font-weight: 600;
+    }
+    .sidebar-link .slink-icon { font-size: 15px; flex-shrink: 0; }
+    .sidebar-count {
+      margin-left: auto;
+      font-size: 10px; font-weight: 600;
+      background: var(--cream-dark); color: var(--text-muted);
+      padding: 2px 7px; border-radius: 99px;
+    }
+
+    /* ── ARTICLE GRID ── */
+    .enc-main {
+      padding: 2.5rem;
+      background: var(--cream);
+    }
+    .enc-section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .enc-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .enc-section-count {
+      font-size: 12px; color: var(--text-muted);
+    }
+
+    /* FEATURED */
+    .featured-article {
+      background: var(--brown-dark);
+      border-radius: 16px; overflow: hidden;
+      display: flex; gap: 0;
+      margin-bottom: 2rem;
+      text-decoration: none; color: inherit;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .featured-article:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 48px rgba(74,46,26,0.25);
+    }
+    .featured-art-body {
+      flex: 1; padding: 2.5rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .featured-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--sand);
+      background: rgba(196,164,107,0.18);
+      padding: 4px 10px; border-radius: 99px;
+      width: fit-content;
+    }
+    .featured-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--cream);
+      background: rgba(250,243,232,0.15);
+      border: 0.5px solid rgba(250,243,232,0.25);
+      padding: 3px 9px; border-radius: 99px;
+      width: fit-content; margin-bottom: 0.25rem;
+    }
+    .featured-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 900; color: var(--cream);
+      line-height: 1.2; letter-spacing: -0.5px;
+    }
+    .featured-excerpt {
+      font-size: 14px; color: rgba(250,243,232,0.6);
+      line-height: 1.65; flex: 1;
+    }
+    .featured-meta {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 11px; color: rgba(250,243,232,0.45);
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid rgba(250,243,232,0.1);
+    }
+    .featured-visual {
+      flex: 0 0 240px;
+      background: linear-gradient(135deg, #1a0e06 0%, #3a2010 50%, #5a3520 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 72px;
+      position: relative; overflow: hidden;
+    }
+    .featured-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 60% 40%, rgba(196,164,107,0.25) 0%, transparent 65%);
+    }
+
+    /* ARTICLE CARDS */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .art-card {
+      background: var(--white);
+      border: 0.5px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.65rem;
+      text-decoration: none; color: inherit;
+      transition: transform .18s, box-shadow .18s;
+    }
+    .art-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(74,46,26,0.10);
+    }
+    .art-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.2rem;
+    }
+    .art-cat {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--brown-mid);
+    }
+    .art-level {
+      font-size: 10px; color: var(--text-muted);
+      background: var(--cream-dark); padding: 2px 8px; border-radius: 99px;
+    }
+    .art-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 700;
+      color: var(--text-primary); line-height: 1.35;
+    }
+    .art-excerpt {
+      font-size: 13px; color: var(--text-muted);
+      line-height: 1.6; flex: 1;
+    }
+    .art-meta {
+      font-size: 11px; color: var(--text-muted);
+      border-top: 0.5px solid var(--border);
+      padding-top: 0.65rem; margin-top: auto;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .art-meta-dot { opacity: 0.3; }
+
+    /* SEPARADOR DE CATEGORÍAS */
+    .cat-separator {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 2.5rem 0 1.5rem;
+    }
+    .cat-sep-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--text-primary); white-space: nowrap;
+    }
+    .cat-sep-icon { font-size: 18px; }
+    .cat-sep-line {
+      flex: 1; height: 0.5px; background: var(--border);
+    }
+    .cat-sep-count {
+      font-size: 11px; color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ── MODAL ARTÍCULO ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(26,18,8,0.6);
+      backdrop-filter: blur(6px);
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      max-width: 740px; width: 100%;
+      margin: auto;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(26,18,8,0.30);
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      background: var(--brown-dark);
+      padding: 2rem 2.5rem;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      background: rgba(250,243,232,0.12); color: var(--cream);
+      border: none; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 8px;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .modal-close:hover { background: rgba(250,243,232,0.22); }
+    .modal-cat {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--sand);
+      margin-bottom: 0.75rem;
+    }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 3.5vw, 30px);
+      font-weight: 900; color: var(--cream);
+      line-height: 1.18; letter-spacing: -0.5px;
+    }
+    .modal-meta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: 12px; color: rgba(250,243,232,0.45);
+    }
+    .modal-body {
+      padding: 2.5rem;
+    }
+    .modal-body p {
+      font-size: 15px; line-height: 1.8;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+    .modal-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--text-primary);
+      margin: 2rem 0 0.75rem;
+      letter-spacing: -0.3px;
+    }
+    .modal-body .highlight-box {
+      background: var(--cream-dark);
+      border-left: 3px solid var(--brown-mid);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 14px; color: var(--text-muted); line-height: 1.65;
+    }
+    .modal-body .key-term {
+      font-weight: 600; color: var(--brown-mid);
+    }
+    .modal-footer {
+      padding: 1.5rem 2.5rem;
+      border-top: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .modal-tag {
+      font-size: 11px; color: var(--text-muted);
+      background: var(--cream-dark); padding: 4px 10px; border-radius: 99px;
+    }
+    .modal-cta {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--brown-mid); color: var(--cream);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px; font-weight: 600;
+      padding: 9px 20px; border-radius: 99px;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: background .2s;
+    }
+    .modal-cta:hover { background: var(--brown-dark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--brown-dark);
+      color: rgba(250,243,232,0.5);
+      padding: 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      border-top: 0.5px solid rgba(250,243,232,0.1);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 700; color: var(--cream);
+    }
+    .footer-logo span { color: var(--sand); }
+    .footer-text { font-size: 12px; }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 12px; color: rgba(250,243,232,0.4); text-decoration: none; }
+    .footer-links a:hover { color: var(--cream); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem;
+      display: none;
+    }
+    .empty-state.visible { display: block; }
+    .empty-icon { font-size: 48px; margin-bottom: 1rem; }
+    .empty-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .empty-sub { font-size: 14px; color: var(--text-muted); }
+
+    /* ── ANIMACIONES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-hero-content > * { animation: fadeUp .6s ease both; }
+    .page-eyebrow { animation-delay: .05s; }
+    .page-title   { animation-delay: .15s; }
+    .page-lead    { animation-delay: .25s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .page-hero { padding: 6rem 1.25rem 2.5rem; }
+      .search-bar-wrap { padding: 1.25rem; }
+      .enc-layout { grid-template-columns: 1fr; }
+      .enc-sidebar { display: none; }
+      .enc-main { padding: 1.5rem; }
+      .featured-visual { display: none; }
+      .modal-overlay { padding: 0; }
+      .modal { border-radius: 0; min-height: 100vh; }
+    }
+    @media (max-width: 560px) {
+      .articles-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">⛰</div>
+    <span class="nav-logo-text">Geo<span>Knowledge</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="enciclopedia.html" class="active">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales 3D</a></li>
+    <li><a href="tiempo-geologico.html">Escala del tiempo</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+  <a class="nav-cta" href="enciclopedia.html">Explorar →</a>
+</nav>
+
+<!-- ── PAGE HERO ── -->
+<header class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="strata-top">
+    <div style="background:#B4813A"></div><div style="background:#8B6239"></div>
+    <div style="background:#C4A46B"></div><div style="background:#7A5C3A"></div>
+    <div style="background:#D4B97A"></div><div style="background:#9E7B56"></div>
+    <div style="background:#6B4C2E"></div><div style="background:#E8D4A0"></div>
+  </div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span>/</span>
+      Enciclopedia
+    </div>
+    <div class="page-eyebrow">📖 Enciclopedia geológica</div>
+    <h1 class="page-title">El conocimiento<br>de la Tierra,<br><em>en español.</em></h1>
+    <p class="page-lead">Artículos rigurosos sobre petrología, tectónica, geofísica, hidrogeología y geología histórica. Escritos para estudiantes y curiosos.</p>
+  </div>
+</header>
+
+<!-- ── BARRA DE BÚSQUEDA ── -->
+<div class="search-bar-wrap">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Buscar artículos… ej: subducción, cuarzo, Andes" />
+  </div>
+  <div class="filter-chips">
+    <span class="chip active" data-cat="todos">Todos</span>
+    <span class="chip" data-cat="petrologia">Petrología</span>
+    <span class="chip" data-cat="tectonica">Tectónica</span>
+    <span class="chip" data-cat="geofisica">Geofísica</span>
+    <span class="chip" data-cat="hidrogeologia">Hidrogeología</span>
+    <span class="chip" data-cat="historica">Geol. Histórica</span>
+    <span class="chip" data-cat="argentina">Argentina</span>
+  </div>
+</div>
+
+<!-- ── LAYOUT PRINCIPAL ── -->
+<div class="enc-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="enc-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Categorías</div>
+      <span class="sidebar-link active" data-cat="todos">
+        <span class="slink-icon">🪨</span> Todos los artículos
+        <span class="sidebar-count">18</span>
+      </span>
+      <span class="sidebar-link" data-cat="petrologia">
+        <span class="slink-icon">🔥</span> Petrología
+        <span class="sidebar-count">4</span>
+      </span>
+      <span class="sidebar-link" data-cat="tectonica">
+        <span class="slink-icon">⚡</span> Tectónica de placas
+        <span class="sidebar-count">4</span>
+      </span>
+      <span class="sidebar-link" data-cat="geofisica">
+        <span class="slink-icon">🌐</span> Geofísica
+        <span class="sidebar-count">3</span>
+      </span>
+      <span class="sidebar-link" data-cat="hidrogeologia">
+        <span class="slink-icon">💧</span> Hidrogeología
+        <span class="sidebar-count">3</span>
+      </span>
+      <span class="sidebar-link" data-cat="historica">
+        <span class="slink-icon">⏳</span> Geol. Histórica
+        <span class="sidebar-count">2</span>
+      </span>
+      <span class="sidebar-link" data-cat="argentina">
+        <span class="slink-icon">🗺</span> Argentina
+        <span class="sidebar-count">2</span>
+      </span>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Nivel</div>
+      <span class="sidebar-link" data-level="introductorio">
+        <span class="slink-icon">🌱</span> Introductorio
+      </span>
+      <span class="sidebar-link" data-level="intermedio">
+        <span class="slink-icon">📐</span> Intermedio
+      </span>
+      <span class="sidebar-link" data-level="avanzado">
+        <span class="slink-icon">🎓</span> Avanzado
+      </span>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Otros módulos</div>
+      <a class="sidebar-link" href="minerales.html">
+        <span class="slink-icon">💎</span> Minerales 3D
+      </a>
+      <a class="sidebar-link" href="tiempo-geologico.html">
+        <span class="slink-icon">⏳</span> Escala del tiempo
+      </a>
+      <a class="sidebar-link" href="argentina.html">
+        <span class="slink-icon">🌋</span> Geología Argentina
+      </a>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="enc-main">
+
+    <!-- ARTÍCULO DESTACADO -->
+    <div id="featured-section">
+      <a class="featured-article" href="#" data-id="featured" id="featured-card">
+        <div class="featured-art-body">
+          <div class="featured-badge">⭐ Artículo destacado</div>
+          <div class="featured-tag">Tectónica de placas</div>
+          <div class="featured-title">Zonas de subducción: cómo una placa desaparece bajo otra</div>
+          <div class="featured-excerpt">El proceso más violento y transformador de la geología terrestre. Cuando dos placas colisionan y una desciende hacia el manto, se generan volcanes, sismos y cadenas montañosas que moldean el planeta durante millones de años.</div>
+          <div class="featured-meta">
+            <span>12 min de lectura</span>
+            <span class="art-meta-dot">·</span>
+            <span>Nivel intermedio</span>
+            <span class="art-meta-dot">·</span>
+            <span>Tectónica de placas</span>
+          </div>
+        </div>
+        <div class="featured-visual">🌋</div>
+      </a>
+    </div>
+
+    <!-- LISTADO DE ARTÍCULOS -->
+    <div id="articles-container"></div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🔎</div>
+      <div class="empty-title">Sin resultados</div>
+      <div class="empty-sub">Probá con otros términos o cambiá el filtro de categoría.</div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <div class="footer-logo">Geo<span>Knowledge</span></div>
+    <div class="footer-text" style="margin-top:4px">Un proyecto estudiantil de divulgación geológica · Argentina</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+</footer>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-cat" id="modal-cat"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <div class="modal-tags" id="modal-tags"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATOS DE ARTÍCULOS ──────────────────────────────────────────────
+const articles = [
+  {
+    id: 1,
+    cat: "petrologia",
+    catLabel: "Petrología",
+    level: "introductorio",
+    title: "El ciclo de las rocas: de la cámara magmática a la corteza",
+    excerpt: "Las rocas no son eternas. Se forman, transforman y reciclan en ciclos de millones de años. Entendé cómo una roca ígnea puede convertirse en metamórfica y luego en sedimentaria.",
+    time: "8 min",
+    tags: ["ciclo litológico", "magma", "metamorfismo", "erosión"],
+    body: `
+      <p>El ciclo de las rocas es uno de los procesos más fundamentales de la geología. A diferencia de lo que el ojo humano percibe, las rocas no son estructuras permanentes: se forman, se transforman y se destruyen en escalas de tiempo que van de miles a cientos de millones de años.</p>
+      <h3>Las tres familias de rocas</h3>
+      <p>Toda roca pertenece a una de tres grandes familias según su origen. Las <span class="key-term">rocas ígneas</span> cristalizan a partir del magma, ya sea en el interior de la corteza (plutónicas, como el granito) o en superficie a través de erupciones volcánicas (volcánicas, como el basalto).</p>
+      <p>Las <span class="key-term">rocas sedimentarias</span> se forman por la acumulación y litificación de sedimentos producidos por la meteorización de otras rocas. Cubren más del 75% de la superficie continental y guardan el registro fósil de la vida en la Tierra.</p>
+      <p>Las <span class="key-term">rocas metamórficas</span> son el resultado de la transformación de cualquier roca preexistente bajo condiciones de alta presión y temperatura, sin llegar a fundirse. El mármol, la pizarra y el gneis son ejemplos clásicos.</p>
+      <div class="highlight-box">
+        💡 <strong>Dato clave:</strong> El granito que forma las Sierras Pampeanas tardó entre 10 y 50 millones de años en cristalizarse lentamente en profundidad, y luego afloró a la superficie gracias a millones de años de erosión de las rocas que lo cubrían.
+      </div>
+      <h3>El ciclo en movimiento</h3>
+      <p>El motor del ciclo de las rocas es la energía interna de la Tierra —que produce el magma— combinada con la energía solar y la gravedad, responsables de la erosión y el transporte de sedimentos. Este doble motor garantiza que la materia rocosa nunca esté quieta, aunque lo parezca a escala humana.</p>
+      <p>Una roca metamórfica puede ser arrastrada hacia la superficie por movimientos tectónicos, erosionarse, sedimentarse en una cuenca y, eventualmente, enterrarse de nuevo para metamorfizarse otra vez. No hay inicio ni fin: el ciclo es continuo.</p>
+    `
+  },
+  {
+    id: 2,
+    cat: "tectonica",
+    catLabel: "Tectónica de placas",
+    level: "intermedio",
+    title: "Zonas de subducción: cómo una placa desaparece bajo otra",
+    excerpt: "El proceso más violento de la geología terrestre. Cuando dos placas colisionan y una desciende hacia el manto, se generan volcanes, sismos y cadenas montañosas.",
+    time: "12 min",
+    tags: ["subducción", "trinchera oceánica", "arco volcánico", "sismo"],
+    featured: true,
+    body: `
+      <p>La subducción es el proceso por el cual una placa litosférica desciende bajo otra y se hunde en el manto terrestre. Es el mecanismo que equilibra la creación de corteza oceánica en las dorsales, y es responsable de algunos de los fenómenos más energéticos del planeta.</p>
+      <h3>¿Por qué una placa se hunde?</h3>
+      <p>La densidad es la clave. La corteza oceánica, compuesta principalmente de basalto, es más densa que la corteza continental, formada por granito y rocas afines. Cuando una placa oceánica y una continental colisionan, la oceánica —más densa— inevitablemente desciende bajo la continental.</p>
+      <div class="highlight-box">
+        🌊 <strong>La zona de Wadati-Benioff:</strong> A medida que la placa subduce, genera una serie de sismos que permiten a los geofísicos "seguir" la placa en profundidad. Esta zona de sismicidad, inclinada entre 25° y 70°, puede alcanzar hasta 700 km de profundidad.
+      </div>
+      <h3>Los tres rasgos geomorfológicos de la subducción</h3>
+      <p>Toda zona de subducción activa genera tres formas del relieve características. La <span class="key-term">fosa oceánica</span> marca el punto donde la placa comienza a descender; son las depresiones más profundas del planeta. El <span class="key-term">arco volcánico</span> se forma tierra adentro, donde el agua liberada por la placa en subducción hidrata el manto y reduce su punto de fusión. La <span class="key-term">cuña de acreción</span> es el conjunto de sedimentos y fragmentos corticales raspados de la placa en descenso.</p>
+      <p>En América del Sur, la subducción de la placa de Nazca bajo la placa Sudamericana es la responsable directa de los Andes, el arco volcánico más largo del mundo, y de la fosa de Atacama, una de las más profundas del planeta.</p>
+    `
+  },
+  {
+    id: 3,
+    cat: "argentina",
+    catLabel: "Geología Argentina",
+    level: "avanzado",
+    title: "La Patagonia como archivo del tiempo: sedimentitas mesozoicas",
+    excerpt: "Las rocas sedimentarias patagónicas guardaron secretos por más de 65 millones de años. Dinosaurios, mares epicontinentales y la historia de Gondwana escrita en piedra.",
+    time: "15 min",
+    tags: ["Patagonia", "Cretácico", "Gondwana", "dinosaurios", "Mesozoico"],
+    body: `
+      <p>La Patagonia argentina alberga uno de los registros sedimentarios mesozoicos más completos y mejor preservados del hemisferio sur. Sus formaciones geológicas son una ventana directa al mundo del Jurásico y el Cretácico: un planeta radicalmente diferente al actual.</p>
+      <h3>Gondwana: el continente que se fragmentó</h3>
+      <p>Durante el Mesozoico, América del Sur era parte de Gondwana, el supercontinente austral. Su fragmentación, que comenzó hace unos 180 millones de años, es el evento tectónico que explica la distribución actual de continentes, océanos y fauna en el hemisferio sur.</p>
+      <div class="highlight-box">
+        🦕 <strong>El dinosaurio más grande del mundo</strong> fue hallado en la Patagonia argentina. El <em>Patagotitan mayorum</em>, descubierto en Chubut en 2014, medía aproximadamente 37 metros de largo y pesaba unas 70 toneladas. Vivió hace 100 millones de años.
+      </div>
+      <h3>La Cuenca Neuquina</h3>
+      <p>La Cuenca Neuquina es el repositorio sedimentario más importante de la Patagonia. Sus más de 7.000 metros de sedimentos acumulados registran la historia del mar de Tethys en Sudamérica, las transgresiones y regresiones marinas del Jurásico y el Cretácico, y la posterior emersión continental que permitió el desarrollo de ecosistemas terrestres donde prosperaron los dinosaurios más grandes conocidos.</p>
+    `
+  },
+  {
+    id: 4,
+    cat: "petrologia",
+    catLabel: "Petrología",
+    level: "intermedio",
+    title: "Granito: la roca que construyó los continentes",
+    excerpt: "El granito no es solo una mesada de cocina. Es la roca que forma el núcleo de todos los continentes, y su origen revela cómo funciona la diferenciación de la corteza terrestre.",
+    time: "10 min",
+    tags: ["granito", "plutónica", "corteza continental", "feldespatospatoo"],
+    body: `
+      <p>El granito es la roca plutónica más abundante de la corteza continental. Se forma por la cristalización lenta del magma en profundidad, lo que permite el crecimiento de cristales grandes y visibles a simple vista: cuarzo translúcido, feldespato rosado o blanco, y mica brillante.</p>
+      <h3>Composición y textura</h3>
+      <p>La textura <span class="key-term">fanerítica</span> del granito —con cristales visibles a ojo desnudo— es el resultado directo de su lenta cristalización, que puede durar millones de años a varios kilómetros de profundidad. En contraste, la roca volcánica equivalente (la riolita) tiene la misma composición química pero textura vítrea o microcristalina por su enfriamiento rápido.</p>
+      <div class="highlight-box">
+        ⛰️ <strong>Las Sierras Pampeanas</strong> están formadas principalmente por granitos y gneises de entre 500 y 2.000 millones de años de antigüedad. Son el basamento cristalino más antiguo expuesto en Argentina y representan fragmentos de antiguos orógenos que ensamblaron el continente sudamericano.
+      </div>
+    `
+  },
+  {
+    id: 5,
+    cat: "geofisica",
+    catLabel: "Geofísica",
+    level: "intermedio",
+    title: "Sísmica de reflexión: ver el subsuelo sin perforarlo",
+    excerpt: "La técnica que permite a los geólogos y petroleros ver estructuras a kilómetros de profundidad usando ondas sonoras. Así se descubrió Vaca Muerta.",
+    time: "11 min",
+    tags: ["sísmica", "ondas sísmicas", "prospección", "subsuelo"],
+    body: `
+      <p>La sísmica de reflexión es la herramienta geofísica más poderosa para explorar el subsuelo sin necesidad de perforarlo. Consiste en generar ondas sonoras artificiales en la superficie que viajan hacia el interior de la Tierra, se reflejan en los límites entre capas rocosas de diferente densidad, y regresan a la superficie donde son captadas por receptores llamados <span class="key-term">geófonos</span>.</p>
+      <h3>El principio físico</h3>
+      <p>La técnica se basa en el mismo principio que el sonar marino o la ecografía médica: las ondas viajan a diferente velocidad en diferentes materiales, y en los límites entre materiales se producen reflexiones y refracciones. El tiempo que tarda la onda en regresar, combinado con la velocidad de propagación, permite calcular la profundidad y geometría de las capas reflejantes.</p>
+      <div class="highlight-box">
+        🛢️ <strong>Vaca Muerta</strong>, la formación de shale que convirtió a Neuquén en uno de los principales productores de hidrocarburos no convencionales del mundo, fue detallada gracias a décadas de adquisición sísmica en la Cuenca Neuquina. Los perfiles sísmicos revelaron su continuidad lateral y sus condiciones de entrampamiento.
+      </div>
+    `
+  },
+  {
+    id: 6,
+    cat: "hidrogeologia",
+    catLabel: "Hidrogeología",
+    level: "introductorio",
+    title: "Acuíferos: el agua invisible que sostiene ciudades",
+    excerpt: "Bajo nuestros pies hay más agua dulce que en todos los ríos y lagos superficiales juntos. Los acuíferos son sistemas geológicos que almacenan, transmiten y regulan el agua subterránea.",
+    time: "9 min",
+    tags: ["acuífero", "agua subterránea", "porosidad", "permeabilidad"],
+    body: `
+      <p>Un acuífero es una formación geológica capaz de almacenar y transmitir agua en cantidades económicamente significativas. Son los reservorios de agua subterránea que abastecen pozos, manantiales y, en muchas regiones del mundo, ciudades enteras.</p>
+      <h3>Tipos de acuíferos</h3>
+      <p>Los acuíferos <span class="key-term">libres</span> o freáticos tienen su límite superior (nivel freático) en contacto directo con la zona no saturada; el agua en ellos está a presión atmosférica. Los acuíferos <span class="key-term">confinados</span> o artesianos están encerrados entre dos capas impermeables (acuitardos), lo que los somete a presión superior a la atmosférica: al perforar un pozo que los alcanza, el agua asciende sola e incluso puede surgir naturalmente.</p>
+      <div class="highlight-box">
+        💧 <strong>El Sistema Acuífero Guaraní</strong>, compartido por Argentina, Brasil, Paraguay y Uruguay, es uno de los reservorios de agua dulce subterránea más grandes del mundo, con una extensión de 1,2 millones de km² y reservas estimadas en 37.000 km³.
+      </div>
+    `
+  },
+  {
+    id: 7,
+    cat: "tectonica",
+    catLabel: "Tectónica de placas",
+    level: "introductorio",
+    title: "Dorsales oceánicas: donde nace la corteza",
+    excerpt: "En el fondo de los océanos existe una cadena montañosa continua de 65.000 km de longitud donde se genera constantemente corteza oceánica nueva. Es el mayor sistema volcánico del planeta.",
+    time: "7 min",
+    tags: ["dorsal", "expansión del fondo oceánico", "magma", "corteza oceánica"],
+    body: `
+      <p>Las dorsales oceánicas son cadenas montañosas submarinas donde las placas litosféricas se separan y el magma del manto asciende para crear nueva corteza oceánica. Este proceso, llamado <span class="key-term">expansión del fondo oceánico</span>, fue la primera evidencia geofísica concreta de que los continentes se mueven.</p>
+      <h3>El mecanismo</h3>
+      <p>A lo largo de la dorsal, la litosfera está tan adelgazada que el magma del manto asciende fácilmente. Al emerger en el eje de la dorsal, se enfría y forma nueva corteza basáltica. Las dos placas adyacentes se separan simétricamente a velocidades de entre 1 y 20 cm por año, empujando la corteza vieja hacia los márgenes del océano.</p>
+      <div class="highlight-box">
+        🌊 <strong>La dorsal Mesoatlántica</strong> separa América de Europa y África a una velocidad de unos 2,5 cm por año —la velocidad a la que crecen las uñas humanas. En Islandia, la dorsal emerge a la superficie y puede caminarse encima de ella.
+      </div>
+    `
+  },
+  {
+    id: 8,
+    cat: "geofisica",
+    catLabel: "Geofísica",
+    level: "avanzado",
+    title: "Tomografía sísmica: la TAC del interior de la Tierra",
+    excerpt: "Usando miles de sismos naturales registrados por redes globales de sismómetros, los geofísicos construyen imágenes tridimensionales del manto y el núcleo terrestre.",
+    time: "14 min",
+    tags: ["tomografía", "manto", "sismología", "ondas P y S"],
+    body: `
+      <p>La tomografía sísmica es la técnica que permite obtener imágenes tridimensionales del interior de la Tierra analizando cómo las ondas sísmicas generadas por terremotos varían su velocidad al atravesar materiales de diferente composición y temperatura.</p>
+      <h3>Ondas P y S: los mensajeros del interior</h3>
+      <p>Los terremotos generan varios tipos de ondas sísmicas. Las <span class="key-term">ondas P</span> (primarias o de compresión) viajan a través de sólidos y líquidos, y son las primeras en registrarse en los sismómetros. Las <span class="key-term">ondas S</span> (secundarias o de cizalla) solo viajan a través de sólidos; su incapacidad de atravesar el núcleo externo fue la prueba definitiva de que este es líquido.</p>
+      <div class="highlight-box">
+        🌍 <strong>Las plumas del manto</strong> —columnas de material caliente que ascienden desde el límite manto-núcleo— fueron detectadas por tomografía sísmica como anomalías de baja velocidad. Son responsables del vulcanismo de hotspot como el de Hawái o las Islas Galápagos.
+      </div>
+    `
+  },
+  {
+    id: 9,
+    cat: "hidrogeologia",
+    catLabel: "Hidrogeología",
+    level: "intermedio",
+    title: "Recarga de acuíferos: el ciclo del agua bajo tierra",
+    excerpt: "¿De dónde viene el agua subterránea? La recarga de acuíferos es un proceso lento y vulnerable que define la sustentabilidad del recurso hídrico en regiones áridas.",
+    time: "8 min",
+    tags: ["recarga", "infiltración", "zona no saturada", "hidrogeología"],
+    body: `
+      <p>La recarga de acuíferos es el proceso por el cual el agua superficial —proveniente de lluvia, ríos o nieve derretida— se infiltra en el suelo, atraviesa la zona no saturada y alcanza el nivel freático, incorporándose al acuífero. Es el proceso que renueva este recurso, y su tasa define si el uso es sustentable o no.</p>
+      <h3>Zonas de recarga y zonas de descarga</h3>
+      <p>En la mayoría de los acuíferos, la recarga ocurre en zonas topográficamente elevadas, donde la precipitación es mayor y la vegetación permite la infiltración lenta. La descarga ocurre en zonas bajas: ríos, lagos, humedales y manantiales. Esta diferencia topográfica crea el <span class="key-term">gradiente hidráulico</span> que mueve el agua a través del acuífero.</p>
+    `
+  },
+  {
+    id: 10,
+    cat: "petrologia",
+    catLabel: "Petrología",
+    level: "avanzado",
+    title: "Metamorfismo de alta presión: las rocas que viajaron al manto",
+    excerpt: "Las eclogitas y los esquistos azules son rocas que fueron enterradas a decenas de kilómetros de profundidad y luego retornaron a la superficie. Su estudio revolucionó la comprensión de la subducción.",
+    time: "13 min",
+    tags: ["eclogita", "esquisto azul", "alta presión", "subducción"],
+    body: `
+      <p>El metamorfismo de alta presión y baja temperatura produce rocas que registran condiciones equivalentes a las de las zonas de subducción, a decenas de kilómetros de profundidad. Las <span class="key-term">eclogitas</span> y los <span class="key-term">esquistos azules</span> (glaucofanitas) son las evidencias directas de que fragmentos de corteza oceánica y continental fueron arrastrados a grandes profundidades por el proceso de subducción y luego exhumados.</p>
+      <h3>El problema de la exhumación</h3>
+      <p>Uno de los grandes problemas de la petrología metamórfica es explicar cómo estas rocas, una vez enterradas a 60–100 km de profundidad, logran retornar a la superficie sin fundirse ni transformarse en otras rocas. Los modelos actuales invocan canales de baja densidad en la cuña del manto, erosión tectónica del techo del canal, o la extensión del arco volcánico como mecanismos de exhumación.</p>
+    `
+  },
+  {
+    id: 11,
+    cat: "tectonica",
+    catLabel: "Tectónica de placas",
+    level: "intermedio",
+    title: "Fallas geológicas: fracturas que mueven montañas",
+    excerpt: "Una falla es una fractura en la corteza a lo largo de la cual ha habido desplazamiento relativo entre bloques. Son las cicatrices donde se concentra la mayor parte de la sismicidad del planeta.",
+    time: "9 min",
+    tags: ["falla normal", "falla inversa", "falla de desgarre", "sismo"],
+    body: `
+      <p>Las fallas geológicas son planos de fractura en la litosfera a lo largo de los cuales dos bloques rocosos se desplazan en respuesta a esfuerzos tectónicos. Son los sitios donde se libera la energía acumulada por la deformación, generando los sismos.</p>
+      <h3>Tipos de fallas según el movimiento</h3>
+      <p>Las <span class="key-term">fallas normales</span> resultan de esfuerzos extensionales: el bloque superior (techo) desciende respecto al inferior (piso). Forman cuencas y rifts. Las <span class="key-term">fallas inversas</span> resultan de esfuerzos compresionales y forman cordilleras: el techo asciende sobre el piso. Las <span class="key-term">fallas de desgarre</span> tienen movimiento horizontal y son características de bordes de placa transformantes, como la Falla de San Andrés en California.</p>
+      <div class="highlight-box">
+        🏔️ En la <strong>Precordillera de Cuyo</strong>, un sistema de fallas inversas de vergencia oriental es el responsable tectónico de los sismos que afectan periódicamente a Mendoza y San Juan, y también de la elevación de las sierras que forman el frente andino en esa región.
+      </div>
+    `
+  },
+  {
+    id: 12,
+    cat: "historica",
+    catLabel: "Geología Histórica",
+    level: "intermedio",
+    title: "El límite K-Pg: la frontera entre dos mundos",
+    excerpt: "Hace 66 millones de años, un asteroide impactó la Tierra y terminó con el 75% de las especies. La capa de iridio que marca ese momento puede encontrarse en todo el mundo.",
+    time: "11 min",
+    tags: ["extinción masiva", "Cretácico", "Paleógeno", "iridio", "asteroide"],
+    body: `
+      <p>El límite Cretácico-Paleógeno (K-Pg), antes llamado K-T, es una de las fronteras estratigráficas más reconocibles del registro geológico mundial. Marca el fin del Mesozoico y el comienzo del Cenozoico, y coincide con la quinta extinción masiva más grande de la historia de la vida.</p>
+      <h3>La evidencia del impacto</h3>
+      <p>La hipótesis del impacto asteroidal fue propuesta en 1980 por Luis y Walter Álvarez, al descubrir una anomalía global de <span class="key-term">iridio</span> —un metal de origen extraterrestre— exactamente en el límite K-Pg en múltiples localidades del mundo. El iridio, escaso en la corteza terrestre pero abundante en meteoritos, habría sido dispersado globalmente por el impacto.</p>
+      <div class="highlight-box">
+        ☄️ El cráter de <strong>Chicxulub</strong>, de 180 km de diámetro, enterrado bajo la plataforma de Yucatán (México), es la cicatriz del impacto. Fue identificado en los años 90 mediante sísmica y perforaciones, y su edad de 66 millones de años coincide exactamente con el límite K-Pg.
+      </div>
+    `
+  },
+  {
+    id: 13,
+    cat: "petrologia",
+    catLabel: "Petrología",
+    level: "introductorio",
+    title: "Rocas sedimentarias: el archivo de la historia terrestre",
+    excerpt: "Las rocas sedimentarias son el 75% de las rocas que vemos en superficie y contienen todos los fósiles conocidos. Son las páginas del libro de la historia de la Tierra.",
+    time: "7 min",
+    tags: ["sedimentología", "estratigrafía", "fósiles", "litificación"],
+    body: `
+      <p>Las rocas sedimentarias se forman por la acumulación, compactación y cementación de sedimentos —fragmentos de otras rocas, restos de organismos, o precipitados químicos— en ambientes depositacionales específicos: ríos, mares, desiertos, lagos.</p>
+      <h3>Principios de la estratigrafía</h3>
+      <p>La estratigrafía, la rama de la geología que estudia la secuencia y disposición de las capas sedimentarias, se basa en principios simples pero poderosos. El <span class="key-term">principio de superposición</span> establece que en una secuencia no perturbada, las capas más jóvenes están sobre las más antiguas. El <span class="key-term">principio de horizontalidad original</span> indica que los sedimentos se depositan en capas horizontales, por lo que capas inclinadas implican deformación posterior.</p>
+    `
+  },
+  {
+    id: 14,
+    cat: "geofisica",
+    catLabel: "Geofísica",
+    level: "introductorio",
+    title: "El campo magnético terrestre y su relación con la geología",
+    excerpt: "La Tierra funciona como un imán gigante generado por el movimiento del hierro líquido en el núcleo externo. Este campo magnético preserva un registro de la historia geológica en las rocas.",
+    time: "8 min",
+    tags: ["paleomagnetismo", "campo magnético", "núcleo", "deriva continental"],
+    body: `
+      <p>El campo magnético terrestre es generado por el movimiento convectivo del hierro líquido en el núcleo externo, un proceso conocido como <span class="key-term">efecto dinamo</span>. Este campo, además de protegernos del viento solar, quedó grabado en las rocas a lo largo de la historia geológica, convirtiéndose en una herramienta fundamental para la geología.</p>
+      <h3>Paleomagnetismo y tectónica de placas</h3>
+      <p>Cuando una roca volcánica se enfría y cristaliza, los minerales magnéticos (como la magnetita) alinean sus dominios magnéticos con el campo terrestre del momento. Esta orientación queda "congelada" en la roca. Midiendo la paleodirección magnética en rocas de diferentes edades, los geólogos pueden reconstruir la posición pasada de los continentes y determinar la velocidad de movimiento de las placas.</p>
+    `
+  },
+  {
+    id: 15,
+    cat: "hidrogeologia",
+    catLabel: "Hidrogeología",
+    level: "avanzado",
+    title: "Contaminación de acuíferos: diagnóstico y remediación",
+    excerpt: "Los acuíferos son vulnerables a la contaminación por actividad agrícola, industrial y urbana. Una vez contaminados, pueden tardar décadas en recuperarse.",
+    time: "12 min",
+    tags: ["contaminación", "remediación", "pluma contaminante", "acuífero"],
+    body: `
+      <p>La contaminación de acuíferos es uno de los problemas ambientales más difíciles de resolver. A diferencia de la contaminación superficial, el agua subterránea se mueve muy lentamente —metros por año en muchos casos— lo que hace que la dispersión de contaminantes sea gradual pero difícil de revertir.</p>
+      <h3>Tipos de contaminantes</h3>
+      <p>Los contaminantes más frecuentes en acuíferos incluyen <span class="key-term">nitratos</span> (de fertilizantes agrícolas), <span class="key-term">pesticidas</span>, <span class="key-term">hidrocarburos</span> (de derrames industriales y estaciones de servicio), <span class="key-term">metales pesados</span> (de residuos industriales y mineros) y <span class="key-term">patógenos</span> (de fosas sépticas y pozos negros).</p>
+      <div class="highlight-box">
+        ⚠️ En la región pampeana argentina, la contaminación por nitratos de los acuíferos freáticos es un problema crónico, especialmente en zonas periurbanas con alta densidad de pozos ciegos y uso intensivo de fertilizantes. En algunas zonas rurales, los niveles superan los 50 mg/L recomendados por la OMS.
+      </div>
+    `
+  },
+  {
+    id: 16,
+    cat: "tectonica",
+    catLabel: "Tectónica de placas",
+    level: "avanzado",
+    title: "Colisión continental: el nacimiento del Himalaya",
+    excerpt: "Cuando dos continentes colisionan, ninguno se hunde: el resultado es la cadena montañosa más alta del planeta. El proceso activo hoy en el Himalaya es un laboratorio natural único.",
+    time: "13 min",
+    tags: ["colisión continental", "orogenia", "Himalaya", "Tíbet"],
+    body: `
+      <p>La colisión continental ocurre cuando dos placas portadoras de corteza continental convergen. A diferencia de la subducción océano-continente, ninguna de las dos masas corticales es suficientemente densa para descender al manto: el resultado es una colisión que acorta, engruesa y eleva la corteza, construyendo los orógenos más elevados del planeta.</p>
+      <h3>El caso himalayo</h3>
+      <p>Hace unos 50 millones de años, la placa Índica —que venía desplazándose hacia el norte tras la fragmentación de Gondwana— colisionó con la placa Euroasiática. El resultado fue el <span class="key-term">Himalaya</span> y la <span class="key-term">meseta del Tíbet</span>, la región de mayor altitud media del planeta (~4.500 m), con una corteza de hasta 70 km de espesor, el doble de la corteza continental promedio.</p>
+    `
+  },
+  {
+    id: 17,
+    cat: "historica",
+    catLabel: "Geología Histórica",
+    level: "introductorio",
+    title: "Las grandes glaciaciones: cuando el hielo cubrió la Tierra",
+    excerpt: "En los últimos 2,6 millones de años, la Tierra ha atravesado más de 20 ciclos glaciales. Los glaciares modelaron los paisajes que habitamos hoy.",
+    time: "9 min",
+    tags: ["glaciación", "Cuaternario", "Pleistoceno", "ciclos de Milankovitch"],
+    body: `
+      <p>Las glaciaciones son períodos en los que grandes masas de hielo se expandieron desde los polos y las altas montañas, cubriendo porciones significativas de los continentes. El Cuaternario, los últimos 2,6 millones de años, se caracteriza por la alternancia entre períodos glaciales e interglaciales controlados por los <span class="key-term">ciclos de Milankovitch</span>.</p>
+      <h3>Ciclos de Milankovitch</h3>
+      <p>El matemático serbio Milutin Milankovitch calculó en la primera mitad del siglo XX que las variaciones en la órbita terrestre —excentricidad, oblicuidad y precesión— afectan la distribución de la energía solar sobre la Tierra y pueden desencadenar glaciaciones. Los tres ciclos tienen períodos de ~100.000, ~41.000 y ~23.000 años, respectivamente.</p>
+    `
+  },
+  {
+    id: 18,
+    cat: "argentina",
+    catLabel: "Geología Argentina",
+    level: "intermedio",
+    title: "Los Andes: una cordillera que aún crece",
+    excerpt: "Los Andes son el resultado de 180 millones de años de subducción activa de la placa de Nazca bajo Sudamérica. Su historia geológica es inseparable de la historia de Argentina.",
+    time: "11 min",
+    tags: ["Andes", "subducción", "orogenia andina", "Nazca"],
+    body: `
+      <p>Los Andes son la cadena montañosa más larga del mundo (~7.000 km) y una de las más jóvenes en términos geológicos. Su elevación actual —con cumbres que superan los 6.900 m— es el resultado acumulado de millones de años de subducción de la placa oceánica de Nazca bajo el borde occidental de la placa Sudamericana.</p>
+      <h3>La orogenia andina</h3>
+      <p>El proceso de construcción de los Andes, llamado <span class="key-term">orogenia andina</span>, no fue continuo ni uniforme. Se desarrolló en pulsos desde el Jurásico hasta el Presente, con una aceleración notable en el Mioceno (entre 20 y 5 millones de años atrás) que elevó la cordillera a su configuración moderna.</p>
+      <div class="highlight-box">
+        🌋 El <strong>Aconcagua</strong> (6.961 m), el pico más alto del hemisferio occidental y del sur, no es un volcán sino un bloque de rocas sedimentarias y volcánicas mesozoicas elevadas y deformadas por la tectónica andina. Su cima conserva fósiles marinos del Jurásico.
+      </div>
+    `
+  }
+];
+
+// ─── ESTADO ──────────────────────────────────────────────────────────
+let currentCat = 'todos';
+let currentSearch = '';
+let currentLevel = '';
+
+// ─── RENDER ──────────────────────────────────────────────────────────
+function getFiltered() {
+  return articles.filter(a => {
+    const catOk = currentCat === 'todos' || a.cat === currentCat;
+    const lvlOk = !currentLevel || a.level === currentLevel;
+    const q = currentSearch.toLowerCase();
+    const searchOk = !q ||
+      a.title.toLowerCase().includes(q) ||
+      a.excerpt.toLowerCase().includes(q) ||
+      (a.tags || []).some(t => t.toLowerCase().includes(q));
+    return catOk && lvlOk && searchOk;
+  });
+}
+
+function groupByCategory(list) {
+  const order = ['petrologia','tectonica','geofisica','hidrogeologia','historica','argentina'];
+  const groups = {};
+  list.forEach(a => {
+    if (!groups[a.cat]) groups[a.cat] = [];
+    groups[a.cat].push(a);
+  });
+  return order.filter(k => groups[k]).map(k => ({ key: k, label: groups[k][0].catLabel, articles: groups[k] }));
+}
+
+function catIcon(cat) {
+  const icons = { petrologia:'🔥', tectonica:'⚡', geofisica:'🌐', hidrogeologia:'💧', historica:'⏳', argentina:'🗺' };
+  return icons[cat] || '🪨';
+}
+
+function render() {
+  const filtered = getFiltered();
+  const container = document.getElementById('articles-container');
+  const empty = document.getElementById('empty-state');
+  const featured = document.getElementById('featured-section');
+
+  // Ocultar destacado si se busca algo específico
+  featured.style.display = (currentSearch || currentCat !== 'todos' || currentLevel) ? 'none' : 'block';
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    empty.classList.add('visible');
+    return;
+  }
+  empty.classList.remove('visible');
+
+  // Si filtro activo: lista plana
+  if (currentCat !== 'todos' || currentSearch || currentLevel) {
+    container.innerHTML = `
+      <div class="enc-section-header">
+        <span class="enc-section-title">${filtered.length} artículo${filtered.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="articles-grid">
+        ${filtered.map(a => cardHTML(a)).join('')}
+      </div>`;
+  } else {
+    // Todos: agrupados por categoría
+    const groups = groupByCategory(filtered);
+    container.innerHTML = groups.map(g => `
+      <div class="cat-separator">
+        <span class="cat-sep-icon">${catIcon(g.key)}</span>
+        <span class="cat-sep-label">${g.label}</span>
+        <div class="cat-sep-line"></div>
+        <span class="cat-sep-count">${g.articles.length} artículo${g.articles.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="articles-grid">
+        ${g.articles.map(a => cardHTML(a)).join('')}
+      </div>
+    `).join('');
+  }
+
+  // Bindear clicks
+  container.querySelectorAll('.art-card').forEach(card => {
+    card.addEventListener('click', e => {
+      e.preventDefault();
+      const id = parseInt(card.dataset.id);
+      openModal(id);
+    });
+  });
+}
+
+function cardHTML(a) {
+  return `
+    <a class="art-card" href="#" data-id="${a.id}">
+      <div class="art-card-top">
+        <span class="art-cat">${a.catLabel}</span>
+        <span class="art-level">${capitalize(a.level)}</span>
+      </div>
+      <div class="art-title">${a.title}</div>
+      <div class="art-excerpt">${a.excerpt}</div>
+      <div class="art-meta">
+        <span>${a.time} de lectura</span>
+        <span class="art-meta-dot">·</span>
+        <span>${capitalize(a.level)}</span>
+      </div>
+    </a>`;
+}
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// ─── MODAL ───────────────────────────────────────────────────────────
+function openModal(id) {
+  const a = id === 'featured' ? articles.find(x => x.id === 2) : articles.find(x => x.id === id);
+  if (!a) return;
+
+  document.getElementById('modal-cat').textContent = a.catLabel;
+  document.getElementById('modal-title').textContent = a.title;
+  document.getElementById('modal-meta').innerHTML = `
+    <span>⏱ ${a.time} de lectura</span>
+    <span>·</span>
+    <span>📚 ${capitalize(a.level)}</span>
+  `;
+  document.getElementById('modal-body').innerHTML = a.body;
+  document.getElementById('modal-tags').innerHTML = (a.tags || []).map(t => `<span class="modal-tag">${t}</span>`).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── EVENTOS ─────────────────────────────────────────────────────────
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Featured card
+document.getElementById('featured-card').addEventListener('click', e => {
+  e.preventDefault();
+  openModal('featured');
+});
+
+// Chips de filtro
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentCat = chip.dataset.cat;
+    // Sincronizar sidebar
+    document.querySelectorAll('.sidebar-link[data-cat]').forEach(l => l.classList.remove('active'));
+    const sideMatch = document.querySelector(`.sidebar-link[data-cat="${currentCat}"]`);
+    if (sideMatch) sideMatch.classList.add('active');
+    render();
+  });
+});
+
+// Sidebar links
+document.querySelectorAll('.sidebar-link[data-cat]').forEach(link => {
+  link.addEventListener('click', () => {
+    currentCat = link.dataset.cat;
+    currentLevel = '';
+    // Sincronizar chips
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    const chipMatch = document.querySelector(`.chip[data-cat="${currentCat}"]`);
+    if (chipMatch) chipMatch.classList.add('active');
+    // Sidebar activo
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    render();
+  });
+});
+
+document.querySelectorAll('.sidebar-link[data-level]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (currentLevel === link.dataset.level) {
+      currentLevel = '';
+      document.querySelectorAll('.sidebar-link[data-level]').forEach(l => l.classList.remove('active'));
+    } else {
+      currentLevel = link.dataset.level;
+      document.querySelectorAll('.sidebar-link[data-level]').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+    render();
+  });
+});
+
+// Búsqueda
+let searchTimeout;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentSearch = e.target.value.trim();
+    render();
+  }, 200);
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+render();
+</script>
+
+</body>
+</html>
