@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minerales 3D — GeoKnowledge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --brown-dark:#4A2E1A;--brown-mid:#7A5C3A;--brown-light:#9E7B56;
+      --sand:#C4A46B;--cream:#FAF3E8;--cream-dark:#F0E4CC;
+      --stone:#6B5D52;--text-primary:#1A1208;--text-muted:#7A6A5A;
+      --border:rgba(122,92,58,0.18);--white:#ffffff;
+      --viewer-bg:#07070F;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text-primary);overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(250,243,232,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);padding:0 2.5rem;height:58px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .nav-logo-icon{width:32px;height:32px;border-radius:8px;background:var(--brown-mid);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:16px}
+    .nav-logo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text-primary)}
+    .nav-logo-text span{color:var(--brown-light)}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text-primary)}
+    .nav-links a.active{color:var(--text-primary);font-weight:600}
+    .nav-cta{font-size:12px;font-weight:600;background:var(--brown-mid);color:var(--cream);padding:7px 18px;border-radius:99px;text-decoration:none;transition:background .2s}
+    .nav-cta:hover{background:var(--brown-dark)}
+
+    /* PAGE HERO */
+    .page-hero{padding:7rem 2.5rem 3rem;background:var(--white);border-bottom:.5px solid var(--border);position:relative;overflow:hidden}
+    .page-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 50% 80% at 95% 50%,rgba(196,164,107,0.14) 0%,transparent 65%),radial-gradient(ellipse 30% 50% at 0% 100%,rgba(122,92,58,0.08) 0%,transparent 60%)}
+    .strata-top{position:absolute;top:0;left:0;right:0;height:6px;display:flex}
+    .strata-top div{flex:1}
+    .page-hero-content{position:relative;z-index:1;max-width:760px}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-bottom:1.25rem}
+    .breadcrumb a{color:var(--brown-mid);text-decoration:none}
+    .page-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--brown-mid);background:rgba(122,92,58,0.10);border:.5px solid rgba(122,92,58,0.25);padding:5px 12px;border-radius:99px;margin-bottom:1.25rem}
+    .page-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,54px);font-weight:900;line-height:1.08;letter-spacing:-1.5px;color:var(--text-primary);margin-bottom:1rem}
+    .page-title em{font-style:italic;color:var(--brown-light)}
+    .page-lead{font-size:17px;font-weight:300;line-height:1.7;color:var(--text-muted);max-width:560px}
+
+    /* SEARCH + FILTER BAR */
+    .filter-bar{padding:1.5rem 2.5rem;background:var(--cream-dark);border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .search-box{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;background:var(--white);border:.5px solid var(--border);border-radius:99px;padding:9px 18px;transition:border-color .2s,box-shadow .2s}
+    .search-box:focus-within{border-color:var(--brown-light);box-shadow:0 0 0 3px rgba(158,123,86,0.12)}
+    .search-box input{border:none;outline:none;background:transparent;font-family:'Source Sans 3',sans-serif;font-size:14px;color:var(--text-primary);width:100%}
+    .search-box input::placeholder{color:var(--text-muted)}
+    .cat-chips{display:flex;gap:7px;flex-wrap:wrap}
+    .chip{font-size:11px;font-weight:600;padding:5px 13px;border-radius:99px;border:.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap}
+    .chip:hover{border-color:var(--brown-light);color:var(--text-primary)}
+    .chip.active{background:var(--brown-mid);color:var(--cream);border-color:var(--brown-mid)}
+
+    /* MAIN LAYOUT */
+    .main-layout{display:grid;grid-template-columns:1fr 380px;min-height:calc(100vh - 58px)}
+
+    /* MINERAL GRID */
+    .grid-panel{padding:2rem 2.5rem;background:var(--cream);overflow-y:auto}
+    .grid-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.25rem}
+    .grid-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-primary)}
+    .grid-count{font-size:12px;color:var(--text-muted)}
+    .minerals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+    .mineral-card{background:var(--white);border:.5px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;text-align:center}
+    .mineral-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(74,46,26,0.12);border-color:var(--brown-light)}
+    .mineral-card.selected{border-color:var(--brown-mid);background:var(--cream-dark);box-shadow:0 0 0 2px var(--brown-mid)}
+    .card-preview{width:100%;height:80px;border-radius:10px;background:var(--viewer-bg);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+    .card-preview canvas{width:100%!important;height:100%!important}
+    .card-name{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--text-primary);line-height:1.2}
+    .card-formula{font-size:10px;color:var(--text-muted);font-style:italic}
+    .card-cat-badge{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:99px;width:fit-content;margin:0 auto}
+
+    /* VIEWER PANEL */
+    .viewer-panel{background:var(--viewer-bg);position:sticky;top:58px;height:calc(100vh - 58px);display:flex;flex-direction:column;border-left:.5px solid rgba(255,255,255,0.06)}
+    #main-canvas{width:100%;flex:1;display:block}
+    .viewer-info{background:rgba(255,255,255,0.03);border-top:.5px solid rgba(255,255,255,0.07);padding:1.5rem;overflow-y:auto;max-height:52%}
+    .vinfo-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem}
+    .vinfo-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:.25rem}
+    .vinfo-formula{font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;margin-bottom:1rem}
+    .vinfo-props{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+    .vprop{background:rgba(255,255,255,0.05);border-radius:10px;padding:.6rem .75rem}
+    .vprop-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,0.35);margin-bottom:2px}
+    .vprop-value{font-size:12px;color:rgba(255,255,255,0.85);font-weight:600}
+    .vinfo-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65}
+    .vinfo-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:.75rem}
+    .vtag{font-size:10px;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06);padding:3px 9px;border-radius:99px}
+    .hint{text-align:center;font-size:11px;color:rgba(255,255,255,0.2);padding:1rem;flex-shrink:0}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:4rem 2rem;display:none;grid-column:1/-1}
+    .empty-state.visible{display:block}
+    .empty-icon{font-size:48px;margin-bottom:1rem}
+    .empty-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:.5rem}
+    .empty-sub{font-size:14px;color:var(--text-muted)}
+
+    /* FOOTER */
+    footer{background:var(--brown-dark);color:rgba(250,243,232,0.5);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:.5px solid rgba(250,243,232,0.1)}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--cream)}
+    .footer-logo span{color:var(--sand)}
+    .footer-text{font-size:12px}
+    .footer-links{display:flex;gap:1.5rem;list-style:none}
+    .footer-links a{font-size:12px;color:rgba(250,243,232,0.4);text-decoration:none}
+    .footer-links a:hover{color:var(--cream)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .page-hero-content>*{animation:fadeUp .6s ease both}
+    .page-eyebrow{animation-delay:.05s}.page-title{animation-delay:.15s}.page-lead{animation-delay:.25s}
+
+    @media(max-width:900px){
+      nav{padding:0 1.25rem}.nav-links{display:none}
+      .page-hero{padding:6rem 1.25rem 2.5rem}
+      .filter-bar{padding:1.25rem}
+      .main-layout{grid-template-columns:1fr}
+      .viewer-panel{position:fixed;bottom:0;left:0;right:0;top:auto;height:340px;z-index:150;border-top:.5px solid rgba(255,255,255,0.1)}
+      .grid-panel{padding:1.25rem;padding-bottom:360px}
+      #main-canvas{height:160px}
+      .viewer-info{max-height:180px}
+    }
+    @media(max-width:500px){.minerals-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">⛰</div>
+    <span class="nav-logo-text">Geo<span>Knowledge</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html" class="active">Minerales 3D</a></li>
+    <li><a href="tiempo-geologico.html">Escala del tiempo</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+  <a class="nav-cta" href="enciclopedia.html">Explorar →</a>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="strata-top">
+    <div style="background:#B4813A"></div><div style="background:#8B6239"></div>
+    <div style="background:#C4A46B"></div><div style="background:#7A5C3A"></div>
+    <div style="background:#D4B97A"></div><div style="background:#9E7B56"></div>
+    <div style="background:#6B4C2E"></div><div style="background:#E8D4A0"></div>
+  </div>
+  <div class="page-hero-content">
+    <div class="breadcrumb"><a href="index.html">Inicio</a><span>/</span>Minerales 3D</div>
+    <div class="page-eyebrow">💎 Visualizador 3D interactivo</div>
+    <h1 class="page-title">Minerales como<br><em>nunca los viste.</em></h1>
+    <p class="page-lead">Más de 50 minerales con geometría cristalina real, propiedades ópticas y fichas completas. Rotá, explorá, aprendé.</p>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="search-box">
+    <span style="font-size:14px;color:var(--text-muted)">🔍</span>
+    <input type="text" id="search-input" placeholder="Buscar mineral… ej: cuarzo, pirita, feldespato"/>
+  </div>
+  <div class="cat-chips">
+    <span class="chip active" data-cat="todos">Todos</span>
+    <span class="chip" data-cat="silicatos">Silicatos</span>
+    <span class="chip" data-cat="oxidos">Óxidos</span>
+    <span class="chip" data-cat="sulfuros">Sulfuros</span>
+    <span class="chip" data-cat="carbonatos">Carbonatos</span>
+    <span class="chip" data-cat="fosfatos">Fosfatos</span>
+    <span class="chip" data-cat="halogenuros">Halogenuros</span>
+    <span class="chip" data-cat="nativos">Elementos Nativos</span>
+    <span class="chip" data-cat="sulfatos">Sulfatos</span>
+  </div>
+</div>
+
+<div class="main-layout">
+  <div class="grid-panel">
+    <div class="grid-header">
+      <span class="grid-title" id="grid-title">Todos los minerales</span>
+      <span class="grid-count" id="grid-count"></span>
+    </div>
+    <div class="minerals-grid" id="minerals-grid"></div>
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🔎</div>
+      <div class="empty-title">Sin resultados</div>
+      <div class="empty-sub">Probá con otro nombre o categoría.</div>
+    </div>
+  </div>
+
+  <div class="viewer-panel">
+    <canvas id="main-canvas"></canvas>
+    <div class="hint" id="viewer-hint">← Seleccioná un mineral para verlo en 3D</div>
+    <div class="viewer-info" id="viewer-info" style="display:none">
+      <div class="vinfo-cat" id="vi-cat"></div>
+      <div class="vinfo-name" id="vi-name"></div>
+      <div class="vinfo-formula" id="vi-formula"></div>
+      <div class="vinfo-props" id="vi-props"></div>
+      <div class="vinfo-desc" id="vi-desc"></div>
+      <div class="vinfo-tags" id="vi-tags"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="footer-logo">Geo<span>Knowledge</span></div>
+    <div class="footer-text" style="margin-top:4px">Un proyecto estudiantil de divulgación geológica · Argentina</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="enciclopedia.html">Enciclopedia</a></li>
+    <li><a href="minerales.html">Minerales</a></li>
+    <li><a href="argentina.html">Argentina</a></li>
+  </ul>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── DATOS DE MINERALES ────────────────────────────────────────────────────────
+const CAT_COLORS = {
+  silicatos:   { bg:'#1a2e1a', text:'#6fcf97', badge:'rgba(111,207,151,0.18)' },
+  oxidos:      { bg:'#2e1a1a', text:'#eb5757', badge:'rgba(235,87,87,0.18)' },
+  sulfuros:    { bg:'#2a2a12', text:'#f2c94c', badge:'rgba(242,201,76,0.18)' },
+  carbonatos:  { bg:'#1a2030', text:'#56ccf2', badge:'rgba(86,204,242,0.18)' },
+  fosfatos:    { bg:'#251a30', text:'#bb6bd9', badge:'rgba(187,107,217,0.18)' },
+  halogenuros: { bg:'#1a2a28', text:'#27ae60', badge:'rgba(39,174,96,0.18)' },
+  nativos:     { bg:'#2a2010', text:'#f2994a', badge:'rgba(242,153,74,0.18)' },
+  sulfatos:    { bg:'#201a2e', text:'#9b51e0', badge:'rgba(155,81,224,0.18)' },
+};
+
+// shape: 'cube','octahedron','dodecahedron','prism','rhombo','sphere','pyramid','flat','needle','tabular'
+// color: hex, metalness 0-1, roughness 0-1, emissive optional
+const minerals = [
+  // SILICATOS
+  { id:1,  cat:'silicatos', name:'Cuarzo', formula:'SiO₂', system:'Trigonal', hardness:'7', cleavage:'Ninguna', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0xd4eaf7, metalness:0.05, roughness:0.08, transparent:true, opacity:0.72,
+    desc:'El mineral más abundante de la corteza terrestre. Se presenta en innumerables variedades: cristal de roca, amatista, citrino, ágata, jaspe. Sus cristales prismáticos hexagonales son icónicos.', tags:['roca ígnea','metamórfica','sedimentaria','piezoelectricidad'] },
+  { id:2,  cat:'silicatos', name:'Feldespato K', formula:'KAlSi₃O₈', system:'Monoclínico', hardness:'6', cleavage:'Perfecta en 2 dir.', luster:'Vítreo a perlado', streak:'Blanco', shape:'tabular', color:0xf0c8a0, metalness:0.0, roughness:0.35,
+    desc:'Uno de los minerales más comunes en rocas ígneas. Sus variedades incluyen ortoclasa, sanidina y microclino. El color rosado del granito se debe a este mineral.', tags:['granito','pegmatita','feldespato'] },
+  { id:3,  cat:'silicatos', name:'Plagioclasa', formula:'NaAlSi₃O₈–CaAl₂Si₂O₈', system:'Triclínico', hardness:'6–6.5', cleavage:'Perfecta en 2 dir.', luster:'Vítreo', streak:'Blanco', shape:'tabular', color:0xe8e0d8, metalness:0.0, roughness:0.3,
+    desc:'Serie de solución sólida entre albita (Na) y anortita (Ca). Componente esencial de basaltos, andesitas y granodioritas. Se reconoce por su macla polisintética característica.', tags:['basalto','andesita','macla'] },
+  { id:4,  cat:'silicatos', name:'Olivino', formula:'(Mg,Fe)₂SiO₄', system:'Ortorrómbico', hardness:'6.5–7', cleavage:'Imperfecta', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0x6aaa44, metalness:0.0, roughness:0.22,
+    desc:'Mineral predominante del manto superior terrestre. Forma rocas como la dunita y el peridotito. Su variedad gema se llama peridoto. El olivino de Mg puro se llama forsterita.', tags:['manto','basalto','komatiita','peridotita'] },
+  { id:5,  cat:'silicatos', name:'Amatista', formula:'SiO₂', system:'Trigonal', hardness:'7', cleavage:'Ninguna', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0x9b59b6, metalness:0.0, roughness:0.06, transparent:true, opacity:0.75,
+    desc:'Variedad violácea del cuarzo, coloreada por trazas de hierro y procesos de irradiación natural. Argentina es uno de los principales productores mundiales, especialmente en Misiones y Entre Ríos.', tags:['cuarzo','gema','Uruguay','Argentina'] },
+  { id:6,  cat:'silicatos', name:'Moscovita', formula:'KAl₂(AlSi₃O₁₀)(OH)₂', system:'Monoclínico', hardness:'2–2.5', cleavage:'Perfecta basal', luster:'Perlado a nacarado', streak:'Blanco', shape:'flat', color:0xd4c88a, metalness:0.15, roughness:0.12,
+    desc:'La mica blanca más común. Se exfolia en láminas flexibles y elásticas. Excelente aislante eléctrico. Componente clave de granitos y esquistos. Sus grandes cristales en pegmatitas son valiosos industrialmente.', tags:['mica','granito','esquisto','pegmatita'] },
+  { id:7,  cat:'silicatos', name:'Biotita', formula:'K(Mg,Fe)₃(AlSi₃O₁₀)(OH)₂', system:'Monoclínico', hardness:'2.5–3', cleavage:'Perfecta basal', luster:'Submetálico', streak:'Blanco a gris', shape:'flat', color:0x3d2b1f, metalness:0.35, roughness:0.18,
+    desc:'La mica negra. Omnipresente en granitos, gneis y esquistos. Contiene hierro y magnesio. Se altera fácilmente a cloritas y óxidos de hierro durante el intemperismo.', tags:['mica','granito','gneis','intemperismo'] },
+  { id:8,  cat:'silicatos', name:'Hornblenda', formula:'Ca₂(Mg,Fe,Al)₅(Si,Al)₈O₂₂(OH)₂', system:'Monoclínico', hardness:'5–6', cleavage:'Perfecta en 2 dir. 60°', luster:'Vítreo', streak:'Blanco verdoso', shape:'prism', color:0x2c3e2c, metalness:0.08, roughness:0.38,
+    desc:'El anfíbol más común. Componente esencial de dioritas, andesitas y algunas granodioritas. Sus dos clivajes a 60° la distinguen del piroxeno. Abundante en rocas metamórficas de grado medio a alto.', tags:['anfíbol','diorita','andesita','metamorfismo'] },
+  { id:9,  cat:'silicatos', name:'Augita', formula:'(Ca,Na)(Mg,Fe,Al,Ti)(Si,Al)₂O₆', system:'Monoclínico', hardness:'5.5–6', cleavage:'Buena en 2 dir. 90°', luster:'Vítreo a resinoso', streak:'Gris verdoso', shape:'prism', color:0x1a2a1a, metalness:0.05, roughness:0.42,
+    desc:'El piroxeno más común en rocas máficas. Componente esencial de basaltos y gabros. Sus clivajes a casi 90° permiten distinguirlo del anfíbol. Forma prismas cortos y gruesos.', tags:['piroxeno','basalto','gabro','máfico'] },
+  { id:10, cat:'silicatos', name:'Granate', formula:'X₃Y₂(SiO₄)₃', system:'Cúbico', hardness:'6.5–7.5', cleavage:'Ninguna', luster:'Vítreo a resinoso', streak:'Blanco', shape:'dodecahedron', color:0x8b1a1a, metalness:0.0, roughness:0.14,
+    desc:'Grupo de nesosilicatos isoestructurales con gran variedad composicional. El almandino (rojo) es el más común. Mineral índice de metamorfismo de alta P y T. Usado como abrasivo y gema.', tags:['metamórfico','eclogita','gema','abrasivo'] },
+  { id:11, cat:'silicatos', name:'Topacio', formula:'Al₂SiO₄(F,OH)₂', system:'Ortorrómbico', hardness:'8', cleavage:'Perfecta basal', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0xa8d8e8, metalness:0.0, roughness:0.06, transparent:true, opacity:0.78,
+    desc:'Con dureza 8, es uno de los minerales más duros. Se forma en pegmatitas y depósitos hidrotermales. Sus variedades gema incluyen el topacio azul y el imperial (naranja-rosado).', tags:['pegmatita','gema','dureza','escala Mohs'] },
+  { id:12, cat:'silicatos', name:'Talco', formula:'Mg₃Si₄O₁₀(OH)₂', system:'Triclínico', hardness:'1', cleavage:'Perfecta basal', luster:'Perlado a ceroso', streak:'Blanco', shape:'flat', color:0xe8e8d4, metalness:0.0, roughness:0.55,
+    desc:'El mineral más blando de la escala de Mohs (dureza 1). Se forma por alteración de rocas ultramáficas. Principal componente del talco industrial, cosmético y cerámico. Se siente jabonoso al tacto.', tags:['escala Mohs','ultramáfico','industrial','jabonoso'] },
+  { id:13, cat:'silicatos', name:'Cianita', formula:'Al₂SiO₅', system:'Triclínico', hardness:'5–7', cleavage:'Perfecta', luster:'Vítreo a perlado', streak:'Blanco', shape:'needle', color:0x4a7fa8, metalness:0.0, roughness:0.18,
+    desc:'Interesante por su anisotropía de dureza: 5 en sentido longitudinal y 7 en transversal. Indicador de metamorfismo de alta presión. Sus cristales azules elongados son diagnósticos.', tags:['polimorfismo','presión','metamorfismo','Al₂SiO₅'] },
+  { id:14, cat:'silicatos', name:'Estaurolita', formula:'Fe₂Al₉Si₄O₂₃(OH)', system:'Monoclínico', hardness:'7–7.5', cleavage:'Imperfecta', luster:'Vítreo a resinoso', streak:'Gris', shape:'prism', color:0x5c3a1a, metalness:0.0, roughness:0.38,
+    desc:'Famosa por sus maclas en cruz (macla de penetración). Mineral índice de metamorfismo de grado medio. Sus cristales de color marrón rojizo son inconfundibles en esquistos y gneis.', tags:['macla en cruz','metamorfismo','esquisto','mineral índice'] },
+  { id:15, cat:'silicatos', name:'Turmalina', formula:'(Na,Ca)(Li,Mg,Fe,Al)₃Al₆(Si₆O₁₈)(BO₃)₃(OH,F)₄', system:'Trigonal', hardness:'7–7.5', cleavage:'Ninguna', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0x1a4a2a, metalness:0.0, roughness:0.12,
+    desc:'Mineral boráceo de composición muy variable. Piezoeléctico y piroeléctico. Sus variedades gema incluyen rubellita (rosa), indicolita (azul) y la excepcional sandía (rosa/verde). Común en pegmatitas.', tags:['boro','pegmatita','piroelectricidad','gema'] },
+
+  // ÓXIDOS
+  { id:16, cat:'oxidos', name:'Magnetita', formula:'Fe₃O₄', system:'Cúbico', hardness:'5.5–6', cleavage:'Ninguna', luster:'Submetálico', streak:'Negro', shape:'octahedron', color:0x1a1a1a, metalness:0.9, roughness:0.25,
+    desc:'Óxido de hierro magnético. Uno de los principales minerales de hierro. Sus cristales octaédricos son característicos. Contribuye al paleomagnetismo de las rocas. Abundante en rocas máficas y metamórficas.', tags:['hierro','magnético','paleomagnetismo','octaédrico'] },
+  { id:17, cat:'oxidos', name:'Hematita', formula:'Fe₂O₃', system:'Trigonal', hardness:'5–6', cleavage:'Ninguna', luster:'Metálico a submetálico', streak:'Rojo sangre', shape:'tabular', color:0x8b2020, metalness:0.7, roughness:0.3,
+    desc:'El mineral de hierro más importante económicamente. Su raya roja es diagnóstica. Formó las grandes formaciones bandeadas de hierro del Precámbrico cuando la atmósfera primitiva se oxidó.', tags:['hierro','siderurgia','BIF','Precámbrico'] },
+  { id:18, cat:'oxidos', name:'Corindón', formula:'Al₂O₃', system:'Trigonal', hardness:'9', cleavage:'Ninguna', luster:'Adamantino a vítreo', streak:'Blanco', shape:'prism', color:0xe8c8c8, metalness:0.0, roughness:0.08,
+    desc:'Dureza 9 en la escala de Mohs. Sus variedades gema son el rubí (rojo por Cr) y el zafiro (azul por Fe y Ti). Se usa como abrasivo industrial. Forma el esmeril.', tags:['rubí','zafiro','dureza 9','abrasivo'] },
+  { id:19, cat:'oxidos', name:'Rubí', formula:'Al₂O₃:Cr', system:'Trigonal', hardness:'9', cleavage:'Ninguna', luster:'Adamantino', streak:'Blanco', shape:'prism', color:0xcc1133, metalness:0.0, roughness:0.06,
+    desc:'Variedad roja del corindón, coloreada por trazas de cromo. Una de las gemas más valiosas del mundo. Los mejores ejemplares provienen de Myanmar, Mozambique y Tailandia.', tags:['gema','corindón','cromo','Myanmar'] },
+  { id:20, cat:'oxidos', name:'Zafiro', formula:'Al₂O₃:Fe,Ti', system:'Trigonal', hardness:'9', cleavage:'Ninguna', luster:'Adamantino', streak:'Blanco', shape:'prism', color:0x1a4888, metalness:0.0, roughness:0.06, transparent:true, opacity:0.82,
+    desc:'Variedad azul del corindón, coloreada por hierro y titanio. Aunque el azul es el más famoso, existe en todos los colores excepto rojo. Sri Lanka, Cachemira y Madagascar son los principales productores.', tags:['gema','corindón','Sri Lanka','asteria'] },
+  { id:21, cat:'oxidos', name:'Cromita', formula:'FeCr₂O₄', system:'Cúbico', hardness:'5.5', cleavage:'Ninguna', luster:'Metálico', streak:'Marrón', shape:'octahedron', color:0x2a1a0a, metalness:0.85, roughness:0.28,
+    desc:'Principal mineral de cromo. Se concentra en rocas ultramáficas y ofiolitas. Esencial para la producción de acero inoxidable y cromado. Argentina tiene depósitos en la Patagonia.', tags:['cromo','acero inoxidable','ofiolita','ultramáfico'] },
+  { id:22, cat:'oxidos', name:'Casiterita', formula:'SnO₂', system:'Tetragonal', hardness:'6–7', cleavage:'Imperfecta', luster:'Adamantino a metálico', streak:'Blanco a amarillento', shape:'prism', color:0x4a3a28, metalness:0.6, roughness:0.22,
+    desc:'Principal mena de estaño. Se presenta en cristales bipiramidales tetragonales. Resistente al intemperismo, forma placeres aluviales. Bolivia y el sudeste asiático concentran la producción mundial.', tags:['estaño','mena','placer aluvial','Bolivia'] },
+  { id:23, cat:'oxidos', name:'Rutilo', formula:'TiO₂', system:'Tetragonal', hardness:'6–6.5', cleavage:'Perfecta', luster:'Adamantino a metálico', streak:'Marrón rojizo', shape:'prism', color:0x8b3a00, metalness:0.55, roughness:0.2,
+    desc:'Principal mineral de titanio. Sus agujas dentro del cuarzo crean el "cuarzo rutilado". El TiO₂ se usa como pigmento blanco. Resistente al intemperismo y se concentra en arenas negras de playa.', tags:['titanio','pigmento','cuarzo rutilado','placer'] },
+
+  // SULFUROS
+  { id:24, cat:'sulfuros', name:'Pirita', formula:'FeS₂', system:'Cúbico', hardness:'6–6.5', cleavage:'Imperfecta', luster:'Metálico brillante', streak:'Negro verdoso', shape:'cube', color:0xc8a832, metalness:0.98, roughness:0.08,
+    desc:'El "oro de los tontos". Sus cristales cúbicos perfectos con estrías en las caras son inconfundibles. Abundantísima en depósitos hidrotermales, rocas sedimentarias negras y como mineral accesorio. Fuente de SO₂ para ácido sulfúrico.', tags:['sulfuro de hierro','hidrotermal','ácido sulfúrico','framboides'] },
+  { id:25, cat:'sulfuros', name:'Galena', formula:'PbS', system:'Cúbico', hardness:'2.5', cleavage:'Perfecta cúbica', luster:'Metálico brillante', streak:'Gris plomo', shape:'cube', color:0x5a5a6a, metalness:0.95, roughness:0.12,
+    desc:'Principal mena de plomo. Cristales cúbicos con brillo metálico plomizo inconfundible. Clivaje perfecto en tres direcciones. Frecuentemente asociada con esfalerita y plata nativa. Argentina tiene importantes yacimientos.', tags:['plomo','mena','hidrotermal','galena argentífera'] },
+  { id:26, cat:'sulfuros', name:'Esfalerita', formula:'(Zn,Fe)S', system:'Cúbico', hardness:'3.5–4', cleavage:'Perfecta', luster:'Resinoso a adamantino', streak:'Blanco a amarillo', shape:'dodecahedron', color:0x8b6a00, metalness:0.2, roughness:0.18,
+    desc:'Principal mena de zinc. Color muy variable: negro (por Fe), amarillo, naranja, verde. Su brillo resinoso y clivaje perfecto son característicos. Asociada con galena en depósitos MVT y SEDEX.', tags:['zinc','MVT','SEDEX','blenda'] },
+  { id:27, cat:'sulfuros', name:'Calcopirita', formula:'CuFeS₂', system:'Tetragonal', hardness:'3.5–4', cleavage:'Imperfecta', luster:'Metálico', streak:'Negro verdoso', shape:'pyramid', color:0xc8b428, metalness:0.92, roughness:0.15,
+    desc:'Principal mena de cobre. Su coloración amarilla con iridiscencia azul-violácea la distingue de la pirita. Omnipresente en pórfidos de cobre, depósitos VMS y skarn. Los Andes albergan enormes depósitos.', tags:['cobre','pórfido','VMS','Andes'] },
+  { id:28, cat:'sulfuros', name:'Molibdenita', formula:'MoS₂', system:'Hexagonal', hardness:'1–1.5', cleavage:'Perfecta basal', luster:'Metálico', streak:'Gris verdoso', shape:'flat', color:0x3a3a4a, metalness:0.88, roughness:0.14,
+    desc:'Principal mena de molibdeno. Láminas hexagonales con brillo metálico y sensación grasosa. Se exfolia como el grafito. Asociada a pórfidos de cobre. El molibdeno es esencial para aceros especiales.', tags:['molibdeno','pórfido de Cu','acero','lubricante'] },
+  { id:29, cat:'sulfuros', name:'Arsenopirita', formula:'FeAsS', system:'Monoclínico', hardness:'5.5–6', cleavage:'Imperfecta', luster:'Metálico', streak:'Negro', shape:'prism', color:0x7a7a5a, metalness:0.88, roughness:0.18,
+    desc:'Principal mena de arsénico. Sus cristales rómbicos con superficie estriada y olor a ajo al golpearlos son diagnósticos. Asociada a oro en muchos depósitos epitermales y mesotermes.', tags:['arsénico','oro','epitermal','olor a ajo'] },
+  { id:30, cat:'sulfuros', name:'Cinabrio', formula:'HgS', system:'Trigonal', hardness:'2–2.5', cleavage:'Perfecta', luster:'Adamantino', streak:'Rojo escarlata', shape:'tabular', color:0xcc2200, metalness:0.1, roughness:0.2,
+    desc:'Principal mena de mercurio. Su color rojo escarlata es inconfundible. Muy denso. Históricamente usado como pigmento (bermellón). Los principales depósitos están en Almadén (España) y Huancavelica (Perú).', tags:['mercurio','bermellón','pigmento','Almadén'] },
+  { id:31, cat:'sulfuros', name:'Bornita', formula:'Cu₅FeS₄', system:'Ortorrómbico', hardness:'3', cleavage:'Imperfecta', luster:'Metálico', streak:'Gris', shape:'cube', color:0x8b4513, metalness:0.88, roughness:0.12,
+    desc:'Conocida como "mineral pavo real" por su iridiscencia azul-violeta-roja al oxidarse. Mena importante de cobre. Frecuente en pórfidos de cobre y depósitos de Cu-Fe.', tags:['cobre','iridiscencia','pórfido','oxidación'] },
+  { id:32, cat:'sulfuros', name:'Estibina', formula:'Sb₂S₃', system:'Ortorrómbico', hardness:'2', cleavage:'Perfecta', luster:'Metálico', streak:'Gris plomizo', shape:'needle', color:0x4a4a4a, metalness:0.9, roughness:0.1,
+    desc:'Principal mena de antimonio. Cristales prismáticos elongados, a veces curvados, con estrías longitudinales. Clásica de depósitos hidrotermales de baja temperatura. China domina la producción mundial.', tags:['antimonio','hidrotermal','cristales curvados','China'] },
+
+  // CARBONATOS
+  { id:33, cat:'carbonatos', name:'Calcita', formula:'CaCO₃', system:'Trigonal', hardness:'3', cleavage:'Perfecta romboédrica', luster:'Vítreo', streak:'Blanco', shape:'rhombo', color:0xf0ece4, metalness:0.0, roughness:0.25, transparent:true, opacity:0.85,
+    desc:'Mineral más estable del sistema CaCO₃. Componente esencial de calizas, mármoles y conchas. Efervescente con HCl diluido. Sus cristales son muy variados: escalenoédricos, romboédricos, prismáticos.', tags:['caliza','mármol','efervescencia','CaCO₃'] },
+  { id:34, cat:'carbonatos', name:'Dolomita', formula:'CaMg(CO₃)₂', system:'Trigonal', hardness:'3.5–4', cleavage:'Perfecta romboédrica', luster:'Vítreo a perlado', streak:'Blanco', shape:'rhombo', color:0xe8d8b8, metalness:0.0, roughness:0.28,
+    desc:'Carbonato doble de calcio y magnesio. Forma la roca dolomía. Efervescencia suave con HCl (más activa en polvo). Origen aún debatido: principalmente diagenético. Importante reservorio de petróleo.', tags:['dolomía','diagénesis','reservorio','magnesia'] },
+  { id:35, cat:'carbonatos', name:'Aragonita', formula:'CaCO₃', system:'Ortorrómbico', hardness:'3.5', cleavage:'Imperfecta', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0xf5f0e8, metalness:0.0, roughness:0.2,
+    desc:'Polimorfismo del CaCO₃ metaestable a presión y temperatura ambiente. Componente de conchas de moluscos y coral. Se convierte en calcita con el tiempo. También forma en zonas de subducción a alta presión.', tags:['polimorfismo','aragonita','coral','subducción'] },
+  { id:36, cat:'carbonatos', name:'Malaquita', formula:'Cu₂(CO₃)(OH)₂', system:'Monoclínico', hardness:'3.5–4', cleavage:'Perfecta', luster:'Adamantino a vítreo', streak:'Verde pálido', shape:'prism', color:0x1a7a2a, metalness:0.0, roughness:0.22,
+    desc:'De un verde brillante inconfundible. Se forma en la zona de oxidación de depósitos de cobre. Sus bandas concéntricas verdes son ornamentales. Históricamente usada como pigmento y mena de cobre.', tags:['cobre','oxidación','pigmento verde','ornamental'] },
+  { id:37, cat:'carbonatos', name:'Azurita', formula:'Cu₃(CO₃)₂(OH)₂', system:'Monoclínico', hardness:'3.5–4', cleavage:'Perfecta', luster:'Vítreo', streak:'Azul pálido', shape:'prism', color:0x1a3888, metalness:0.0, roughness:0.18,
+    desc:'Carbonato de cobre de color azul intenso. Se forma con malaquita en zonas de oxidación cupríferas. Usada como pigmento azul en pinturas medievales. Se convierte a malaquita con el tiempo.', tags:['cobre','oxidación','pigmento azul','medieval'] },
+  { id:38, cat:'carbonatos', name:'Rodocrosita', formula:'MnCO₃', system:'Trigonal', hardness:'3.5–4.5', cleavage:'Perfecta romboédrica', luster:'Vítreo', streak:'Blanco', shape:'rhombo', color:0xe84888, metalness:0.0, roughness:0.2,
+    desc:'Carbonato de manganeso de color rosa a rojo. Argentina tiene los mejores cristales del mundo en Capillitas, Catamarca. Es piedra nacional argentina (Rosa del Inca). También llamada Rodocrosita argentina.', tags:['manganeso','Argentina','Catamarca','Rosa del Inca'] },
+  { id:39, cat:'carbonatos', name:'Siderita', formula:'FeCO₃', system:'Trigonal', hardness:'3.5–4.5', cleavage:'Perfecta romboédrica', luster:'Vítreo', streak:'Blanco', shape:'rhombo', color:0x8b6a44, metalness:0.08, roughness:0.3,
+    desc:'Carbonato de hierro. Forma en ambientes reductores diagenéticos y zonas de alteración hidrotermal. Mena de hierro de baja ley. Sus cristales romboédricos curvados (en silla de montar) son típicos.', tags:['hierro','diagenético','hidrotermal','sedimentario'] },
+
+  // FOSFATOS
+  { id:40, cat:'fosfatos', name:'Apatito', formula:'Ca₅(PO₄)₃(F,Cl,OH)', system:'Hexagonal', hardness:'5', cleavage:'Imperfecta', luster:'Vítreo a ceroso', streak:'Blanco', shape:'prism', color:0x44aa88, metalness:0.0, roughness:0.28,
+    desc:'Mineral de referencia para la dureza 5 en la escala de Mohs. Único mineral fosfático biológico: forma huesos y dientes. Esencial para fertilizantes. Sus cristales prismáticos hexagonales son elegantes.', tags:['escala Mohs','huesos','fertilizante','biomineral'] },
+  { id:41, cat:'fosfatos', name:'Turquesa', formula:'CuAl₆(PO₄)₄(OH)₈·4H₂O', system:'Triclínico', hardness:'5–6', cleavage:'Buena', luster:'Ceroso a subvítreo', streak:'Blanco', shape:'tabular', color:0x40b8b8, metalness:0.0, roughness:0.35,
+    desc:'Fosfato de cobre y aluminio de color azul-verde característico. Una de las gemas más antiguas de la humanidad. Se forma en zonas áridas por meteorización de rocas ricas en cobre. Irán y EE.UU. son los principales productores.', tags:['gema','cobre','zona árida','Irán'] },
+  { id:42, cat:'fosfatos', name:'Vivianita', formula:'Fe₃(PO₄)₂·8H₂O', system:'Monoclínico', hardness:'1.5–2', cleavage:'Perfecta', luster:'Vítreo', streak:'Blanco', shape:'needle', color:0x1a3a6a, metalness:0.0, roughness:0.25,
+    desc:'Fosfato de hierro hidratado. Incoloro cuando es fresco, se oxida al azul-verde intenso con la exposición. Se forma en sedimentos anóxicos y suelos ricos en materia orgánica. Notable por su transformación de color.', tags:['hierro','anóxico','oxidación','sedimento'] },
+
+  // HALOGENUROS
+  { id:43, cat:'halogenuros', name:'Fluorita', formula:'CaF₂', system:'Cúbico', hardness:'4', cleavage:'Perfecta octaédrica', luster:'Vítreo', streak:'Blanco', shape:'cube', color:0x8844cc, metalness:0.0, roughness:0.08, transparent:true, opacity:0.68,
+    desc:'Mineral de referencia para la dureza 4. Fluorescente bajo UV (el fenómeno lleva su nombre). Gran variedad de colores. Usada como fundente en siderurgia (espato flúor) y en óptica de alta precisión.', tags:['fluorescencia','espato flúor','dureza 4','óptica'] },
+  { id:44, cat:'halogenuros', name:'Halita', formula:'NaCl', system:'Cúbico', hardness:'2–2.5', cleavage:'Perfecta cúbica', luster:'Vítreo', streak:'Blanco', shape:'cube', color:0xf0f0e0, metalness:0.0, roughness:0.18, transparent:true, opacity:0.7,
+    desc:'La sal de mesa. Cristales cúbicos perfectos. Se deposita por evaporación de cuerpos de agua salada (evaporita). Las salinas punteanas y la Puna argentina son grandes productores. Soluble en agua.', tags:['sal','evaporita','soluble','Puna argentina'] },
+  { id:45, cat:'halogenuros', name:'Silvita', formula:'KCl', system:'Cúbico', hardness:'2', cleavage:'Perfecta cúbica', luster:'Vítreo', streak:'Blanco', shape:'cube', color:0xffeecc, metalness:0.0, roughness:0.22,
+    desc:'Cloruro de potasio. Muy similar a la halita pero con sabor amargo. Evaporita que se deposita después de la halita. Fundamental para la producción de fertilizantes potásicos. Se distingue de la halita por su sabor.', tags:['potasio','evaporita','fertilizante','sabor amargo'] },
+
+  // ELEMENTOS NATIVOS
+  { id:46, cat:'nativos', name:'Oro', formula:'Au', system:'Cúbico', hardness:'2.5–3', cleavage:'Ninguna', luster:'Metálico brillante', streak:'Amarillo', shape:'cube', color:0xffcc00, metalness:1.0, roughness:0.03,
+    desc:'Metal nativo de color amarillo brillante. No se corroe ni oxida. Se forma en filones hidrotermales de cuarzo y en placeres aluviales. Densidad 19.3 g/cm³. Argentina tiene yacimientos en San Juan, Santa Cruz y Jujuy.', tags:['metal precioso','hidrotermal','placer','San Juan'] },
+  { id:47, cat:'nativos', name:'Plata', formula:'Ag', system:'Cúbico', hardness:'2.5–3', cleavage:'Ninguna', luster:'Metálico brillante', streak:'Plateado', shape:'cube', color:0xe8e8f0, metalness:1.0, roughness:0.04,
+    desc:'Metal nativo. Se presenta en formas arborescentes, alámbricas o masivas. Mena de plata con galena y otros sulfosales. Se ennegrece (sulfuro de plata) por reacción con el H₂S atmosférico.', tags:['metal precioso','hidrotermal','Potosí','sulfosales'] },
+  { id:48, cat:'nativos', name:'Cobre', formula:'Cu', system:'Cúbico', hardness:'2.5–3', cleavage:'Ninguna', luster:'Metálico', streak:'Rojo cobre', shape:'cube', color:0xb87333, metalness:1.0, roughness:0.08,
+    desc:'Metal nativo de color rojo característico. Se presenta en formas dendríticas, arborescentes o masivas. Asociado a zonas de oxidación de depósitos cupríferos. Fue el primer metal utilizado por la humanidad.', tags:['metal','prehistórico','nativo','árbol de cobre'] },
+  { id:49, cat:'nativos', name:'Diamante', formula:'C', system:'Cúbico', hardness:'10', cleavage:'Perfecta octaédrica', luster:'Adamantino', streak:'Ninguna', shape:'octahedron', color:0xeef8ff, metalness:0.0, roughness:0.02, transparent:true, opacity:0.85,
+    desc:'La sustancia natural más dura (10 en escala de Mohs). Polimorfismo del carbono estable a alta presión. Se forma en kimberlitas del manto a más de 150 km de profundidad. Sus propiedades ópticas únicas lo hacen la gema más codiciada.', tags:['dureza 10','kimberlita','carbono','gema'] },
+  { id:50, cat:'nativos', name:'Grafito', formula:'C', system:'Hexagonal', hardness:'1–2', cleavage:'Perfecta basal', luster:'Metálico a submetálico', streak:'Negro', shape:'flat', color:0x2a2a2a, metalness:0.7, roughness:0.18,
+    desc:'Polimorfismo del carbono estable a baja presión. Conductor eléctrico. Sus capas de grafeno unidas débilmente explican su blandura y uso como lubricante y en lápices. Hoy central en baterías de litio.', tags:['carbono','polimorfismo','grafeno','batería de litio'] },
+  { id:51, cat:'nativos', name:'Azufre', formula:'S', system:'Ortorrómbico', hardness:'1.5–2.5', cleavage:'Imperfecta', luster:'Resinoso', streak:'Blanco', shape:'pyramid', color:0xddcc00, metalness:0.0, roughness:0.28,
+    desc:'Elemento nativo de color amarillo brillante. Se forma en fumarolas volcánicas, lagos de cráter y por actividad bacteriana. Arde con llama azul produciendo SO₂. Base de la industria química y del ácido sulfúrico.', tags:['volcánico','fumarola','ácido sulfúrico','Puna'] },
+
+  // SULFATOS
+  { id:52, cat:'sulfatos', name:'Yeso', formula:'CaSO₄·2H₂O', system:'Monoclínico', hardness:'2', cleavage:'Perfecta', luster:'Vítreo a perlado', streak:'Blanco', shape:'flat', color:0xf8f4ec, metalness:0.0, roughness:0.2,
+    desc:'El sulfato más común. Dureza 2 en la escala de Mohs. Evaporita que se deposita antes que la halita. Sus variedades incluyen el alabastro (masivo), el espejuelo (láminas transparentes) y el yeso fibroso (satinado).', tags:['evaporita','construcción','escala Mohs','alabastro'] },
+  { id:53, cat:'sulfatos', name:'Anhidrita', formula:'CaSO₄', system:'Ortorrómbico', hardness:'3–3.5', cleavage:'Perfecta en 3 dir.', luster:'Vítreo a perlado', streak:'Blanco', shape:'tabular', color:0xe0e8f0, metalness:0.0, roughness:0.25,
+    desc:'Sulfato de calcio anhidro. Se hidrata lentamente para convertirse en yeso, con expansión volumétrica que puede deformar terrenos. Forma grandes cuerpos en evaporitas y domos salinos.', tags:['evaporita','hidratación','domo salino','expansión'] },
+  { id:54, cat:'sulfatos', name:'Barita', formula:'BaSO₄', system:'Ortorrómbico', hardness:'3–3.5', cleavage:'Perfecta', luster:'Vítreo a resinoso', streak:'Blanco', shape:'tabular', color:0xe8dcc8, metalness:0.0, roughness:0.22,
+    desc:'Muy densa (4.5 g/cm³) para ser un mineral no metálico. Se usa en fluidos de perforación petrolera para controlar la presión. Sus cristales tabulares forman "rosas del desierto" cuando incluyen arena.', tags:['bario','perforación','rosa del desierto','densidad'] },
+  { id:55, cat:'sulfatos', name:'Celestina', formula:'SrSO₄', system:'Ortorrómbico', hardness:'3–3.5', cleavage:'Perfecta', luster:'Vítreo', streak:'Blanco', shape:'tabular', color:0xa8d0f0, metalness:0.0, roughness:0.18, transparent:true, opacity:0.8,
+    desc:'Sulfato de estroncio de color azul celeste. Sus cristales prismáticos son delicados y elegantes. Principal fuente de estroncio, usado en fuegos artificiales (color rojo brillante) y en televisores de tubos.', tags:['estroncio','fuegos artificiales','azul celeste','cristales'] },
+];
+
+// ─── CATEGORY LABELS ────────────────────────────────────────────────
+const CAT_LABELS = {
+  silicatos:'Silicatos', oxidos:'Óxidos', sulfuros:'Sulfuros',
+  carbonatos:'Carbonatos', fosfatos:'Fosfatos', halogenuros:'Halogenuros',
+  nativos:'Elementos Nativos', sulfatos:'Sulfatos'
+};
+
+// ─── THREE.JS SETUP ──────────────────────────────────────────────────
+const mainCanvas = document.getElementById('main-canvas');
+const mainRenderer = new THREE.WebGLRenderer({ canvas: mainCanvas, antialias: true, alpha: false });
+mainRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+mainRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+mainRenderer.toneMappingExposure = 1.4;
+mainRenderer.outputEncoding = THREE.sRGBEncoding;
+
+const mainScene = new THREE.Scene();
+mainScene.background = new THREE.Color(0x07070F);
+
+const mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+mainCamera.position.set(0, 0, 5);
+
+// Lights
+mainScene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const key = new THREE.DirectionalLight(0xfff8e0, 2.5);
+key.position.set(5, 6, 5); mainScene.add(key);
+const fill = new THREE.DirectionalLight(0xc8e8ff, 0.8);
+fill.position.set(-5, 2, 3); mainScene.add(fill);
+const rim = new THREE.DirectionalLight(0xffe8c0, 1.2);
+rim.position.set(0, -4, -4); mainScene.add(rim);
+const back = new THREE.DirectionalLight(0x8888cc, 0.5);
+back.position.set(0, 0, -6); mainScene.add(back);
+
+// Point lights for gem effect
+const pLight1 = new THREE.PointLight(0xffd080, 1.5, 10);
+pLight1.position.set(2, 3, 2); mainScene.add(pLight1);
+const pLight2 = new THREE.PointLight(0x80c0ff, 1.0, 10);
+pLight2.position.set(-3, -2, 1); mainScene.add(pLight2);
+
+let currentMesh = null;
+let mainAnimId = null;
+let rot = { x: 0.4, y: 0 };
+let isDragging = false, lastMouse = { x: 0, y: 0 };
+
+// Mouse interaction on main canvas
+mainCanvas.addEventListener('mousedown', e => { isDragging = true; lastMouse = { x: e.clientX, y: e.clientY }; });
+window.addEventListener('mouseup', () => isDragging = false);
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  rot.y += (e.clientX - lastMouse.x) * 0.008;
+  rot.x += (e.clientY - lastMouse.y) * 0.004;
+  lastMouse = { x: e.clientX, y: e.clientY };
+});
+mainCanvas.addEventListener('touchstart', e => { isDragging = true; lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY }; });
+mainCanvas.addEventListener('touchend', () => isDragging = false);
+mainCanvas.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  rot.y += (e.touches[0].clientX - lastMouse.x) * 0.008;
+  rot.x += (e.touches[0].clientY - lastMouse.y) * 0.004;
+  lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
+
+function resizeMain() {
+  const wrap = mainCanvas.parentElement;
+  const w = wrap.clientWidth, h = mainCanvas.clientHeight || wrap.clientHeight * 0.5;
+  mainRenderer.setSize(w, h);
+  mainCamera.aspect = w / h;
+  mainCamera.updateProjectionMatrix();
+}
+
+function buildGeometry(shape) {
+  switch (shape) {
+    case 'cube':         return new THREE.BoxGeometry(1.8, 1.8, 1.8, 2, 2, 2);
+    case 'octahedron':   return new THREE.OctahedronGeometry(1.2, 1);
+    case 'dodecahedron': return new THREE.DodecahedronGeometry(1.1, 0);
+    case 'sphere':       return new THREE.SphereGeometry(1.1, 64, 64);
+    case 'prism':        return new THREE.CylinderGeometry(1.0, 1.0, 2.2, 6, 1);
+    case 'rhombo': {
+      const g = new THREE.OctahedronGeometry(1.3, 0);
+      const pos = g.attributes.position;
+      for (let i = 0; i < pos.count; i++) pos.setY(i, pos.getY(i) * 0.65);
+      pos.needsUpdate = true;
+      g.computeVertexNormals();
+      return g;
+    }
+    case 'pyramid':  return new THREE.ConeGeometry(1.1, 2.0, 4, 1);
+    case 'flat':     return new THREE.BoxGeometry(2.2, 0.3, 1.6);
+    case 'needle':   return new THREE.CylinderGeometry(0.12, 0.35, 2.8, 8, 1);
+    case 'tabular':  return new THREE.BoxGeometry(2.0, 0.65, 1.4);
+    default:         return new THREE.SphereGeometry(1.1, 32, 32);
+  }
+}
+
+function loadMineral(m) {
+  if (currentMesh) { mainScene.remove(currentMesh); currentMesh.geometry.dispose(); currentMesh.material.dispose(); }
+
+  const geo = buildGeometry(m.shape);
+
+  const matParams = {
+    color: m.color,
+    metalness: m.metalness,
+    roughness: m.roughness,
+    envMapIntensity: 1.2,
+  };
+  if (m.transparent) {
+    matParams.transparent = true;
+    matParams.opacity = m.opacity;
+    matParams.side = THREE.DoubleSide;
+  }
+  if (m.emissive) {
+    matParams.emissive = new THREE.Color(m.emissive);
+    matParams.emissiveIntensity = 0.3;
+  }
+
+  const mat = new THREE.MeshStandardMaterial(matParams);
+  currentMesh = new THREE.Mesh(geo, mat);
+
+  // Center prism geometry
+  if (m.shape === 'prism') {
+    currentMesh.position.set(-1.1, -1.1, 0);
+    currentMesh.rotation.x = -Math.PI / 2;
+    currentMesh.scale.setScalar(0.85);
+  }
+
+  mainScene.add(currentMesh);
+  rot.x = 0.3; rot.y = 0;
+}
+
+function animateMain() {
+  mainAnimId = requestAnimationFrame(animateMain);
+  resizeMain();
+  if (currentMesh) {
+    if (!isDragging) rot.y += 0.006;
+    currentMesh.rotation.x = rot.x;
+    currentMesh.rotation.y = rot.y;
+  }
+  // Animate point lights
+  const t = Date.now() * 0.001;
+  pLight1.position.set(2 * Math.cos(t * 0.5), 3, 2 * Math.sin(t * 0.5));
+  pLight2.position.set(-3 * Math.cos(t * 0.3), -2, Math.sin(t * 0.7));
+  mainRenderer.render(mainScene, mainCamera);
+}
+animateMain();
+
+// ─── MINI CANVAS FOR CARDS ───────────────────────────────────────────
+// ─── MINI PREVIEWS: un solo renderer offscreen genera PNG para cada card ───
+const miniCache = {}; // id -> dataURL
+
+function buildAllMiniPreviews(callback) {
+  // Renderer offscreen único — no va al DOM
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width = 150; offCanvas.height = 90;
+  const r = new THREE.WebGLRenderer({ canvas: offCanvas, antialias: true, alpha: false, preserveDrawingBuffer: true });
+  r.setPixelRatio(1);
+  r.toneMapping = THREE.ACESFilmicToneMapping;
+  r.toneMappingExposure = 1.3;
+  r.setSize(150, 90);
+
+  const s = new THREE.Scene();
+  s.background = new THREE.Color(0x07070F);
+  const cam = new THREE.PerspectiveCamera(40, 150 / 90, 0.1, 50);
+  cam.position.set(0, 0, 3.5);
+  s.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const kl = new THREE.DirectionalLight(0xfff8e0, 2.2); kl.position.set(3, 4, 3); s.add(kl);
+  const fl = new THREE.DirectionalLight(0xc8e8ff, 0.7); fl.position.set(-3, 1, 2); s.add(fl);
+
+  let idx = 0;
+  function renderNext() {
+    if (idx >= minerals.length) {
+      r.dispose();
+      if (callback) callback();
+      return;
+    }
+    const m = minerals[idx++];
+
+    // Limpiar mesh anterior
+    while (s.children.length > 3) s.remove(s.children[s.children.length - 1]);
+
+    const geo = buildGeometry(m.shape);
+    const matP = { color: m.color, metalness: m.metalness, roughness: m.roughness };
+    if (m.transparent) { matP.transparent = true; matP.opacity = m.opacity; matP.side = THREE.DoubleSide; }
+    const mat = new THREE.MeshStandardMaterial(matP);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.rotation.x = 0.4;
+    mesh.rotation.y = 0.6;
+    mesh.scale.setScalar(0.55);
+    s.add(mesh);
+
+    r.render(s, cam);
+    miniCache[m.id] = offCanvas.toDataURL('image/png');
+
+    mat.dispose(); geo.dispose();
+    // Ceder el hilo al navegador entre renders para no bloquearlo
+    setTimeout(renderNext, 0);
+  }
+  renderNext();
+}
+
+// ─── STATE & FILTER ──────────────────────────────────────────────────
+let activeCat = 'todos', activeSearch = '', selectedId = null;
+
+function filtered() {
+  return minerals.filter(m => {
+    const catOk = activeCat === 'todos' || m.cat === activeCat;
+    const q = activeSearch.toLowerCase();
+    const searchOk = !q || m.name.toLowerCase().includes(q) || m.formula.toLowerCase().includes(q) || (m.tags || []).some(t => t.toLowerCase().includes(q)) || (m.desc || '').toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+}
+
+// ─── RENDER GRID ─────────────────────────────────────────────────────
+function renderGrid() {
+  const list = filtered();
+  const grid = document.getElementById('minerals-grid');
+  const empty = document.getElementById('empty-state');
+  const countEl = document.getElementById('grid-count');
+  const titleEl = document.getElementById('grid-title');
+
+  titleEl.textContent = activeCat === 'todos' ? 'Todos los minerales' : CAT_LABELS[activeCat];
+  countEl.textContent = `${list.length} mineral${list.length !== 1 ? 'es' : ''}`;
+
+  if (list.length === 0) { grid.innerHTML = ''; empty.classList.add('visible'); return; }
+  empty.classList.remove('visible');
+
+  grid.innerHTML = list.map(m => {
+    const cc = CAT_COLORS[m.cat];
+    const preview = miniCache[m.id]
+      ? `<img src="${miniCache[m.id]}" width="150" height="90" style="display:block;width:100%;height:100%;object-fit:cover" alt="${m.name}">`
+      : `<div style="width:100%;height:100%;background:#07070F;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:11px">cargando...</div>`;
+    return `<div class="mineral-card${selectedId === m.id ? ' selected' : ''}" data-id="${m.id}">
+      <div class="card-preview" id="prev-${m.id}">${preview}</div>
+      <div class="card-name">${m.name}</div>
+      <div class="card-formula">${m.formula}</div>
+      <span class="card-cat-badge" style="background:${cc.badge};color:${cc.text}">${CAT_LABELS[m.cat]}</span>
+    </div>`;
+  }).join('');
+
+  // Click handlers
+  grid.querySelectorAll('.mineral-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = parseInt(card.dataset.id);
+      selectMineral(id);
+    });
+  });
+}
+
+function selectMineral(id) {
+  selectedId = id;
+  const m = minerals.find(x => x.id === id);
+  if (!m) return;
+
+  // Update card selection
+  document.querySelectorAll('.mineral-card').forEach(c => {
+    c.classList.toggle('selected', parseInt(c.dataset.id) === id);
+  });
+
+  // Load 3D
+  loadMineral(m);
+
+  // Update info panel
+  const cc = CAT_COLORS[m.cat];
+  document.getElementById('viewer-hint').style.display = 'none';
+  const vi = document.getElementById('viewer-info');
+  vi.style.display = 'block';
+
+  document.getElementById('vi-cat').innerHTML = `<span style="color:${cc.text}">${CAT_LABELS[m.cat]}</span>`;
+  document.getElementById('vi-name').textContent = m.name;
+  document.getElementById('vi-formula').textContent = m.formula;
+  document.getElementById('vi-props').innerHTML = `
+    <div class="vprop"><div class="vprop-label">Dureza</div><div class="vprop-value">${m.hardness}</div></div>
+    <div class="vprop"><div class="vprop-label">Sistema</div><div class="vprop-value">${m.system}</div></div>
+    <div class="vprop"><div class="vprop-label">Brillo</div><div class="vprop-value">${m.luster}</div></div>
+    <div class="vprop"><div class="vprop-label">Raya</div><div class="vprop-value">${m.streak}</div></div>
+    <div class="vprop"><div class="vprop-label">Exfoliación</div><div class="vprop-value">${m.cleavage}</div></div>
+  `;
+  document.getElementById('vi-desc').textContent = m.desc;
+  document.getElementById('vi-tags').innerHTML = (m.tags || []).map(t => `<span class="vtag">${t}</span>`).join('');
+
+  // Scroll card into view on mobile
+  const cardEl = document.querySelector(`.mineral-card[data-id="${id}"]`);
+  if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ─── EVENTS ──────────────────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    renderGrid();
+  });
+});
+
+let st;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(st);
+  st = setTimeout(() => { activeSearch = e.target.value.trim(); renderGrid(); }, 180);
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+// Primero generar todas las miniaturas con el renderer único, luego mostrar el grid
+buildAllMiniPreviews(() => {
+  renderGrid();
+  setTimeout(() => selectMineral(1), 200);
+});
+</script>
+</body>
+</html>
