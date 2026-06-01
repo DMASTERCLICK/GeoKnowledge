@@ -84,9 +84,15 @@
     }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
+      background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&q=70');
+      background-size: cover; background-position: center 60%;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 60% 50% at 80% 40%, rgba(196,164,107,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(122,92,58,0.10) 0%, transparent 60%);
+        linear-gradient(to right, rgba(250,243,232,0.97) 0%, rgba(250,243,232,0.88) 50%, rgba(250,243,232,0.60) 100%),
+        radial-gradient(ellipse 60% 50% at 80% 40%, rgba(196,164,107,0.15) 0%, transparent 70%);
     }
     .strata-bg {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -459,7 +465,7 @@
 
   <div class="modules-grid">
     <a class="module-card" href="tiempo-geologico.html">
-      <div class="module-img" style="background-image:url('https://source.unsplash.com/800x600/?sedimentary,rock,layers,geology')"></div>
+      <div class="module-img" style="background-image:url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80')"></div>
       <div class="module-overlay"></div>
       <div class="module-body">
         <div class="module-icon" style="background:rgba(255,243,224,0.15);color:#C4A46B">⏳</div>
@@ -469,7 +475,7 @@
       </div>
     </a>
     <a class="module-card" href="minerales.html">
-      <div class="module-img" style="background-image:url('https://source.unsplash.com/800x600/?crystal,mineral,gem,quartz')"></div>
+      <div class="module-img" style="background-image:url('https://images.unsplash.com/photo-1576482969697-7e7a8f30ded4?w=800&q=80')"></div>
       <div class="module-overlay"></div>
       <div class="module-body">
         <div class="module-icon" style="background:rgba(232,245,233,0.15);color:#81C784">💎</div>
@@ -479,7 +485,7 @@
       </div>
     </a>
     <a class="module-card" href="argentina.html">
-      <div class="module-img" style="background-image:url('https://source.unsplash.com/800x600/?andes,patagonia,mountains,argentina')"></div>
+      <div class="module-img" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80')"></div>
       <div class="module-overlay"></div>
       <div class="module-body">
         <div class="module-icon" style="background:rgba(227,242,253,0.15);color:#64B5F6">🗺</div>
@@ -489,7 +495,7 @@
       </div>
     </a>
     <a class="module-card" href="enciclopedia.html">
-      <div class="module-img" style="background-image:url('https://source.unsplash.com/800x600/?rock,stone,geology,texture')"></div>
+      <div class="module-img" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80')"></div>
       <div class="module-overlay"></div>
       <div class="module-body">
         <div class="module-icon" style="background:rgba(243,229,245,0.15);color:#CE93D8">📖</div>
@@ -509,8 +515,8 @@
   <div class="articles-grid">
     <a class="article-card" href="enciclopedia.html">
       <div class="art-img-wrap">
-        <!-- Lava / roca ígnea -->
-        <div class="art-img" style="background-image:url('https://images.unsplash.com/photo-1554573756-417e2f61830d?w=800&q=80')"></div>
+        <!-- Roca ígnea / magma / petrología -->
+        <div class="art-img" style="background-image:url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80')"></div>
         <div class="art-img-overlay"></div>
       </div>
       <div class="article-body">
@@ -523,7 +529,7 @@
     <a class="article-card" href="enciclopedia.html">
       <div class="art-img-wrap">
         <!-- Volcán en erupción / tectónica -->
-        <div class="art-img" style="background-image:url('https://images.unsplash.com/photo-1564907582081-ab06bcafde95?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
+        <div class="art-img" style="background-image:url('https://images.unsplash.com/photo-1564907582081-ab06bcafde95?w=800&q=80')"></div>
         <div class="art-img-overlay"></div>
       </div>
       <div class="article-body">
@@ -557,8 +563,8 @@
 
   <div class="arg-grid">
     <a class="arg-card" href="argentina.html">
-      <!-- Estratos / afloramiento sedimentario -->
-      <div class="arg-bg" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80')"></div>
+      <!-- Cuenca Neuquina / estratos sedimentarios -->
+      <div class="arg-bg" style="background-image:url('https://images.unsplash.com/photo-1548268770-66184a21657e?w=800&q=80')"></div>
       <div class="arg-overlay"></div>
       <div class="arg-body">
         <div class="arg-card-name">Cuenca Neuquina</div>
@@ -567,7 +573,7 @@
       </div>
     </a>
     <a class="arg-card" href="argentina.html">
-      <!-- Desierto / erosión / badlands -->
+      <!-- Valle de Ischigualasto / badlands triásico -->
       <div class="arg-bg" style="background-image:url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80')"></div>
       <div class="arg-overlay"></div>
       <div class="arg-body">
@@ -577,7 +583,7 @@
       </div>
     </a>
     <a class="arg-card" href="argentina.html">
-      <!-- Montaña / cordillera / roca -->
+      <!-- Precordillera / cordillera andina -->
       <div class="arg-bg" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80')"></div>
       <div class="arg-overlay"></div>
       <div class="arg-body">
@@ -587,7 +593,7 @@
       </div>
     </a>
     <a class="arg-card" href="argentina.html">
-      <!-- Granito / roca cristalina -->
+      <!-- Sierras Pampeanas / basamento cristalino -->
       <div class="arg-bg" style="background-image:url('https://images.unsplash.com/photo-1518623001395-125242310d0c?w=800&q=80')"></div>
       <div class="arg-overlay"></div>
       <div class="arg-body">
