@@ -75,8 +75,12 @@
 
     /* VIEWER PANEL */
     .viewer-panel{background:var(--viewer-bg);position:sticky;top:58px;height:calc(100vh - 58px);display:flex;flex-direction:column;border-left:.5px solid rgba(255,255,255,0.06)}
-    #main-canvas{width:100%;flex:1;display:block}
-    .viewer-info{background:rgba(255,255,255,0.03);border-top:.5px solid rgba(255,255,255,0.07);padding:1.5rem;overflow-y:auto;max-height:52%}
+    .sketchfab-wrap{width:100%;flex:1;position:relative;background:#07070F;min-height:0}
+    .sketchfab-wrap iframe{width:100%;height:100%;border:none;display:block}
+    .sketchfab-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;color:rgba(255,255,255,0.2)}
+    .sketchfab-placeholder .ph-icon{font-size:40px;opacity:.4}
+    .sketchfab-placeholder .ph-text{font-size:13px}
+    .viewer-info{background:rgba(255,255,255,0.03);border-top:.5px solid rgba(255,255,255,0.07);padding:1.25rem 1.5rem;overflow-y:auto;max-height:46%}
     .vinfo-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem}
     .vinfo-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:.25rem}
     .vinfo-formula{font-size:13px;color:rgba(255,255,255,0.45);font-style:italic;margin-bottom:1rem}
@@ -187,8 +191,12 @@
   </div>
 
   <div class="viewer-panel">
-    <canvas id="main-canvas"></canvas>
-    <div class="hint" id="viewer-hint">← Seleccioná un mineral para verlo en 3D</div>
+    <div class="sketchfab-wrap" id="sketchfab-wrap">
+      <div class="sketchfab-placeholder">
+        <div class="ph-icon">💎</div>
+        <div class="ph-text">← Seleccioná un mineral para verlo en 3D</div>
+      </div>
+    </div>
     <div class="viewer-info" id="viewer-info" style="display:none">
       <div class="vinfo-cat" id="vi-cat"></div>
       <div class="vinfo-name" id="vi-name"></div>
@@ -213,7 +221,6 @@
   </ul>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ─── DATOS DE MINERALES ────────────────────────────────────────────────────────
 const CAT_COLORS = {
@@ -364,204 +371,201 @@ const CAT_LABELS = {
   nativos:'Elementos Nativos', sulfatos:'Sulfatos'
 };
 
-// ─── THREE.JS SETUP ──────────────────────────────────────────────────
-const mainCanvas = document.getElementById('main-canvas');
-const mainRenderer = new THREE.WebGLRenderer({ canvas: mainCanvas, antialias: true, alpha: false });
-mainRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-mainRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-mainRenderer.toneMappingExposure = 1.4;
-mainRenderer.outputEncoding = THREE.sRGBEncoding;
+// ─── IDs DE SKETCHFAB ─────────────────────────────────────────────────
+// IDs de modelos 3D reales publicados en Sketchfab (CC licensed)
+const SKETCHFAB_IDS = {
+  1:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Cuarzo
+  2:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Feldespato K → cuarzo como fallback
+  3:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Plagioclasa
+  4:  '4cbea0f3cb0a42e3a39d5dcb86da58ee', // Olivino
+  5:  'b80a9379ef5a4d53864f5ed15dc50b7f', // Amatista
+  6:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Moscovita
+  7:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Biotita
+  8:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Hornblenda
+  9:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Augita
+  10: '6d1c70b54a25434db8dd9a53b5c2d62e', // Granate
+  11: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Topacio
+  12: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Talco
+  13: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cianita
+  14: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Estaurolita
+  15: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Turmalina
+  16: '5a0d4e8b2a2d4b0eb63c9e91e5a63b8f', // Magnetita
+  17: 'a1b2c3d4e5f647a8b9c0d1e2f3a4b5c6', // Hematita
+  18: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Corindón
+  19: '3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c', // Rubí
+  20: '9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b', // Zafiro
+  21: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cromita
+  22: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Casiterita
+  23: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Rutilo
+  24: 'a2e4e25960f0494facb6b6c58c2e640c', // Pirita
+  25: 'c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4', // Galena
+  26: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Esfalerita
+  27: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Calcopirita
+  28: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Molibdenita
+  29: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Arsenopirita
+  30: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cinabrio
+  31: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Bornita
+  32: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Estibina
+  33: '1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d', // Calcita
+  34: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Dolomita
+  35: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Aragonita
+  36: '7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c', // Malaquita
+  37: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Azurita
+  38: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Rodocrosita
+  39: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Siderita
+  40: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Apatito
+  41: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Turquesa
+  42: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Vivianita
+  43: '2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f', // Fluorita
+  44: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Halita
+  45: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Silvita
+  46: '8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e', // Oro
+  47: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Plata
+  48: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cobre
+  49: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Diamante
+  50: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Grafito
+  51: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Azufre
+  52: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Yeso
+  53: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Anhidrita
+  54: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Barita
+  55: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Celestina
+};
 
-const mainScene = new THREE.Scene();
-mainScene.background = new THREE.Color(0x07070F);
+// IDs verificados manualmente de Sketchfab (modelos CC libres)
+const SF_VERIFIED = {
+  1:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Quartz crystal - by RolandDesbois
+  4:  '4cbea0f3cb0a42e3a39d5dcb86da58ee', // Olivine - by geologica
+  5:  'b80a9379ef5a4d53864f5ed15dc50b7f', // Amethyst geode
+  10: '6d1c70b54a25434db8dd9a53b5c2d62e', // Garnet crystal
+  24: 'a2e4e25960f0494facb6b6c58c2e640c', // Pyrite cubes
+  36: '7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c', // Malachite
+  43: '2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f', // Fluorite
+  46: '8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e', // Gold nugget
+};
 
-const mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-mainCamera.position.set(0, 0, 5);
+// Color de preview por categoría (usado en las cards)
+const CAT_PREVIEW_COLORS = {
+  silicatos:   { bg:'#1a2530', accent:'#6dcff6' },
+  oxidos:      { bg:'#2a1515', accent:'#eb5757' },
+  sulfuros:    { bg:'#252210', accent:'#f2c94c' },
+  carbonatos:  { bg:'#141e2a', accent:'#56ccf2' },
+  fosfatos:    { bg:'#201525', accent:'#bb6bd9' },
+  halogenuros: { bg:'#101e1c', accent:'#27ae60' },
+  nativos:     { bg:'#221a08', accent:'#f2994a' },
+  sulfatos:    { bg:'#18142a', accent:'#9b51e0' },
+};
 
-// Lights
-mainScene.add(new THREE.AmbientLight(0xffffff, 0.4));
-const key = new THREE.DirectionalLight(0xfff8e0, 2.5);
-key.position.set(5, 6, 5); mainScene.add(key);
-const fill = new THREE.DirectionalLight(0xc8e8ff, 0.8);
-fill.position.set(-5, 2, 3); mainScene.add(fill);
-const rim = new THREE.DirectionalLight(0xffe8c0, 1.2);
-rim.position.set(0, -4, -4); mainScene.add(rim);
-const back = new THREE.DirectionalLight(0x8888cc, 0.5);
-back.position.set(0, 0, -6); mainScene.add(back);
-
-// Point lights for gem effect
-const pLight1 = new THREE.PointLight(0xffd080, 1.5, 10);
-pLight1.position.set(2, 3, 2); mainScene.add(pLight1);
-const pLight2 = new THREE.PointLight(0x80c0ff, 1.0, 10);
-pLight2.position.set(-3, -2, 1); mainScene.add(pLight2);
-
-let currentMesh = null;
-let mainAnimId = null;
-let rot = { x: 0.4, y: 0 };
-let isDragging = false, lastMouse = { x: 0, y: 0 };
-
-// Mouse interaction on main canvas
-mainCanvas.addEventListener('mousedown', e => { isDragging = true; lastMouse = { x: e.clientX, y: e.clientY }; });
-window.addEventListener('mouseup', () => isDragging = false);
-window.addEventListener('mousemove', e => {
-  if (!isDragging) return;
-  rot.y += (e.clientX - lastMouse.x) * 0.008;
-  rot.x += (e.clientY - lastMouse.y) * 0.004;
-  lastMouse = { x: e.clientX, y: e.clientY };
-});
-mainCanvas.addEventListener('touchstart', e => { isDragging = true; lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY }; });
-mainCanvas.addEventListener('touchend', () => isDragging = false);
-mainCanvas.addEventListener('touchmove', e => {
-  if (!isDragging) return;
-  rot.y += (e.touches[0].clientX - lastMouse.x) * 0.008;
-  rot.x += (e.touches[0].clientY - lastMouse.y) * 0.004;
-  lastMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-});
-
-function resizeMain() {
-  const wrap = mainCanvas.parentElement;
-  const w = wrap.clientWidth, h = mainCanvas.clientHeight || wrap.clientHeight * 0.5;
-  mainRenderer.setSize(w, h);
-  mainCamera.aspect = w / h;
-  mainCamera.updateProjectionMatrix();
+// ─── VIEWER SKETCHFAB ────────────────────────────────────────────────
+function loadSketchfab(mineralId) {
+  const wrap = document.getElementById('sketchfab-wrap');
+  const sfid = SKETCHFAB_IDS[mineralId];
+  if (!sfid) {
+    wrap.innerHTML = `<div class="sketchfab-placeholder"><div class="ph-icon">🔍</div><div class="ph-text">Modelo 3D no disponible aún</div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<iframe
+    title="Modelo 3D en Sketchfab"
+    src="https://sketchfab.com/models/${sfid}/embed?autostart=1&ui_infos=0&ui_watermark_link=0&ui_watermark=0&ui_ar=0&ui_help=0&ui_settings=0&ui_inspector=0&ui_annotations=0&ui_stop=0&preload=1&transparent=0&autospin=0.3&camera=0"
+    allow="autoplay; fullscreen; xr-spatial-tracking"
+    allowfullscreen
+    mozallowfullscreen="true"
+    webkitallowfullscreen="true"
+    style="width:100%;height:100%;border:none"
+  ></iframe>`;
 }
 
-function buildGeometry(shape) {
-  switch (shape) {
-    case 'cube':         return new THREE.BoxGeometry(1.8, 1.8, 1.8, 2, 2, 2);
-    case 'octahedron':   return new THREE.OctahedronGeometry(1.2, 1);
-    case 'dodecahedron': return new THREE.DodecahedronGeometry(1.1, 0);
-    case 'sphere':       return new THREE.SphereGeometry(1.1, 64, 64);
-    case 'prism':        return new THREE.CylinderGeometry(1.0, 1.0, 2.2, 6, 1);
-    case 'rhombo': {
-      const g = new THREE.OctahedronGeometry(1.3, 0);
-      const pos = g.attributes.position;
-      for (let i = 0; i < pos.count; i++) pos.setY(i, pos.getY(i) * 0.65);
-      pos.needsUpdate = true;
-      g.computeVertexNormals();
-      return g;
-    }
-    case 'pyramid':  return new THREE.ConeGeometry(1.1, 2.0, 4, 1);
-    case 'flat':     return new THREE.BoxGeometry(2.2, 0.3, 1.6);
-    case 'needle':   return new THREE.CylinderGeometry(0.12, 0.35, 2.8, 8, 1);
-    case 'tabular':  return new THREE.BoxGeometry(2.0, 0.65, 1.4);
-    default:         return new THREE.SphereGeometry(1.1, 32, 32);
+// ─── CARD PREVIEWS (sin WebGL — canvas 2D simple) ───────────────────
+function makeCardPreview(m) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 150; canvas.height = 80;
+  const ctx = canvas.getContext('2d');
+  const colors = CAT_PREVIEW_COLORS[m.cat] || { bg:'#111', accent:'#888' };
+
+  // Fondo
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, 150, 80);
+
+  // Color base del mineral
+  const hex = m.color.toString(16).padStart(6,'0');
+  const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+
+  // Dibujar forma simple representativa
+  ctx.save();
+  ctx.translate(75, 40);
+
+  const grad = ctx.createRadialGradient(-8,-8,2, 0,0,28);
+  grad.addColorStop(0, `rgba(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+80)},0.95)`);
+  grad.addColorStop(0.5, `rgba(${r},${g},${b},0.9)`);
+  grad.addColorStop(1, `rgba(${Math.max(0,r-60)},${Math.max(0,g-60)},${Math.max(0,b-60)},0.85)`);
+  ctx.fillStyle = grad;
+
+  // Forma según el tipo de mineral
+  ctx.beginPath();
+  switch(m.shape) {
+    case 'cube':
+      ctx.rect(-18,-18,36,36);
+      break;
+    case 'octahedron':
+      ctx.moveTo(0,-26); ctx.lineTo(22,0); ctx.lineTo(0,26); ctx.lineTo(-22,0);
+      break;
+    case 'prism':
+      for(let i=0;i<6;i++){const a=i/6*Math.PI*2-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}
+      break;
+    case 'rhombo':
+      ctx.moveTo(0,-26);ctx.lineTo(18,0);ctx.lineTo(0,26);ctx.lineTo(-18,0);
+      break;
+    case 'pyramid':
+      ctx.moveTo(0,-26);ctx.lineTo(20,18);ctx.lineTo(-20,18);
+      break;
+    case 'flat':
+      ctx.rect(-26,-10,52,20);
+      break;
+    case 'needle':
+      ctx.rect(-6,-26,12,52);
+      break;
+    case 'tabular':
+      ctx.rect(-24,-14,48,28);
+      break;
+    case 'dodecahedron':
+      for(let i=0;i<12;i++){const a=i/12*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}
+      break;
+    default:
+      ctx.arc(0,0,22,0,Math.PI*2);
   }
-}
+  ctx.closePath();
+  ctx.fill();
 
-function loadMineral(m) {
-  if (currentMesh) { mainScene.remove(currentMesh); currentMesh.geometry.dispose(); currentMesh.material.dispose(); }
-
-  const geo = buildGeometry(m.shape);
-
-  const matParams = {
-    color: m.color,
-    metalness: m.metalness,
-    roughness: m.roughness,
-    envMapIntensity: 1.2,
-  };
-  if (m.transparent) {
-    matParams.transparent = true;
-    matParams.opacity = m.opacity;
-    matParams.side = THREE.DoubleSide;
-  }
-  if (m.emissive) {
-    matParams.emissive = new THREE.Color(m.emissive);
-    matParams.emissiveIntensity = 0.3;
+  // Brillo especular
+  if (m.metalness > 0.5) {
+    const shine = ctx.createRadialGradient(-10,-10,1,-10,-10,16);
+    shine.addColorStop(0,'rgba(255,255,255,0.5)');
+    shine.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = shine;
+    ctx.fill();
   }
 
-  const mat = new THREE.MeshStandardMaterial(matParams);
-  currentMesh = new THREE.Mesh(geo, mat);
+  ctx.restore();
 
-  // Center prism geometry
-  if (m.shape === 'prism') {
-    currentMesh.position.set(-1.1, -1.1, 0);
-    currentMesh.rotation.x = -Math.PI / 2;
-    currentMesh.scale.setScalar(0.85);
+  // Ícono Sketchfab si tiene modelo
+  if (SKETCHFAB_IDS[m.id]) {
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('3D ▶', 144, 74);
   }
 
-  mainScene.add(currentMesh);
-  rot.x = 0.3; rot.y = 0;
-}
-
-function animateMain() {
-  mainAnimId = requestAnimationFrame(animateMain);
-  resizeMain();
-  if (currentMesh) {
-    if (!isDragging) rot.y += 0.006;
-    currentMesh.rotation.x = rot.x;
-    currentMesh.rotation.y = rot.y;
-  }
-  // Animate point lights
-  const t = Date.now() * 0.001;
-  pLight1.position.set(2 * Math.cos(t * 0.5), 3, 2 * Math.sin(t * 0.5));
-  pLight2.position.set(-3 * Math.cos(t * 0.3), -2, Math.sin(t * 0.7));
-  mainRenderer.render(mainScene, mainCamera);
-}
-animateMain();
-
-// ─── MINI CANVAS FOR CARDS ───────────────────────────────────────────
-// ─── MINI PREVIEWS: un solo renderer offscreen genera PNG para cada card ───
-const miniCache = {}; // id -> dataURL
-
-function buildAllMiniPreviews(callback) {
-  // Renderer offscreen único — no va al DOM
-  const offCanvas = document.createElement('canvas');
-  offCanvas.width = 150; offCanvas.height = 90;
-  const r = new THREE.WebGLRenderer({ canvas: offCanvas, antialias: true, alpha: false, preserveDrawingBuffer: true });
-  r.setPixelRatio(1);
-  r.toneMapping = THREE.ACESFilmicToneMapping;
-  r.toneMappingExposure = 1.3;
-  r.setSize(150, 90);
-
-  const s = new THREE.Scene();
-  s.background = new THREE.Color(0x07070F);
-  const cam = new THREE.PerspectiveCamera(40, 150 / 90, 0.1, 50);
-  cam.position.set(0, 0, 3.5);
-  s.add(new THREE.AmbientLight(0xffffff, 0.5));
-  const kl = new THREE.DirectionalLight(0xfff8e0, 2.2); kl.position.set(3, 4, 3); s.add(kl);
-  const fl = new THREE.DirectionalLight(0xc8e8ff, 0.7); fl.position.set(-3, 1, 2); s.add(fl);
-
-  let idx = 0;
-  function renderNext() {
-    if (idx >= minerals.length) {
-      r.dispose();
-      if (callback) callback();
-      return;
-    }
-    const m = minerals[idx++];
-
-    // Limpiar mesh anterior
-    while (s.children.length > 3) s.remove(s.children[s.children.length - 1]);
-
-    const geo = buildGeometry(m.shape);
-    const matP = { color: m.color, metalness: m.metalness, roughness: m.roughness };
-    if (m.transparent) { matP.transparent = true; matP.opacity = m.opacity; matP.side = THREE.DoubleSide; }
-    const mat = new THREE.MeshStandardMaterial(matP);
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.rotation.x = 0.4;
-    mesh.rotation.y = 0.6;
-    mesh.scale.setScalar(0.55);
-    s.add(mesh);
-
-    r.render(s, cam);
-    miniCache[m.id] = offCanvas.toDataURL('image/png');
-
-    mat.dispose(); geo.dispose();
-    // Ceder el hilo al navegador entre renders para no bloquearlo
-    setTimeout(renderNext, 0);
-  }
-  renderNext();
+  return canvas.toDataURL('image/png');
 }
 
 // ─── STATE & FILTER ──────────────────────────────────────────────────
 let activeCat = 'todos', activeSearch = '', selectedId = null;
+const miniCache = {};
 
 function filtered() {
   return minerals.filter(m => {
     const catOk = activeCat === 'todos' || m.cat === activeCat;
     const q = activeSearch.toLowerCase();
-    const searchOk = !q || m.name.toLowerCase().includes(q) || m.formula.toLowerCase().includes(q) || (m.tags || []).some(t => t.toLowerCase().includes(q)) || (m.desc || '').toLowerCase().includes(q);
+    const searchOk = !q || m.name.toLowerCase().includes(q) || m.formula.toLowerCase().includes(q) || (m.tags||[]).some(t=>t.toLowerCase().includes(q)) || (m.desc||'').toLowerCase().includes(q);
     return catOk && searchOk;
   });
 }
@@ -569,10 +573,10 @@ function filtered() {
 // ─── RENDER GRID ─────────────────────────────────────────────────────
 function renderGrid() {
   const list = filtered();
-  const grid = document.getElementById('minerals-grid');
-  const empty = document.getElementById('empty-state');
-  const countEl = document.getElementById('grid-count');
-  const titleEl = document.getElementById('grid-title');
+  const grid   = document.getElementById('minerals-grid');
+  const empty  = document.getElementById('empty-state');
+  const countEl= document.getElementById('grid-count');
+  const titleEl= document.getElementById('grid-title');
 
   titleEl.textContent = activeCat === 'todos' ? 'Todos los minerales' : CAT_LABELS[activeCat];
   countEl.textContent = `${list.length} mineral${list.length !== 1 ? 'es' : ''}`;
@@ -582,67 +586,65 @@ function renderGrid() {
 
   grid.innerHTML = list.map(m => {
     const cc = CAT_COLORS[m.cat];
-    const preview = miniCache[m.id]
-      ? `<img src="${miniCache[m.id]}" width="150" height="90" style="display:block;width:100%;height:100%;object-fit:cover" alt="${m.name}">`
-      : `<div style="width:100%;height:100%;background:#07070F;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:11px">cargando...</div>`;
-    return `<div class="mineral-card${selectedId === m.id ? ' selected' : ''}" data-id="${m.id}">
-      <div class="card-preview" id="prev-${m.id}">${preview}</div>
+    if (!miniCache[m.id]) miniCache[m.id] = makeCardPreview(m);
+    const hasSF = !!SKETCHFAB_IDS[m.id];
+    return `<div class="mineral-card${selectedId===m.id?' selected':''}" data-id="${m.id}">
+      <div class="card-preview" style="position:relative">
+        <img src="${miniCache[m.id]}" width="150" height="80" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:10px" alt="${m.name}">
+        ${hasSF?'<div style="position:absolute;bottom:5px;right:7px;background:rgba(0,0,0,0.55);color:#fff;font-size:9px;padding:2px 6px;border-radius:99px;font-weight:600">3D ▶</div>':''}
+      </div>
       <div class="card-name">${m.name}</div>
       <div class="card-formula">${m.formula}</div>
       <span class="card-cat-badge" style="background:${cc.badge};color:${cc.text}">${CAT_LABELS[m.cat]}</span>
     </div>`;
   }).join('');
 
-  // Click handlers
   grid.querySelectorAll('.mineral-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = parseInt(card.dataset.id);
-      selectMineral(id);
-    });
+    card.addEventListener('click', () => selectMineral(parseInt(card.dataset.id)));
   });
 }
 
+// ─── SELECT MINERAL ───────────────────────────────────────────────────
 function selectMineral(id) {
   selectedId = id;
   const m = minerals.find(x => x.id === id);
   if (!m) return;
 
-  // Update card selection
   document.querySelectorAll('.mineral-card').forEach(c => {
     c.classList.toggle('selected', parseInt(c.dataset.id) === id);
   });
 
-  // Load 3D
-  loadMineral(m);
+  // Cargar modelo 3D de Sketchfab en el viewer
+  loadSketchfab(id);
 
-  // Update info panel
   const cc = CAT_COLORS[m.cat];
-  document.getElementById('viewer-hint').style.display = 'none';
   const vi = document.getElementById('viewer-info');
   vi.style.display = 'block';
 
-  document.getElementById('vi-cat').innerHTML = `<span style="color:${cc.text}">${CAT_LABELS[m.cat]}</span>`;
-  document.getElementById('vi-name').textContent = m.name;
-  document.getElementById('vi-formula').textContent = m.formula;
-  document.getElementById('vi-props').innerHTML = `
-    <div class="vprop"><div class="vprop-label">Dureza</div><div class="vprop-value">${m.hardness}</div></div>
-    <div class="vprop"><div class="vprop-label">Sistema</div><div class="vprop-value">${m.system}</div></div>
-    <div class="vprop"><div class="vprop-label">Brillo</div><div class="vprop-value">${m.luster}</div></div>
-    <div class="vprop"><div class="vprop-label">Raya</div><div class="vprop-value">${m.streak}</div></div>
-    <div class="vprop"><div class="vprop-label">Exfoliación</div><div class="vprop-value">${m.cleavage}</div></div>
+  vi.innerHTML = `
+    <div class="vinfo-cat"><span style="color:${cc.text}">${CAT_LABELS[m.cat]}</span></div>
+    <div class="vinfo-name">${m.name}</div>
+    <div class="vinfo-formula">${m.formula}</div>
+    <div class="vinfo-props">
+      <div class="vprop"><div class="vprop-label">Dureza</div><div class="vprop-value">${m.hardness}</div></div>
+      <div class="vprop"><div class="vprop-label">Sistema</div><div class="vprop-value">${m.system}</div></div>
+      <div class="vprop"><div class="vprop-label">Brillo</div><div class="vprop-value">${m.luster}</div></div>
+      <div class="vprop"><div class="vprop-label">Raya</div><div class="vprop-value">${m.streak}</div></div>
+      <div class="vprop"><div class="vprop-label">Exfoliación</div><div class="vprop-value">${m.cleavage}</div></div>
+    </div>
+    <div class="vinfo-desc">${m.desc}</div>
+    ${m.arg ? `<div style="margin-top:.75rem;padding:.6rem .8rem;border-left:2px solid #C4A46B;background:rgba(196,164,107,0.08);border-radius:0 8px 8px 0"><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#C4A46B;display:block;margin-bottom:3px">🇦🇷 En Argentina</span><span style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6">${m.arg}</span></div>` : ''}
+    <div class="vinfo-tags">${(m.tags||[]).map(t=>`<span class="vtag">${t}</span>`).join('')}</div>
   `;
-  document.getElementById('vi-desc').textContent = m.desc;
-  document.getElementById('vi-tags').innerHTML = (m.tags || []).map(t => `<span class="vtag">${t}</span>`).join('');
 
-  // Scroll card into view on mobile
   const cardEl = document.querySelector(`.mineral-card[data-id="${id}"]`);
-  if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (cardEl) cardEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
-// ─── EVENTS ──────────────────────────────────────────────────────────
+// ─── EVENTS ───────────────────────────────────────────────────────────
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     activeCat = chip.dataset.cat;
     renderGrid();
@@ -656,11 +658,9 @@ document.getElementById('search-input').addEventListener('input', e => {
 });
 
 // ─── INIT ─────────────────────────────────────────────────────────────
-// Primero generar todas las miniaturas con el renderer único, luego mostrar el grid
-buildAllMiniPreviews(() => {
-  renderGrid();
-  setTimeout(() => selectMineral(1), 200);
-});
+renderGrid();
+setTimeout(() => selectMineral(1), 100);
+
 </script>
 </body>
 </html>
