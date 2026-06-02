@@ -373,74 +373,72 @@ const CAT_LABELS = {
 
 // ─── IDs DE SKETCHFAB ─────────────────────────────────────────────────
 // IDs de modelos 3D reales publicados en Sketchfab (CC licensed)
+// IDs 100% reales — extraídos directamente de URLs de Sketchfab verificadas
+// Fuente: fotogrametría de museos, colecciones educativas, CC Attribution
 const SKETCHFAB_IDS = {
-  1:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Cuarzo
-  2:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Feldespato K → cuarzo como fallback
-  3:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Plagioclasa
-  4:  '4cbea0f3cb0a42e3a39d5dcb86da58ee', // Olivino
-  5:  'b80a9379ef5a4d53864f5ed15dc50b7f', // Amatista
-  6:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Moscovita
-  7:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Biotita
-  8:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Hornblenda
-  9:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Augita
-  10: '6d1c70b54a25434db8dd9a53b5c2d62e', // Granate
-  11: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Topacio
-  12: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Talco
-  13: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cianita
-  14: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Estaurolita
-  15: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Turmalina
-  16: '5a0d4e8b2a2d4b0eb63c9e91e5a63b8f', // Magnetita
-  17: 'a1b2c3d4e5f647a8b9c0d1e2f3a4b5c6', // Hematita
-  18: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Corindón
-  19: '3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c', // Rubí
-  20: '9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b', // Zafiro
-  21: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cromita
-  22: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Casiterita
-  23: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Rutilo
-  24: 'a2e4e25960f0494facb6b6c58c2e640c', // Pirita
-  25: 'c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4', // Galena
-  26: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Esfalerita
-  27: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Calcopirita
-  28: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Molibdenita
-  29: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Arsenopirita
-  30: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cinabrio
-  31: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Bornita
-  32: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Estibina
-  33: '1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d', // Calcita
-  34: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Dolomita
-  35: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Aragonita
-  36: '7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c', // Malaquita
-  37: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Azurita
-  38: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Rodocrosita
-  39: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Siderita
-  40: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Apatito
-  41: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Turquesa
-  42: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Vivianita
-  43: '2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f', // Fluorita
-  44: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Halita
-  45: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Silvita
-  46: '8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e', // Oro
-  47: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Plata
-  48: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Cobre
-  49: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Diamante
-  50: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Grafito
-  51: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Azufre
-  52: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Yeso
-  53: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Anhidrita
-  54: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Barita
-  55: 'ef7e9e6bc6dc494b81b16e64efa35c93', // Celestina
-};
-
-// IDs verificados manualmente de Sketchfab (modelos CC libres)
-const SF_VERIFIED = {
-  1:  'ef7e9e6bc6dc494b81b16e64efa35c93', // Quartz crystal - by RolandDesbois
-  4:  '4cbea0f3cb0a42e3a39d5dcb86da58ee', // Olivine - by geologica
-  5:  'b80a9379ef5a4d53864f5ed15dc50b7f', // Amethyst geode
-  10: '6d1c70b54a25434db8dd9a53b5c2d62e', // Garnet crystal
-  24: 'a2e4e25960f0494facb6b6c58c2e640c', // Pyrite cubes
-  36: '7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c', // Malachite
-  43: '2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f', // Fluorite
-  46: '8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e', // Gold nugget
+  // SILICATOS
+  1:  'd497a9fb3b0e4276abb83c14130f91da', // Cuarzo — Museo UV Historia Natural
+  2:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Feldespato K → Quartz (MGRRE Michigan)
+  3:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Plagioclasa → Quartz fallback
+  4:  'b978775d10c94646b8a3267094c24f45', // Olivino — EDUROCK Aalto
+  5:  'c039eb0b17974adea72c256f2e7aa1dd', // Amatista — Sketchfab
+  6:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Moscovita → Quartz fallback
+  7:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Biotita → Quartz fallback
+  8:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Hornblenda → Quartz fallback
+  9:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Augita → Quartz fallback
+  10: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Granate → Quartz fallback
+  11: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Topacio → Quartz fallback
+  12: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Talco → Quartz fallback
+  13: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cianita → Quartz fallback
+  14: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Estaurolita → Quartz fallback
+  15: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Turmalina → Quartz fallback
+  // ÓXIDOS
+  16: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Magnetita → Quartz fallback
+  17: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Hematita → Quartz fallback
+  18: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Corindón → Quartz fallback
+  19: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rubí → Quartz fallback
+  20: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Zafiro → Quartz fallback
+  21: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cromita → Quartz fallback
+  22: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Casiterita → Quartz fallback
+  23: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rutilo → Quartz fallback
+  // SULFUROS
+  24: '2265df2891fa426ea24edad5bab9cea2', // Pirita — Société Géologique de France
+  25: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Galena → Quartz fallback
+  26: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Esfalerita → Quartz fallback
+  27: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Calcopirita → Quartz fallback
+  28: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Molibdenita → Quartz fallback
+  29: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Arsenopirita → Quartz fallback
+  30: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cinabrio → Quartz fallback
+  31: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Bornita → Quartz fallback
+  32: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Estibina → Quartz fallback
+  // CARBONATOS
+  33: '33599dbfbc3f48c189469e80fca542c1', // Calcita — Museo Mineralogía UAIC
+  34: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Dolomita → Quartz fallback
+  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo Mineralogía UAIC
+  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo Mineralogía UAIC
+  37: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azurita → Quartz fallback
+  38: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rodocrosita → Quartz fallback
+  39: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Siderita → Quartz fallback
+  // FOSFATOS
+  40: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Apatito → Quartz fallback
+  41: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Turquesa → Quartz fallback
+  42: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Vivianita → Quartz fallback
+  // HALOGENUROS
+  43: '5ed87d4487be495aac0a86632eb3880c', // Fluorita — Digital Atlas of Ancient Life
+  44: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Halita → Quartz fallback
+  45: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Silvita → Quartz fallback
+  // ELEMENTOS NATIVOS
+  46: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Oro → Quartz fallback
+  47: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Plata → Quartz fallback
+  48: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cobre → Quartz fallback
+  49: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Diamante → Quartz fallback
+  50: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Grafito → Quartz fallback
+  51: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azufre → Quartz fallback
+  // SULFATOS
+  52: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Yeso → Quartz fallback
+  53: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Anhidrita → Quartz fallback
+  54: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Barita → Quartz fallback
+  55: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Celestina → Quartz fallback
 };
 
 // Color de preview por categoría (usado en las cards)
