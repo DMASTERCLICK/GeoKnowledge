@@ -373,28 +373,28 @@ const CAT_LABELS = {
 
 // ─── IDs DE SKETCHFAB ─────────────────────────────────────────────────
 // IDs de modelos 3D reales publicados en Sketchfab (CC licensed)
-// IDs 100% reales — extraídos directamente de URLs de Sketchfab verificadas
-// Fuente: fotogrametría de museos, colecciones educativas, CC Attribution
+// IDs 100% reales extraídos de URLs de Sketchfab verificadas
+// Cada mineral tiene su modelo específico o el más parecido disponible
 const SKETCHFAB_IDS = {
   // SILICATOS
-  1:  'd497a9fb3b0e4276abb83c14130f91da', // Cuarzo — Museo UV Historia Natural
-  2:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Feldespato K → Quartz (MGRRE Michigan)
-  3:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Plagioclasa → Quartz fallback
+  1:  'd497a9fb3b0e4276abb83c14130f91da', // Cuarzo — Museo UV Historia Natural (fotogrametría)
+  2:  '4c448a3506a747d68fc2a7d6860a16bf', // Feldespato K — EDUROCK Aalto (K-Feldspar)
+  3:  '578f7772bf1942a1b0dc6f0622655948', // Plagioclasa — Jason Boettger (estructura cristalina)
   4:  'b978775d10c94646b8a3267094c24f45', // Olivino — EDUROCK Aalto
-  5:  'c039eb0b17974adea72c256f2e7aa1dd', // Amatista — Sketchfab
-  6:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Moscovita → Quartz fallback
+  5:  'c039eb0b17974adea72c256f2e7aa1dd', // Amatista — Sketchfab colección
+  6:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Moscovita → Quartz fallback (MGRRE Michigan)
   7:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Biotita → Quartz fallback
   8:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Hornblenda → Quartz fallback
   9:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Augita → Quartz fallback
-  10: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Granate → Quartz fallback
+  10: 'be2bf9718f9347b1ae6d3012ceb1b1e5', // Granate — Andradita, Museo Mineralogía UAIC
   11: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Topacio → Quartz fallback
-  12: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Talco → Quartz fallback
+  12: '537a70a65abb46b9b20410698b110bd6', // Talco — Museo Mineralogía UAIC
   13: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cianita → Quartz fallback
-  14: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Estaurolita → Quartz fallback
+  14: '0c3285e4748046a89ffe874668e6caa8', // Estaurolita — Graham Andrews (schist con estaurolita)
   15: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Turmalina → Quartz fallback
   // ÓXIDOS
-  16: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Magnetita → Quartz fallback
-  17: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Hematita → Quartz fallback
+  16: '3af33fa1f68049f9a69b7064927a8963', // Magnetita — Lambton County Museums
+  17: '694022dd73934f0fa2fd3e55e6ff0f05', // Hematita — Museo Mineralogía UAIC (cristales lustrosos)
   18: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Corindón → Quartz fallback
   19: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rubí → Quartz fallback
   20: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Zafiro → Quartz fallback
@@ -402,20 +402,20 @@ const SKETCHFAB_IDS = {
   22: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Casiterita → Quartz fallback
   23: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rutilo → Quartz fallback
   // SULFUROS
-  24: '2265df2891fa426ea24edad5bab9cea2', // Pirita — Société Géologique de France
-  25: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Galena → Quartz fallback
-  26: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Esfalerita → Quartz fallback
-  27: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Calcopirita → Quartz fallback
+  24: '2265df2891fa426ea24edad5bab9cea2', // Pirita — Société Géologique de France (fotogrametría)
+  25: '4f14f2434af84f949a0809c03eda53be', // Galena — Museo Mineralogía UAIC (fragmentos de clivaje)
+  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo Mineralogía UAIC (var. Cleiophane)
+  27: 'aaa78eabc92849eca871e1fe89bd3865', // Calcopirita — Museo UAIC (con galena)
   28: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Molibdenita → Quartz fallback
   29: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Arsenopirita → Quartz fallback
   30: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cinabrio → Quartz fallback
   31: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Bornita → Quartz fallback
   32: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Estibina → Quartz fallback
   // CARBONATOS
-  33: '33599dbfbc3f48c189469e80fca542c1', // Calcita — Museo Mineralogía UAIC
-  34: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Dolomita → Quartz fallback
-  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo Mineralogía UAIC
-  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo Mineralogía UAIC
+  33: '33599dbfbc3f48c189469e80fca542c1', // Calcita — Museo Mineralogía UAIC (estructura cristalina)
+  34: 'eaaf248e70504e699f11e02b7929186c', // Dolomita — EDUROCK Aalto
+  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo Mineralogía UAIC (trillings, España)
+  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo Mineralogía UAIC (forma cristalográfica)
   37: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azurita → Quartz fallback
   38: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rodocrosita → Quartz fallback
   39: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Siderita → Quartz fallback
@@ -435,7 +435,7 @@ const SKETCHFAB_IDS = {
   50: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Grafito → Quartz fallback
   51: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azufre → Quartz fallback
   // SULFATOS
-  52: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Yeso → Quartz fallback
+  52: 'de785119fe014b5e998a17e0fdcf6850', // Yeso — EDUROCK Aalto (Gypsum)
   53: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Anhidrita → Quartz fallback
   54: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Barita → Quartz fallback
   55: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Celestina → Quartz fallback
