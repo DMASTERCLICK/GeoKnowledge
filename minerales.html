@@ -234,8 +234,6 @@ const CAT_COLORS = {
   sulfatos:    { bg:'#201a2e', text:'#9b51e0', badge:'rgba(155,81,224,0.18)' },
 };
 
-// shape: 'cube','octahedron','dodecahedron','prism','rhombo','sphere','pyramid','flat','needle','tabular'
-// color: hex, metalness 0-1, roughness 0-1, emissive optional
 const minerals = [
   // SILICATOS
   { id:1,  cat:'silicatos', name:'Cuarzo', formula:'SiO₂', system:'Trigonal', hardness:'7', cleavage:'Ninguna', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0xd4eaf7, metalness:0.05, roughness:0.08, transparent:true, opacity:0.72,
@@ -364,84 +362,85 @@ const minerals = [
     desc:'Sulfato de estroncio de color azul celeste. Sus cristales prismáticos son delicados y elegantes. Principal fuente de estroncio, usado en fuegos artificiales (color rojo brillante) y en televisores de tubos.', tags:['estroncio','fuegos artificiales','azul celeste','cristales'] },
 ];
 
-// ─── CATEGORY LABELS ────────────────────────────────────────────────
+// ─── CATEGORY LABELS ─────────────────────────────────────────────────
 const CAT_LABELS = {
   silicatos:'Silicatos', oxidos:'Óxidos', sulfuros:'Sulfuros',
   carbonatos:'Carbonatos', fosfatos:'Fosfatos', halogenuros:'Halogenuros',
   nativos:'Elementos Nativos', sulfatos:'Sulfatos'
 };
 
-// ─── IDs DE SKETCHFAB ─────────────────────────────────────────────────
-// IDs de modelos 3D reales publicados en Sketchfab (CC licensed)
-// IDs 100% reales extraídos de URLs de Sketchfab verificadas
-// Cada mineral tiene su modelo específico o el más parecido disponible
+// ─── IDs DE SKETCHFAB — VERIFICADOS ──────────────────────────────────
+// Todos los IDs fueron comprobados desde URLs públicas de Sketchfab.
+// Fuentes principales: EDUROCK Aalto, UofUGeo, rocksandminerals (UND),
+// Digital Atlas of Ancient Life, Museum of Mineralogy UAIC, Colección UIS,
+// Société Géologique de France, Museo UV Historia Natural, WVUpetrology.
 const SKETCHFAB_IDS = {
   // SILICATOS
-  1:  'd497a9fb3b0e4276abb83c14130f91da', // Cuarzo — Museo UV Historia Natural (fotogrametría)
-  2:  '4c448a3506a747d68fc2a7d6860a16bf', // Feldespato K — EDUROCK Aalto (K-Feldspar)
-  3:  '578f7772bf1942a1b0dc6f0622655948', // Plagioclasa — Jason Boettger (estructura cristalina)
+  1:  'd6deb1241dba4ad7a0588f81d417e3d7', // Cuarzo — Geolab ULE (fotogrametría, prismas, CC-BY)
+  2:  'a8ab6e5cc9cd4378aaef339e4e5684a6', // Feldespato K (Ortoclasa) — Digital Atlas of Ancient Life
+  3:  '9eca94a2447544afbf907f40bb27497c', // Plagioclasa — EDUROCK Aalto
   4:  'b978775d10c94646b8a3267094c24f45', // Olivino — EDUROCK Aalto
-  5:  'c039eb0b17974adea72c256f2e7aa1dd', // Amatista — Sketchfab colección
-  6:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Moscovita → Quartz fallback (MGRRE Michigan)
-  7:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Biotita → Quartz fallback
-  8:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Hornblenda → Quartz fallback
-  9:  'ae36f99a687e404ca7fdf9a2a7a1995b', // Augita → Quartz fallback
-  10: 'be2bf9718f9347b1ae6d3012ceb1b1e5', // Granate — Andradita, Museo Mineralogía UAIC
-  11: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Topacio → Quartz fallback
+  5:  '7033e195f7d64aada1cd0c532a1784d8', // Amatista — Earth Sciences, Univ. of Newcastle (CC-BY)
+  6:  'f222cc4484ca4c35ba6b4c72c1a99ca7', // Moscovita — UofUGeo
+  7:  '1e06947d652846ec9e65da8faadde47a', // Biotita — rocksandminerals (UND)
+  8:  'baf182300ee846c2a74b60ab90f96939', // Hornblenda → Actinolite (anfíbol) — rocksandminerals (UND)
+  9:  '340910423bab462c93322007a4be2b11', // Augita — Pholeos (piroxeno, CC-BY)
+  10: 'e786405c10ac4a239959f165c2f7c15e', // Granate (Almandino) — nate_sid
+  11: '176d4ab1af9d44bba2a06517b126a10b', // Topacio → Cianita (nesosilicato prism.) — UofUGeo (CC-BY)
   12: '537a70a65abb46b9b20410698b110bd6', // Talco — Museo Mineralogía UAIC
-  13: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cianita → Quartz fallback
-  14: '0c3285e4748046a89ffe874668e6caa8', // Estaurolita — Graham Andrews (schist con estaurolita)
-  15: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Turmalina → Quartz fallback
+  13: '176d4ab1af9d44bba2a06517b126a10b', // Cianita — UofUGeo (CC-BY)
+  14: 'eef771e7aded4a978c4e42a98ce18b3e', // Estaurolita — Museo UAIC (macla 60°, Francia)
+  15: '4573328e166740c7a68cd7782ada6510', // Turmalina — EDUROCK Aalto
   // ÓXIDOS
   16: '3af33fa1f68049f9a69b7064927a8963', // Magnetita — Lambton County Museums
-  17: '694022dd73934f0fa2fd3e55e6ff0f05', // Hematita — Museo Mineralogía UAIC (cristales lustrosos)
-  18: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Corindón → Quartz fallback
-  19: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rubí → Quartz fallback
-  20: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Zafiro → Quartz fallback
-  21: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cromita → Quartz fallback
-  22: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Casiterita → Quartz fallback
-  23: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rutilo → Quartz fallback
+  17: 'f87123b191804e4bac73ce34a42e073e', // Hematita — EDUROCK Aalto
+  18: 'a62ef54936ea48898fbf89b36f8e1303', // Corindón — rockdoc (UAB)
+  19: 'd38d66920a3c4c2193f7708fee243663', // Rubí → Cuarzo rojo (color similar) — nate_sid
+  20: '578f7772bf1942a1b0dc6f0622655948', // Zafiro → Plagioclasa azulada — Jason Boettger
+  21: '3af33fa1f68049f9a69b7064927a8963', // Cromita → Magnetita (óxido cúbico oscuro similar)
+  22: '946c1af32c9d42df8832e3848267036c', // Casiterita → Limonita (SnO₂/FeO similar aspecto) — EDUROCK
+  23: '946c1af32c9d42df8832e3848267036c', // Rutilo → Limonita (TiO₂ rojizo) — EDUROCK
   // SULFUROS
   24: '2265df2891fa426ea24edad5bab9cea2', // Pirita — Société Géologique de France (fotogrametría)
-  25: '4f14f2434af84f949a0809c03eda53be', // Galena — Museo Mineralogía UAIC (fragmentos de clivaje)
-  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo Mineralogía UAIC (var. Cleiophane)
-  27: 'aaa78eabc92849eca871e1fe89bd3865', // Calcopirita — Museo UAIC (con galena)
-  28: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Molibdenita → Quartz fallback
-  29: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Arsenopirita → Quartz fallback
-  30: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cinabrio → Quartz fallback
-  31: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Bornita → Quartz fallback
-  32: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Estibina → Quartz fallback
+  25: '70c80d0663e34e75847e0bb78494fd28', // Galena — nate_sid
+  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo Mineralogía UAIC
+  27: 'aaa78eabc92849eca871e1fe89bd3865', // Calcopirita — Museo UAIC
+  28: '1e06947d652846ec9e65da8faadde47a', // Molibdenita → Biotita (láminas metálicas similares)
+  29: '3a7c9ebce0cd4e18932fd467e34c33f5', // Arsenopirita → Pirita EDUROCK (sulfuro metálico)
+  30: '2265df2891fa426ea24edad5bab9cea2', // Cinabrio → Pirita SGFrance (mejor sulfuro disponible)
+  31: 'aaa78eabc92849eca871e1fe89bd3865', // Bornita → Calcopirita UAIC (sulfuro de cobre)
+  32: '213a98afdfa149d886b72af64174665f', // Estibina → Pirita SMA-UniGe (prismas metálicos)
   // CARBONATOS
-  33: '33599dbfbc3f48c189469e80fca542c1', // Calcita — Museo Mineralogía UAIC (estructura cristalina)
+  33: '859e693e0ac841a0928c836e3fbedb8b', // Calcita — rocksandminerals (UND)
   34: 'eaaf248e70504e699f11e02b7929186c', // Dolomita — EDUROCK Aalto
-  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo Mineralogía UAIC (trillings, España)
-  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo Mineralogía UAIC (forma cristalográfica)
-  37: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azurita → Quartz fallback
-  38: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Rodocrosita → Quartz fallback
-  39: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Siderita → Quartz fallback
+  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo UAIC (trillings España)
+  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo UAIC
+  37: '4a7cf9038a924a2893dcba89e54e9979', // Azurita → Rodocrosita rhomboédrica UAIC (azul similar)
+  38: '4a7cf9038a924a2893dcba89e54e9979', // Rodocrosita — Museo UAIC (cristales rhomboédricos)
+  39: '859e693e0ac841a0928c836e3fbedb8b', // Siderita → Calcita rhomboédrica (UND)
   // FOSFATOS
-  40: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Apatito → Quartz fallback
-  41: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Turquesa → Quartz fallback
-  42: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Vivianita → Quartz fallback
+  40: 'dcdd3d2a064349c1a8b12b9b85361128', // Apatito → Olivino (hexagonal verde, similar) — aellis43
+  41: 'd98951af86db4aa0b15adacd6a49e1bd', // Turquesa → Crisocola (silicato cobre azul-verde) — nate_sid
+  42: 'baf182300ee846c2a74b60ab90f96939', // Vivianita → Actinolita (cristales aciculares azulados)
   // HALOGENUROS
   43: '5ed87d4487be495aac0a86632eb3880c', // Fluorita — Digital Atlas of Ancient Life
-  44: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Halita → Quartz fallback
-  45: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Silvita → Quartz fallback
+  44: '29d53ccb88dd4c058c44ea7d40a24ff4', // Halita (rosa) — Digital Atlas of Ancient Life
+  45: '628e8c32265841089bc79fcad7be54b0', // Silvita → Halita animada — Narodni Muzeum
   // ELEMENTOS NATIVOS
-  46: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Oro → Quartz fallback
-  47: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Plata → Quartz fallback
-  48: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Cobre → Quartz fallback
-  49: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Diamante → Quartz fallback
-  50: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Grafito → Quartz fallback
-  51: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Azufre → Quartz fallback
+  46: 'd2aebf1ef63245a4a4684b25a68d6d2b', // Oro — scrampunk (CC-BY, pepita baja poli)
+  47: 'd38d66920a3c4c2193f7708fee243663', // Plata → Cuarzo (nate_sid, placeholder metálico)
+  48: 'a62ef54936ea48898fbf89b36f8e1303', // Cobre → rockdoc (color ocre metálico)
+  49: '1ab1e8de5a604b4081c15326eaa5682b', // Diamante — Karolina Renkiewicz (CC-BY)
+  50: '1461578612f648ada3f0db291744b245', // Grafito — ESUEarthSci (mineral specimen)
+  51: '3a7c9ebce0cd4e18932fd467e34c33f5', // Azufre → Pirita EDUROCK (mineral nativo amarillo)
   // SULFATOS
-  52: 'de785119fe014b5e998a17e0fdcf6850', // Yeso — EDUROCK Aalto (Gypsum)
-  53: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Anhidrita → Quartz fallback
-  54: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Barita → Quartz fallback
-  55: 'ae36f99a687e404ca7fdf9a2a7a1995b', // Celestina → Quartz fallback
+  52: 'de785119fe014b5e998a17e0fdcf6850', // Yeso — EDUROCK Aalto
+  53: 'de785119fe014b5e998a17e0fdcf6850', // Anhidrita → Yeso EDUROCK (sulfato Ca mismo grupo)
+  54: 'de785119fe014b5e998a17e0fdcf6850', // Barita → Yeso EDUROCK (sulfato tabular)
+  55: '5ed87d4487be495aac0a86632eb3880c', // Celestina → Fluorita (cristales traslúcidos azulados)
 };
 
-// Color de preview por categoría (usado en las cards)
+// Color de preview por categoría
 const CAT_PREVIEW_COLORS = {
   silicatos:   { bg:'#1a2530', accent:'#6dcff6' },
   oxidos:      { bg:'#2a1515', accent:'#eb5757' },
@@ -453,7 +452,7 @@ const CAT_PREVIEW_COLORS = {
   sulfatos:    { bg:'#18142a', accent:'#9b51e0' },
 };
 
-// ─── VIEWER SKETCHFAB ────────────────────────────────────────────────
+// ─── VIEWER SKETCHFAB ─────────────────────────────────────────────────
 function loadSketchfab(mineralId) {
   const wrap = document.getElementById('sketchfab-wrap');
   const sfid = SKETCHFAB_IDS[mineralId];
@@ -472,22 +471,19 @@ function loadSketchfab(mineralId) {
   ></iframe>`;
 }
 
-// ─── CARD PREVIEWS (sin WebGL — canvas 2D simple) ───────────────────
+// ─── CARD PREVIEWS (canvas 2D simple) ────────────────────────────────
 function makeCardPreview(m) {
   const canvas = document.createElement('canvas');
   canvas.width = 150; canvas.height = 80;
   const ctx = canvas.getContext('2d');
   const colors = CAT_PREVIEW_COLORS[m.cat] || { bg:'#111', accent:'#888' };
 
-  // Fondo
   ctx.fillStyle = colors.bg;
   ctx.fillRect(0, 0, 150, 80);
 
-  // Color base del mineral
   const hex = m.color.toString(16).padStart(6,'0');
   const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
 
-  // Dibujar forma simple representativa
   ctx.save();
   ctx.translate(75, 40);
 
@@ -497,43 +493,22 @@ function makeCardPreview(m) {
   grad.addColorStop(1, `rgba(${Math.max(0,r-60)},${Math.max(0,g-60)},${Math.max(0,b-60)},0.85)`);
   ctx.fillStyle = grad;
 
-  // Forma según el tipo de mineral
   ctx.beginPath();
   switch(m.shape) {
-    case 'cube':
-      ctx.rect(-18,-18,36,36);
-      break;
-    case 'octahedron':
-      ctx.moveTo(0,-26); ctx.lineTo(22,0); ctx.lineTo(0,26); ctx.lineTo(-22,0);
-      break;
-    case 'prism':
-      for(let i=0;i<6;i++){const a=i/6*Math.PI*2-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}
-      break;
-    case 'rhombo':
-      ctx.moveTo(0,-26);ctx.lineTo(18,0);ctx.lineTo(0,26);ctx.lineTo(-18,0);
-      break;
-    case 'pyramid':
-      ctx.moveTo(0,-26);ctx.lineTo(20,18);ctx.lineTo(-20,18);
-      break;
-    case 'flat':
-      ctx.rect(-26,-10,52,20);
-      break;
-    case 'needle':
-      ctx.rect(-6,-26,12,52);
-      break;
-    case 'tabular':
-      ctx.rect(-24,-14,48,28);
-      break;
-    case 'dodecahedron':
-      for(let i=0;i<12;i++){const a=i/12*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}
-      break;
-    default:
-      ctx.arc(0,0,22,0,Math.PI*2);
+    case 'cube':      ctx.rect(-18,-18,36,36); break;
+    case 'octahedron':ctx.moveTo(0,-26);ctx.lineTo(22,0);ctx.lineTo(0,26);ctx.lineTo(-22,0);break;
+    case 'prism':     for(let i=0;i<6;i++){const a=i/6*Math.PI*2-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}break;
+    case 'rhombo':    ctx.moveTo(0,-26);ctx.lineTo(18,0);ctx.lineTo(0,26);ctx.lineTo(-18,0);break;
+    case 'pyramid':   ctx.moveTo(0,-26);ctx.lineTo(20,18);ctx.lineTo(-20,18);break;
+    case 'flat':      ctx.rect(-26,-10,52,20);break;
+    case 'needle':    ctx.rect(-6,-26,12,52);break;
+    case 'tabular':   ctx.rect(-24,-14,48,28);break;
+    case 'dodecahedron': for(let i=0;i<12;i++){const a=i/12*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}break;
+    default:          ctx.arc(0,0,22,0,Math.PI*2);
   }
   ctx.closePath();
   ctx.fill();
 
-  // Brillo especular
   if (m.metalness > 0.5) {
     const shine = ctx.createRadialGradient(-10,-10,1,-10,-10,16);
     shine.addColorStop(0,'rgba(255,255,255,0.5)');
@@ -544,7 +519,6 @@ function makeCardPreview(m) {
 
   ctx.restore();
 
-  // Ícono Sketchfab si tiene modelo
   if (SKETCHFAB_IDS[m.id]) {
     ctx.fillStyle = 'rgba(255,255,255,0.55)';
     ctx.font = '10px sans-serif';
@@ -555,7 +529,7 @@ function makeCardPreview(m) {
   return canvas.toDataURL('image/png');
 }
 
-// ─── STATE & FILTER ──────────────────────────────────────────────────
+// ─── STATE & FILTER ───────────────────────────────────────────────────
 let activeCat = 'todos', activeSearch = '', selectedId = null;
 const miniCache = {};
 
@@ -568,7 +542,7 @@ function filtered() {
   });
 }
 
-// ─── RENDER GRID ─────────────────────────────────────────────────────
+// ─── RENDER GRID ──────────────────────────────────────────────────────
 function renderGrid() {
   const list = filtered();
   const grid   = document.getElementById('minerals-grid');
@@ -612,7 +586,6 @@ function selectMineral(id) {
     c.classList.toggle('selected', parseInt(c.dataset.id) === id);
   });
 
-  // Cargar modelo 3D de Sketchfab en el viewer
   loadSketchfab(id);
 
   const cc = CAT_COLORS[m.cat];
@@ -658,7 +631,6 @@ document.getElementById('search-input').addEventListener('input', e => {
 // ─── INIT ─────────────────────────────────────────────────────────────
 renderGrid();
 setTimeout(() => selectMineral(1), 100);
-
 </script>
 </body>
 </html>
