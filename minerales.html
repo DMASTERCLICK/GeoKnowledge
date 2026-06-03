@@ -67,8 +67,26 @@
     .mineral-card{background:var(--white);border:.5px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;text-align:center}
     .mineral-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(74,46,26,0.12);border-color:var(--brown-light)}
     .mineral-card.selected{border-color:var(--brown-mid);background:var(--cream-dark);box-shadow:0 0 0 2px var(--brown-mid)}
+
+    /* CARD PREVIEW — now uses real images */
     .card-preview{width:100%;height:80px;border-radius:10px;background:var(--viewer-bg);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-    .card-preview canvas{width:100%!important;height:100%!important}
+    .card-preview img.mineral-photo{
+      width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;
+      transition:transform .3s ease;
+    }
+    .mineral-card:hover .card-preview img.mineral-photo{transform:scale(1.07)}
+    .card-preview img.mineral-photo.errored{display:none}
+    .card-preview .fallback-icon{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-size:28px;opacity:0.5;
+    }
+    .card-preview .sf-badge{
+      position:absolute;bottom:5px;right:7px;
+      background:rgba(0,0,0,0.6);color:#fff;
+      font-size:9px;padding:2px 6px;border-radius:99px;font-weight:600;
+      z-index:2;pointer-events:none;
+    }
+
     .card-name{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--text-primary);line-height:1.2}
     .card-formula{font-size:10px;color:var(--text-muted);font-style:italic}
     .card-cat-badge{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:99px;width:fit-content;margin:0 auto}
@@ -222,6 +240,79 @@
 </footer>
 
 <script>
+// ─── IMÁGENES REALES POR MINERAL (Wikimedia Commons — dominio público / CC) ────
+const MINERAL_IMAGES = {
+  // SILICATOS
+  1:  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Quartz%2C_Tibet.jpg/320px-Quartz%2C_Tibet.jpg',
+  2:  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Orthoclase-1-Madagas.jpg/320px-Orthoclase-1-Madagas.jpg',
+  3:  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Plagioclase_feldspar_specimen.jpg/320px-Plagioclase_feldspar_specimen.jpg',
+  4:  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Peridot_on_matrix.jpg/320px-Peridot_on_matrix.jpg',
+  5:  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amethyst._Magaliesburg%2C_South_Africa.jpg/320px-Amethyst._Magaliesburg%2C_South_Africa.jpg',
+  6:  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Muscovite-281bc.jpg/320px-Muscovite-281bc.jpg',
+  7:  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Biotite_Biotit.jpg/320px-Biotite_Biotit.jpg',
+  8:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Hornblende-250px.jpg/320px-Hornblende-250px.jpg',
+  9:  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Augite_-_pyroxene_group.jpg/320px-Augite_-_pyroxene_group.jpg',
+  10: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Almandine_-_Garnet_group.jpg/320px-Almandine_-_Garnet_group.jpg',
+  11: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Topaz_-_Minas_Gerais%2C_Brazil.jpg/320px-Topaz_-_Minas_Gerais%2C_Brazil.jpg',
+  12: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Talc_block.jpg/320px-Talc_block.jpg',
+  13: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Kyanite_crystals_%28Kyanit%29_-_Czech_Rep..jpg/320px-Kyanite_crystals_%28Kyanit%29_-_Czech_Rep..jpg',
+  14: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Staurolite_crystals_in_schist.jpg/320px-Staurolite_crystals_in_schist.jpg',
+  15: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tourmaline-189240.jpg/320px-Tourmaline-189240.jpg',
+  // ÓXIDOS
+  16: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Magnetite-118736.jpg/320px-Magnetite-118736.jpg',
+  17: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Hematite.jpg/320px-Hematite.jpg',
+  18: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Corundum_India.jpg/320px-Corundum_India.jpg',
+  19: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Ruby_gem.jpg/320px-Ruby_gem.jpg',
+  20: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Sapphire_gem.jpg/320px-Sapphire_gem.jpg',
+  21: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Chromite_-_South_Africa.jpg/320px-Chromite_-_South_Africa.jpg',
+  22: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Cassiterite_-_Viloco%2C_Bolivia.jpg/320px-Cassiterite_-_Viloco%2C_Bolivia.jpg',
+  23: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Rutile_in_quartz_-_quartz_with_rutile_inclusions.jpg/320px-Rutile_in_quartz_-_quartz_with_rutile_inclusions.jpg',
+  // SULFUROS
+  24: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/PyriteCrystal.jpg/320px-PyriteCrystal.jpg',
+  25: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Galena_germanite_quartz_from_the_Fletcher_Mine%2C_Viburnum_Trend%2C_Reynolds_County%2C_Missouri%2C_USA_-_cropped.jpg/320px-Galena_germanite_quartz_from_the_Fletcher_Mine%2C_Viburnum_Trend%2C_Reynolds_County%2C_Missouri%2C_USA_-_cropped.jpg',
+  26: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sphalerite_-_Joplin%2C_Jasper_County%2C_Missouri%2C_USA.jpg/320px-Sphalerite_-_Joplin%2C_Jasper_County%2C_Missouri%2C_USA.jpg',
+  27: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/ChalcopyriteSample.jpg/320px-ChalcopyriteSample.jpg',
+  28: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Molybdenite-118785.jpg/320px-Molybdenite-118785.jpg',
+  29: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Arsenopyrite-227645.jpg/320px-Arsenopyrite-227645.jpg',
+  30: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cinnabar-39690.jpg/320px-Cinnabar-39690.jpg',
+  31: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Bornite%28Peacock_ore%29_and_Chalcopyrite.jpg/320px-Bornite%28Peacock_ore%29_and_Chalcopyrite.jpg',
+  32: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Stibnite-140779.jpg/320px-Stibnite-140779.jpg',
+  // CARBONATOS
+  33: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Calcite-Dolomite-252663.jpg/320px-Calcite-Dolomite-252663.jpg',
+  34: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Dolomite-118813.jpg/320px-Dolomite-118813.jpg',
+  35: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Aragonite-39738.jpg/320px-Aragonite-39738.jpg',
+  36: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Malachite_-_Shaba_Congo.jpg/320px-Malachite_-_Shaba_Congo.jpg',
+  37: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/AzuriteMalachite.jpg/320px-AzuriteMalachite.jpg',
+  38: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Rhodochrosite-118733.jpg/320px-Rhodochrosite-118733.jpg',
+  39: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Siderite-164080.jpg/320px-Siderite-164080.jpg',
+  // FOSFATOS
+  40: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Apatite_Canada.jpg/320px-Apatite_Canada.jpg',
+  41: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Turquoise_-_Bisbee%2C_Arizona%2C_USA.jpg/320px-Turquoise_-_Bisbee%2C_Arizona%2C_USA.jpg',
+  42: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Vivianite-170040.jpg/320px-Vivianite-170040.jpg',
+  // HALOGENUROS
+  43: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/FluoriteCrystal.jpg/320px-FluoriteCrystal.jpg',
+  44: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Halite_crystals.jpg/320px-Halite_crystals.jpg',
+  45: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Sylvite-118779.jpg/320px-Sylvite-118779.jpg',
+  // ELEMENTOS NATIVOS
+  46: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Native_Gold_Quartz_Chalcopyrite.jpg/320px-Native_Gold_Quartz_Chalcopyrite.jpg',
+  47: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Silver_-_Kongsberg%2C_Norway.jpg/320px-Silver_-_Kongsberg%2C_Norway.jpg',
+  48: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/NativeCopperUSGOV.jpg/320px-NativeCopperUSGOV.jpg',
+  49: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Diamond_and_graphite2.jpg/320px-Diamond_and_graphite2.jpg',
+  50: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Graphite-sample.jpg/320px-Graphite-sample.jpg',
+  51: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Sulfur_-_Agrigento%2C_Sicily%2C_Italy.jpg/320px-Sulfur_-_Agrigento%2C_Sicily%2C_Italy.jpg',
+  // SULFATOS
+  52: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Gypsum-40188.jpg/320px-Gypsum-40188.jpg',
+  53: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Anhydrite-Cuchillo.jpg/320px-Anhydrite-Cuchillo.jpg',
+  54: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Baryte-118837.jpg/320px-Baryte-118837.jpg',
+  55: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Celestine-118823.jpg/320px-Celestine-118823.jpg',
+};
+
+// Fallback emoji icons por categoría, en caso de que la imagen no cargue
+const CAT_FALLBACK = {
+  silicatos:'🔷', oxidos:'🔴', sulfuros:'🟡', carbonatos:'🔵',
+  fosfatos:'🟣', halogenuros:'🟢', nativos:'🟠', sulfatos:'⚪'
+};
+
 // ─── DATOS DE MINERALES ────────────────────────────────────────────────────────
 const CAT_COLORS = {
   silicatos:   { bg:'#1a2e1a', text:'#6fcf97', badge:'rgba(111,207,151,0.18)' },
@@ -266,7 +357,6 @@ const minerals = [
     desc:'Famosa por sus maclas en cruz (macla de penetración). Mineral índice de metamorfismo de grado medio. Sus cristales de color marrón rojizo son inconfundibles en esquistos y gneis.', tags:['macla en cruz','metamorfismo','esquisto','mineral índice'] },
   { id:15, cat:'silicatos', name:'Turmalina', formula:'(Na,Ca)(Li,Mg,Fe,Al)₃Al₆(Si₆O₁₈)(BO₃)₃(OH,F)₄', system:'Trigonal', hardness:'7–7.5', cleavage:'Ninguna', luster:'Vítreo', streak:'Blanco', shape:'prism', color:0x1a4a2a, metalness:0.0, roughness:0.12,
     desc:'Mineral boráceo de composición muy variable. Piezoeléctico y piroeléctico. Sus variedades gema incluyen rubellita (rosa), indicolita (azul) y la excepcional sandía (rosa/verde). Común en pegmatitas.', tags:['boro','pegmatita','piroelectricidad','gema'] },
-
   // ÓXIDOS
   { id:16, cat:'oxidos', name:'Magnetita', formula:'Fe₃O₄', system:'Cúbico', hardness:'5.5–6', cleavage:'Ninguna', luster:'Submetálico', streak:'Negro', shape:'octahedron', color:0x1a1a1a, metalness:0.9, roughness:0.25,
     desc:'Óxido de hierro magnético. Uno de los principales minerales de hierro. Sus cristales octaédricos son característicos. Contribuye al paleomagnetismo de las rocas. Abundante en rocas máficas y metamórficas.', tags:['hierro','magnético','paleomagnetismo','octaédrico'] },
@@ -284,7 +374,6 @@ const minerals = [
     desc:'Principal mena de estaño. Se presenta en cristales bipiramidales tetragonales. Resistente al intemperismo, forma placeres aluviales. Bolivia y el sudeste asiático concentran la producción mundial.', tags:['estaño','mena','placer aluvial','Bolivia'] },
   { id:23, cat:'oxidos', name:'Rutilo', formula:'TiO₂', system:'Tetragonal', hardness:'6–6.5', cleavage:'Perfecta', luster:'Adamantino a metálico', streak:'Marrón rojizo', shape:'prism', color:0x8b3a00, metalness:0.55, roughness:0.2,
     desc:'Principal mineral de titanio. Sus agujas dentro del cuarzo crean el "cuarzo rutilado". El TiO₂ se usa como pigmento blanco. Resistente al intemperismo y se concentra en arenas negras de playa.', tags:['titanio','pigmento','cuarzo rutilado','placer'] },
-
   // SULFUROS
   { id:24, cat:'sulfuros', name:'Pirita', formula:'FeS₂', system:'Cúbico', hardness:'6–6.5', cleavage:'Imperfecta', luster:'Metálico brillante', streak:'Negro verdoso', shape:'cube', color:0xc8a832, metalness:0.98, roughness:0.08,
     desc:'El "oro de los tontos". Sus cristales cúbicos perfectos con estrías en las caras son inconfundibles. Abundantísima en depósitos hidrotermales, rocas sedimentarias negras y como mineral accesorio. Fuente de SO₂ para ácido sulfúrico.', tags:['sulfuro de hierro','hidrotermal','ácido sulfúrico','framboides'] },
@@ -304,7 +393,6 @@ const minerals = [
     desc:'Conocida como "mineral pavo real" por su iridiscencia azul-violeta-roja al oxidarse. Mena importante de cobre. Frecuente en pórfidos de cobre y depósitos de Cu-Fe.', tags:['cobre','iridiscencia','pórfido','oxidación'] },
   { id:32, cat:'sulfuros', name:'Estibina', formula:'Sb₂S₃', system:'Ortorrómbico', hardness:'2', cleavage:'Perfecta', luster:'Metálico', streak:'Gris plomizo', shape:'needle', color:0x4a4a4a, metalness:0.9, roughness:0.1,
     desc:'Principal mena de antimonio. Cristales prismáticos elongados, a veces curvados, con estrías longitudinales. Clásica de depósitos hidrotermales de baja temperatura. China domina la producción mundial.', tags:['antimonio','hidrotermal','cristales curvados','China'] },
-
   // CARBONATOS
   { id:33, cat:'carbonatos', name:'Calcita', formula:'CaCO₃', system:'Trigonal', hardness:'3', cleavage:'Perfecta romboédrica', luster:'Vítreo', streak:'Blanco', shape:'rhombo', color:0xf0ece4, metalness:0.0, roughness:0.25, transparent:true, opacity:0.85,
     desc:'Mineral más estable del sistema CaCO₃. Componente esencial de calizas, mármoles y conchas. Efervescente con HCl diluido. Sus cristales son muy variados: escalenoédricos, romboédricos, prismáticos.', tags:['caliza','mármol','efervescencia','CaCO₃'] },
@@ -320,7 +408,6 @@ const minerals = [
     desc:'Carbonato de manganeso de color rosa a rojo. Argentina tiene los mejores cristales del mundo en Capillitas, Catamarca. Es piedra nacional argentina (Rosa del Inca). También llamada Rodocrosita argentina.', tags:['manganeso','Argentina','Catamarca','Rosa del Inca'] },
   { id:39, cat:'carbonatos', name:'Siderita', formula:'FeCO₃', system:'Trigonal', hardness:'3.5–4.5', cleavage:'Perfecta romboédrica', luster:'Vítreo', streak:'Blanco', shape:'rhombo', color:0x8b6a44, metalness:0.08, roughness:0.3,
     desc:'Carbonato de hierro. Forma en ambientes reductores diagenéticos y zonas de alteración hidrotermal. Mena de hierro de baja ley. Sus cristales romboédricos curvados (en silla de montar) son típicos.', tags:['hierro','diagenético','hidrotermal','sedimentario'] },
-
   // FOSFATOS
   { id:40, cat:'fosfatos', name:'Apatito', formula:'Ca₅(PO₄)₃(F,Cl,OH)', system:'Hexagonal', hardness:'5', cleavage:'Imperfecta', luster:'Vítreo a ceroso', streak:'Blanco', shape:'prism', color:0x44aa88, metalness:0.0, roughness:0.28,
     desc:'Mineral de referencia para la dureza 5 en la escala de Mohs. Único mineral fosfático biológico: forma huesos y dientes. Esencial para fertilizantes. Sus cristales prismáticos hexagonales son elegantes.', tags:['escala Mohs','huesos','fertilizante','biomineral'] },
@@ -328,7 +415,6 @@ const minerals = [
     desc:'Fosfato de cobre y aluminio de color azul-verde característico. Una de las gemas más antiguas de la humanidad. Se forma en zonas áridas por meteorización de rocas ricas en cobre. Irán y EE.UU. son los principales productores.', tags:['gema','cobre','zona árida','Irán'] },
   { id:42, cat:'fosfatos', name:'Vivianita', formula:'Fe₃(PO₄)₂·8H₂O', system:'Monoclínico', hardness:'1.5–2', cleavage:'Perfecta', luster:'Vítreo', streak:'Blanco', shape:'needle', color:0x1a3a6a, metalness:0.0, roughness:0.25,
     desc:'Fosfato de hierro hidratado. Incoloro cuando es fresco, se oxida al azul-verde intenso con la exposición. Se forma en sedimentos anóxicos y suelos ricos en materia orgánica. Notable por su transformación de color.', tags:['hierro','anóxico','oxidación','sedimento'] },
-
   // HALOGENUROS
   { id:43, cat:'halogenuros', name:'Fluorita', formula:'CaF₂', system:'Cúbico', hardness:'4', cleavage:'Perfecta octaédrica', luster:'Vítreo', streak:'Blanco', shape:'cube', color:0x8844cc, metalness:0.0, roughness:0.08, transparent:true, opacity:0.68,
     desc:'Mineral de referencia para la dureza 4. Fluorescente bajo UV (el fenómeno lleva su nombre). Gran variedad de colores. Usada como fundente en siderurgia (espato flúor) y en óptica de alta precisión.', tags:['fluorescencia','espato flúor','dureza 4','óptica'] },
@@ -336,7 +422,6 @@ const minerals = [
     desc:'La sal de mesa. Cristales cúbicos perfectos. Se deposita por evaporación de cuerpos de agua salada (evaporita). Las salinas punteanas y la Puna argentina son grandes productores. Soluble en agua.', tags:['sal','evaporita','soluble','Puna argentina'] },
   { id:45, cat:'halogenuros', name:'Silvita', formula:'KCl', system:'Cúbico', hardness:'2', cleavage:'Perfecta cúbica', luster:'Vítreo', streak:'Blanco', shape:'cube', color:0xffeecc, metalness:0.0, roughness:0.22,
     desc:'Cloruro de potasio. Muy similar a la halita pero con sabor amargo. Evaporita que se deposita después de la halita. Fundamental para la producción de fertilizantes potásicos. Se distingue de la halita por su sabor.', tags:['potasio','evaporita','fertilizante','sabor amargo'] },
-
   // ELEMENTOS NATIVOS
   { id:46, cat:'nativos', name:'Oro', formula:'Au', system:'Cúbico', hardness:'2.5–3', cleavage:'Ninguna', luster:'Metálico brillante', streak:'Amarillo', shape:'cube', color:0xffcc00, metalness:1.0, roughness:0.03,
     desc:'Metal nativo de color amarillo brillante. No se corroe ni oxida. Se forma en filones hidrotermales de cuarzo y en placeres aluviales. Densidad 19.3 g/cm³. Argentina tiene yacimientos en San Juan, Santa Cruz y Jujuy.', tags:['metal precioso','hidrotermal','placer','San Juan'] },
@@ -350,7 +435,6 @@ const minerals = [
     desc:'Polimorfismo del carbono estable a baja presión. Conductor eléctrico. Sus capas de grafeno unidas débilmente explican su blandura y uso como lubricante y en lápices. Hoy central en baterías de litio.', tags:['carbono','polimorfismo','grafeno','batería de litio'] },
   { id:51, cat:'nativos', name:'Azufre', formula:'S', system:'Ortorrómbico', hardness:'1.5–2.5', cleavage:'Imperfecta', luster:'Resinoso', streak:'Blanco', shape:'pyramid', color:0xddcc00, metalness:0.0, roughness:0.28,
     desc:'Elemento nativo de color amarillo brillante. Se forma en fumarolas volcánicas, lagos de cráter y por actividad bacteriana. Arde con llama azul produciendo SO₂. Base de la industria química y del ácido sulfúrico.', tags:['volcánico','fumarola','ácido sulfúrico','Puna'] },
-
   // SULFATOS
   { id:52, cat:'sulfatos', name:'Yeso', formula:'CaSO₄·2H₂O', system:'Monoclínico', hardness:'2', cleavage:'Perfecta', luster:'Vítreo a perlado', streak:'Blanco', shape:'flat', color:0xf8f4ec, metalness:0.0, roughness:0.2,
     desc:'El sulfato más común. Dureza 2 en la escala de Mohs. Evaporita que se deposita antes que la halita. Sus variedades incluyen el alabastro (masivo), el espejuelo (láminas transparentes) y el yeso fibroso (satinado).', tags:['evaporita','construcción','escala Mohs','alabastro'] },
@@ -369,86 +453,63 @@ const CAT_LABELS = {
   nativos:'Elementos Nativos', sulfatos:'Sulfatos'
 };
 
-// ─── IDs DE SKETCHFAB — CORREGIDOS Y VERIFICADOS ─────────────────────
-// Fuentes: Museo UAIC (MineralogyPetrographyMuseum), EDUROCK Aalto,
-// Digital Atlas of Ancient Life, nate_sid, rocksandminerals (UND),
-// Lapworth Museum, scrampunk, ESUEarthSci, Jason Boettger, Karolina Renkiewicz.
+// ─── IDs DE SKETCHFAB ─────────────────────────────────────────────────
 const SKETCHFAB_IDS = {
-  // SILICATOS
-  1:  'd6deb1241dba4ad7a0588f81d417e3d7', // Cuarzo — Geolab ULE (fotogrametría, CC-BY)
-  2:  'a8ab6e5cc9cd4378aaef339e4e5684a6', // Feldespato K — Digital Atlas of Ancient Life
-  3:  'a62ef54936ea48898fbf89b36f8e1303', // Plagioclasa — EDUROCK Aalto
-  4:  'b978775d10c94646b8a3267094c24f45', // Olivino — EDUROCK Aalto
-  5:  '7033e195f7d64aada1cd0c532a1784d8', // Amatista — Univ. of Newcastle (CC-BY)
-  6:  '281bc57cd8e74a6498fc8a9881d089c7', // Moscovita — UofUGeo
-  7:  '1e06947d652846ec9e65da8faadde47a', // Biotita — rocksandminerals (UND)
-  8:  'fc630be8b0c64256a89bea72d5aacce', // Hornblenda/Actinolita — rocksandminerals (UND)
-  9:  '340910423bab462c93322007a4be2b11', // Augita — Pholeos (CC-BY)
-  10: 'e786405c10ac4a239959f165c2f7c15e', // Granate (Almandino) — nate_sid
-  11: 'c8e66ba6a343429e9107bd3021990d9a', // Topacio translúcido — Museo UAIC ✓ CORREGIDO
-  12: '537a70a65abb46b9b20410698b110bd6', // Talco — Museo UAIC
-  13: '176d4ab1af9d44bba2a06517b126a10b', // Cianita — UofUGeo (CC-BY)
-  14: 'eef771e7aded4a978c4e42a98ce18b3e', // Estaurolita — Museo UAIC (macla 60°)
-  15: '4573328e166740c7a68cd7782ada6510', // Turmalina — EDUROCK Aalto
-  // ÓXIDOS
-  16: '3af33fa1f68049f9a69b7064927a8963', // Magnetita — Lambton County Museums
-  17: 'f87123b191804e4bac73ce34a42e073e', // Hematita — EDUROCK Aalto
-  18: 'f79f4cb3faa14d8eb1f6db3051141bf1', // Corindón — rockdoc (UAB)
-  19: '342bcf5feff446bb9093182ecb024562', // Rubí — nate_sid
-  20: '350ae09d1d21495ca7231363432b7fb5', // Zafiro — Jason Boettger
-  21: '3af33fa1f68049f9a69b7064927a8963', // Cromita → Magnetita (óxido cúbico oscuro, similar)
-  22: '946c1af32c9d42df8832e3848267036c', // Casiterita — EDUROCK (placeholder)
-  23: 'ae72935505484fcf983473750eecdfdb', // Rutilo — Museo UAIC "R is for Rutile" ✓ CORREGIDO
-  // SULFUROS
-  24: 'cb74422b421d4a14bb37ce78fa5fa488', // Pirita — Museo UAIC cubes aesthetic ✓ CORREGIDO
-  25: '70c80d0663e34e75847e0bb78494fd28', // Galena — nate_sid
-  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo UAIC
-  27: 'a8e273f8bcc14e84b998da48d25a9ef8', // Calcopirita iridiscente — Museo UAIC ✓ CORREGIDO
-  28: 'ecf818fab98e4af6ba619cd3b3b31377', // Molibdenita → Biotita (láminas metálicas, similar)
-  29: '68bae3e231a540e7b56534d5315d2e58', // Arsenopirita → Pirita piritohedral UAIC ✓ CORREGIDO
-  30: '354b073e3e6a4e99bd9a30fb68e6f323', // Cinabrio → Pirita dodecaedro UAIC ✓ CORREGIDO
-  31: '9daa3a244b4b452590d5a8c9a62c7f70', // Bornita → Ore sample Cu+Fe+Pb UAIC ✓ CORREGIDO
-  32: '149b1a4a5b334ddcbc126b07989b3c6a', // Estibina — nate_sid specimen real ✓ CORREGIDO
-  // CARBONATOS
-  33: '859e693e0ac841a0928c836e3fbedb8b', // Calcita — rocksandminerals (UND)
-  34: 'eaaf248e70504e699f11e02b7929186c', // Dolomita — EDUROCK Aalto
-  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo UAIC (trillings)
-  36: '376404aefff94f6b8598b8cfb6915313', // Malaquita pulida — Museo UAIC ✓ CORREGIDO
-  37: '59b3e95afb5b41c6b6281b48dae44416', // Azurita + Malaquita — Museo UAIC ✓ CORREGIDO
-  38: '4a7cf9038a924a2893dcba89e54e9979', // Rodocrosita romboedros — Museo UAIC
-  39: '608a1c1676514f999a40d5e9943f0173', // Siderita → Calcita romboédrica (similar)
-  // FOSFATOS
-  40: '56b212b5f1c54db2a739ccfd85b10ef8', // Apatito — aellis43
-  41: 'd98951af86db4aa0b15adacd6a49e1bd', // Turquesa — nate_sid
-  42: '8386a76e90f8462ba8a9af9e3f82f02c', // Vivianita → Actinolita (acicular azulada)
-  // HALOGENUROS
-  43: '5ed87d4487be495aac0a86632eb3880c', // Fluorita — Digital Atlas of Ancient Life
-  44: 'a9ffe137e1624cb7bc238a7ea707ef38', // Halita — Museo UAIC cubes reales ✓ CORREGIDO
-  45: '67857544572145108205b665b0a6196f', // Silvita — Narodni Muzeum
-  // ELEMENTOS NATIVOS
-  46: 'd2aebf1ef63245a4a4684b25a68d6d2b', // Oro — scrampunk (CC-BY)
-  47: 'cfcb8622913f40b6a18d4df2e69f9016', // Plata — nate_sid (placeholder metálico)
-  48: '1534dfb7f1e3420a9f38f1a5bb4d909b', // Cobre — rockdoc
-  49: '1ab1e8de5a604b4081c15326eaa5682b', // Diamante — Karolina Renkiewicz (CC-BY)
-  50: '1461578612f648ada3f0db291744b245', // Grafito — ESUEarthSci
-  51: 'a7f23fb5f196403dbeb4e0e1f91f1e3c', // Azufre — Museo UAIC crystallographic sulphur ✓ CORREGIDO
-  // SULFATOS
-  52: 'de785119fe014b5e998a17e0fdcf6850', // Yeso — EDUROCK Aalto
-  53: '7dea299cf37c4d4d971dd89475935af9', // Anhidrita → Yeso EDUROCK (sulfato Ca, similar)
-  54: '2748932830f149c0bc1d6ac2ecfc6d0b', // Barita — Museo UAIC cristales translúcidos ✓ CORREGIDO
-  55: '1a419f500821461dbca52bc4cf0b4b39', // Celestina → Fluorita (traslúcida similar)
-};
-
-// Color de preview por categoría
-const CAT_PREVIEW_COLORS = {
-  silicatos:   { bg:'#1a2530', accent:'#6dcff6' },
-  oxidos:      { bg:'#2a1515', accent:'#eb5757' },
-  sulfuros:    { bg:'#252210', accent:'#f2c94c' },
-  carbonatos:  { bg:'#141e2a', accent:'#56ccf2' },
-  fosfatos:    { bg:'#201525', accent:'#bb6bd9' },
-  halogenuros: { bg:'#101e1c', accent:'#27ae60' },
-  nativos:     { bg:'#221a08', accent:'#f2994a' },
-  sulfatos:    { bg:'#18142a', accent:'#9b51e0' },
+  1:  'd6deb1241dba4ad7a0588f81d417e3d7',
+  2:  'a8ab6e5cc9cd4378aaef339e4e5684a6',
+  3:  'a62ef54936ea48898fbf89b36f8e1303',
+  4:  'b978775d10c94646b8a3267094c24f45',
+  5:  '7033e195f7d64aada1cd0c532a1784d8',
+  6:  '281bc57cd8e74a6498fc8a9881d089c7',
+  7:  '1e06947d652846ec9e65da8faadde47a',
+  8:  'fc630be8b0c64256a89bea72d5aacce',
+  9:  '340910423bab462c93322007a4be2b11',
+  10: 'e786405c10ac4a239959f165c2f7c15e',
+  11: 'c8e66ba6a343429e9107bd3021990d9a',
+  12: '537a70a65abb46b9b20410698b110bd6',
+  13: '176d4ab1af9d44bba2a06517b126a10b',
+  14: 'eef771e7aded4a978c4e42a98ce18b3e',
+  15: '4573328e166740c7a68cd7782ada6510',
+  16: '3af33fa1f68049f9a69b7064927a8963',
+  17: 'f87123b191804e4bac73ce34a42e073e',
+  18: 'f79f4cb3faa14d8eb1f6db3051141bf1',
+  19: '342bcf5feff446bb9093182ecb024562',
+  20: '350ae09d1d21495ca7231363432b7fb5',
+  21: '3af33fa1f68049f9a69b7064927a8963',
+  22: '946c1af32c9d42df8832e3848267036c',
+  23: 'ae72935505484fcf983473750eecdfdb',
+  24: 'cb74422b421d4a14bb37ce78fa5fa488',
+  25: '70c80d0663e34e75847e0bb78494fd28',
+  26: '453573789b2e478f9c3475b5f18accdb',
+  27: 'a8e273f8bcc14e84b998da48d25a9ef8',
+  28: 'ecf818fab98e4af6ba619cd3b3b31377',
+  29: '68bae3e231a540e7b56534d5315d2e58',
+  30: '354b073e3e6a4e99bd9a30fb68e6f323',
+  31: '9daa3a244b4b452590d5a8c9a62c7f70',
+  32: '149b1a4a5b334ddcbc126b07989b3c6a',
+  33: '859e693e0ac841a0928c836e3fbedb8b',
+  34: 'eaaf248e70504e699f11e02b7929186c',
+  35: '413e789ba2084083bd9d192b890127ee',
+  36: '376404aefff94f6b8598b8cfb6915313',
+  37: '59b3e95afb5b41c6b6281b48dae44416',
+  38: '4a7cf9038a924a2893dcba89e54e9979',
+  39: '608a1c1676514f999a40d5e9943f0173',
+  40: '56b212b5f1c54db2a739ccfd85b10ef8',
+  41: 'd98951af86db4aa0b15adacd6a49e1bd',
+  42: '8386a76e90f8462ba8a9af9e3f82f02c',
+  43: '5ed87d4487be495aac0a86632eb3880c',
+  44: 'a9ffe137e1624cb7bc238a7ea707ef38',
+  45: '67857544572145108205b665b0a6196f',
+  46: 'd2aebf1ef63245a4a4684b25a68d6d2b',
+  47: 'cfcb8622913f40b6a18d4df2e69f9016',
+  48: '1534dfb7f1e3420a9f38f1a5bb4d909b',
+  49: '1ab1e8de5a604b4081c15326eaa5682b',
+  50: '1461578612f648ada3f0db291744b245',
+  51: 'a7f23fb5f196403dbeb4e0e1f91f1e3c',
+  52: 'de785119fe014b5e998a17e0fdcf6850',
+  53: '7dea299cf37c4d4d971dd89475935af9',
+  54: '2748932830f149c0bc1d6ac2ecfc6d0b',
+  55: '1a419f500821461dbca52bc4cf0b4b39',
 };
 
 // ─── VIEWER SKETCHFAB ─────────────────────────────────────────────────
@@ -463,74 +524,13 @@ function loadSketchfab(mineralId) {
     title="Modelo 3D en Sketchfab"
     src="https://sketchfab.com/models/${sfid}/embed?autostart=1&ui_infos=0&ui_watermark_link=0&ui_watermark=0&ui_ar=0&ui_help=0&ui_settings=0&ui_inspector=0&ui_annotations=0&ui_stop=0&preload=1&transparent=0&autospin=0.3&camera=0"
     allow="autoplay; fullscreen; xr-spatial-tracking"
-    allowfullscreen
-    mozallowfullscreen="true"
-    webkitallowfullscreen="true"
+    allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"
     style="width:100%;height:100%;border:none"
   ></iframe>`;
 }
 
-// ─── CARD PREVIEWS (canvas 2D simple) ────────────────────────────────
-function makeCardPreview(m) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 150; canvas.height = 80;
-  const ctx = canvas.getContext('2d');
-  const colors = CAT_PREVIEW_COLORS[m.cat] || { bg:'#111', accent:'#888' };
-
-  ctx.fillStyle = colors.bg;
-  ctx.fillRect(0, 0, 150, 80);
-
-  const hex = m.color.toString(16).padStart(6,'0');
-  const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
-
-  ctx.save();
-  ctx.translate(75, 40);
-
-  const grad = ctx.createRadialGradient(-8,-8,2, 0,0,28);
-  grad.addColorStop(0, `rgba(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+80)},0.95)`);
-  grad.addColorStop(0.5, `rgba(${r},${g},${b},0.9)`);
-  grad.addColorStop(1, `rgba(${Math.max(0,r-60)},${Math.max(0,g-60)},${Math.max(0,b-60)},0.85)`);
-  ctx.fillStyle = grad;
-
-  ctx.beginPath();
-  switch(m.shape) {
-    case 'cube':      ctx.rect(-18,-18,36,36); break;
-    case 'octahedron':ctx.moveTo(0,-26);ctx.lineTo(22,0);ctx.lineTo(0,26);ctx.lineTo(-22,0);break;
-    case 'prism':     for(let i=0;i<6;i++){const a=i/6*Math.PI*2-Math.PI/6;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}break;
-    case 'rhombo':    ctx.moveTo(0,-26);ctx.lineTo(18,0);ctx.lineTo(0,26);ctx.lineTo(-18,0);break;
-    case 'pyramid':   ctx.moveTo(0,-26);ctx.lineTo(20,18);ctx.lineTo(-20,18);break;
-    case 'flat':      ctx.rect(-26,-10,52,20);break;
-    case 'needle':    ctx.rect(-6,-26,12,52);break;
-    case 'tabular':   ctx.rect(-24,-14,48,28);break;
-    case 'dodecahedron': for(let i=0;i<12;i++){const a=i/12*Math.PI*2;i===0?ctx.moveTo(Math.cos(a)*22,Math.sin(a)*22):ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);}break;
-    default:          ctx.arc(0,0,22,0,Math.PI*2);
-  }
-  ctx.closePath();
-  ctx.fill();
-
-  if (m.metalness > 0.5) {
-    const shine = ctx.createRadialGradient(-10,-10,1,-10,-10,16);
-    shine.addColorStop(0,'rgba(255,255,255,0.5)');
-    shine.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle = shine;
-    ctx.fill();
-  }
-
-  ctx.restore();
-
-  if (SKETCHFAB_IDS[m.id]) {
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText('3D ▶', 144, 74);
-  }
-
-  return canvas.toDataURL('image/png');
-}
-
 // ─── STATE & FILTER ───────────────────────────────────────────────────
 let activeCat = 'todos', activeSearch = '', selectedId = null;
-const miniCache = {};
 
 function filtered() {
   return minerals.filter(m => {
@@ -557,12 +557,20 @@ function renderGrid() {
 
   grid.innerHTML = list.map(m => {
     const cc = CAT_COLORS[m.cat];
-    if (!miniCache[m.id]) miniCache[m.id] = makeCardPreview(m);
+    const imgSrc = MINERAL_IMAGES[m.id] || '';
     const hasSF = !!SKETCHFAB_IDS[m.id];
+    const fallback = CAT_FALLBACK[m.cat] || '💎';
     return `<div class="mineral-card${selectedId===m.id?' selected':''}" data-id="${m.id}">
-      <div class="card-preview" style="position:relative">
-        <img src="${miniCache[m.id]}" width="150" height="80" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:10px" alt="${m.name}">
-        ${hasSF?'<div style="position:absolute;bottom:5px;right:7px;background:rgba(0,0,0,0.55);color:#fff;font-size:9px;padding:2px 6px;border-radius:99px;font-weight:600">3D ▶</div>':''}
+      <div class="card-preview">
+        <div class="fallback-icon">${fallback}</div>
+        ${imgSrc ? `<img
+          class="mineral-photo"
+          src="${imgSrc}"
+          alt="${m.name}"
+          loading="lazy"
+          onerror="this.classList.add('errored')"
+        >` : ''}
+        ${hasSF ? '<div class="sf-badge">3D ▶</div>' : ''}
       </div>
       <div class="card-name">${m.name}</div>
       <div class="card-formula">${m.formula}</div>
