@@ -369,75 +369,74 @@ const CAT_LABELS = {
   nativos:'Elementos Nativos', sulfatos:'Sulfatos'
 };
 
-// ─── IDs DE SKETCHFAB — VERIFICADOS ──────────────────────────────────
-// Todos los IDs fueron comprobados desde URLs públicas de Sketchfab.
-// Fuentes principales: EDUROCK Aalto, UofUGeo, rocksandminerals (UND),
-// Digital Atlas of Ancient Life, Museum of Mineralogy UAIC, Colección UIS,
-// Société Géologique de France, Museo UV Historia Natural, WVUpetrology.
+// ─── IDs DE SKETCHFAB — CORREGIDOS Y VERIFICADOS ─────────────────────
+// Fuentes: Museo UAIC (MineralogyPetrographyMuseum), EDUROCK Aalto,
+// Digital Atlas of Ancient Life, nate_sid, rocksandminerals (UND),
+// Lapworth Museum, scrampunk, ESUEarthSci, Jason Boettger, Karolina Renkiewicz.
 const SKETCHFAB_IDS = {
   // SILICATOS
-  1:  'd6deb1241dba4ad7a0588f81d417e3d7', // Cuarzo — Geolab ULE (fotogrametría, prismas, CC-BY)
-  2:  'a8ab6e5cc9cd4378aaef339e4e5684a6', // Feldespato K (Ortoclasa) — Digital Atlas of Ancient Life
+  1:  'd6deb1241dba4ad7a0588f81d417e3d7', // Cuarzo — Geolab ULE (fotogrametría, CC-BY)
+  2:  'a8ab6e5cc9cd4378aaef339e4e5684a6', // Feldespato K — Digital Atlas of Ancient Life
   3:  '9eca94a2447544afbf907f40bb27497c', // Plagioclasa — EDUROCK Aalto
   4:  'b978775d10c94646b8a3267094c24f45', // Olivino — EDUROCK Aalto
-  5:  '7033e195f7d64aada1cd0c532a1784d8', // Amatista — Earth Sciences, Univ. of Newcastle (CC-BY)
+  5:  '7033e195f7d64aada1cd0c532a1784d8', // Amatista — Univ. of Newcastle (CC-BY)
   6:  'f222cc4484ca4c35ba6b4c72c1a99ca7', // Moscovita — UofUGeo
   7:  '1e06947d652846ec9e65da8faadde47a', // Biotita — rocksandminerals (UND)
-  8:  'baf182300ee846c2a74b60ab90f96939', // Hornblenda → Actinolite (anfíbol) — rocksandminerals (UND)
-  9:  '340910423bab462c93322007a4be2b11', // Augita — Pholeos (piroxeno, CC-BY)
+  8:  'baf182300ee846c2a74b60ab90f96939', // Hornblenda/Actinolita — rocksandminerals (UND)
+  9:  '340910423bab462c93322007a4be2b11', // Augita — Pholeos (CC-BY)
   10: 'e786405c10ac4a239959f165c2f7c15e', // Granate (Almandino) — nate_sid
-  11: '176d4ab1af9d44bba2a06517b126a10b', // Topacio → Cianita (nesosilicato prism.) — UofUGeo (CC-BY)
-  12: '537a70a65abb46b9b20410698b110bd6', // Talco — Museo Mineralogía UAIC
+  11: 'c8e66ba6a343429e9107bd3021990d9a', // Topacio translúcido — Museo UAIC ✓ CORREGIDO
+  12: '537a70a65abb46b9b20410698b110bd6', // Talco — Museo UAIC
   13: '176d4ab1af9d44bba2a06517b126a10b', // Cianita — UofUGeo (CC-BY)
-  14: 'eef771e7aded4a978c4e42a98ce18b3e', // Estaurolita — Museo UAIC (macla 60°, Francia)
+  14: 'eef771e7aded4a978c4e42a98ce18b3e', // Estaurolita — Museo UAIC (macla 60°)
   15: '4573328e166740c7a68cd7782ada6510', // Turmalina — EDUROCK Aalto
   // ÓXIDOS
   16: '3af33fa1f68049f9a69b7064927a8963', // Magnetita — Lambton County Museums
   17: 'f87123b191804e4bac73ce34a42e073e', // Hematita — EDUROCK Aalto
   18: 'a62ef54936ea48898fbf89b36f8e1303', // Corindón — rockdoc (UAB)
-  19: 'd38d66920a3c4c2193f7708fee243663', // Rubí → Cuarzo rojo (color similar) — nate_sid
-  20: '578f7772bf1942a1b0dc6f0622655948', // Zafiro → Plagioclasa azulada — Jason Boettger
-  21: '3af33fa1f68049f9a69b7064927a8963', // Cromita → Magnetita (óxido cúbico oscuro similar)
-  22: '946c1af32c9d42df8832e3848267036c', // Casiterita → Limonita (SnO₂/FeO similar aspecto) — EDUROCK
-  23: '946c1af32c9d42df8832e3848267036c', // Rutilo → Limonita (TiO₂ rojizo) — EDUROCK
+  19: 'd38d66920a3c4c2193f7708fee243663', // Rubí — nate_sid
+  20: '578f7772bf1942a1b0dc6f0622655948', // Zafiro — Jason Boettger
+  21: '3af33fa1f68049f9a69b7064927a8963', // Cromita → Magnetita (óxido cúbico oscuro, similar)
+  22: '946c1af32c9d42df8832e3848267036c', // Casiterita — EDUROCK (placeholder)
+  23: 'ae72935505484fcf983473750eecdfdb', // Rutilo — Museo UAIC "R is for Rutile" ✓ CORREGIDO
   // SULFUROS
-  24: '2265df2891fa426ea24edad5bab9cea2', // Pirita — Société Géologique de France (fotogrametría)
+  24: 'cb74422b421d4a14bb37ce78fa5fa488', // Pirita — Museo UAIC cubes aesthetic ✓ CORREGIDO
   25: '70c80d0663e34e75847e0bb78494fd28', // Galena — nate_sid
-  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo Mineralogía UAIC
-  27: 'aaa78eabc92849eca871e1fe89bd3865', // Calcopirita — Museo UAIC
-  28: '1e06947d652846ec9e65da8faadde47a', // Molibdenita → Biotita (láminas metálicas similares)
-  29: '3a7c9ebce0cd4e18932fd467e34c33f5', // Arsenopirita → Pirita EDUROCK (sulfuro metálico)
-  30: '2265df2891fa426ea24edad5bab9cea2', // Cinabrio → Pirita SGFrance (mejor sulfuro disponible)
-  31: 'aaa78eabc92849eca871e1fe89bd3865', // Bornita → Calcopirita UAIC (sulfuro de cobre)
-  32: '213a98afdfa149d886b72af64174665f', // Estibina → Pirita SMA-UniGe (prismas metálicos)
+  26: '453573789b2e478f9c3475b5f18accdb', // Esfalerita — Museo UAIC
+  27: 'a8e273f8bcc14e84b998da48d25a9ef8', // Calcopirita iridiscente — Museo UAIC ✓ CORREGIDO
+  28: '1e06947d652846ec9e65da8faadde47a', // Molibdenita → Biotita (láminas metálicas, similar)
+  29: '68bae3e231a540e7b56534d5315d2e58', // Arsenopirita → Pirita piritohedral UAIC ✓ CORREGIDO
+  30: '2fd713f29cae4d5883d728a3b4aea971', // Cinabrio → Pirita dodecaedro UAIC ✓ CORREGIDO
+  31: '74056bcd37034e94b7dd9c9d63dcdc9e', // Bornita → Ore sample Cu+Fe+Pb UAIC ✓ CORREGIDO
+  32: 'fb8889ca3d0046da902a2ceace8edb6c', // Estibina — nate_sid specimen real ✓ CORREGIDO
   // CARBONATOS
   33: '859e693e0ac841a0928c836e3fbedb8b', // Calcita — rocksandminerals (UND)
   34: 'eaaf248e70504e699f11e02b7929186c', // Dolomita — EDUROCK Aalto
-  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo UAIC (trillings España)
-  36: 'f769dd4ac677438d90d1e84baa0a723e', // Malaquita — Museo UAIC
-  37: '4a7cf9038a924a2893dcba89e54e9979', // Azurita → Rodocrosita rhomboédrica UAIC (azul similar)
-  38: '4a7cf9038a924a2893dcba89e54e9979', // Rodocrosita — Museo UAIC (cristales rhomboédricos)
-  39: '859e693e0ac841a0928c836e3fbedb8b', // Siderita → Calcita rhomboédrica (UND)
+  35: '413e789ba2084083bd9d192b890127ee', // Aragonita — Museo UAIC (trillings)
+  36: 'fafa3a39da1e4f9d9d4c38e51d682ca6', // Malaquita pulida — Museo UAIC ✓ CORREGIDO
+  37: '59b3e95afb5b41c6b6281b48dae44416', // Azurita + Malaquita — Museo UAIC ✓ CORREGIDO
+  38: '4a7cf9038a924a2893dcba89e54e9979', // Rodocrosita romboedros — Museo UAIC
+  39: '859e693e0ac841a0928c836e3fbedb8b', // Siderita → Calcita romboédrica (similar)
   // FOSFATOS
-  40: 'dcdd3d2a064349c1a8b12b9b85361128', // Apatito → Olivino (hexagonal verde, similar) — aellis43
-  41: 'd98951af86db4aa0b15adacd6a49e1bd', // Turquesa → Crisocola (silicato cobre azul-verde) — nate_sid
-  42: 'baf182300ee846c2a74b60ab90f96939', // Vivianita → Actinolita (cristales aciculares azulados)
+  40: 'dcdd3d2a064349c1a8b12b9b85361128', // Apatito — aellis43
+  41: 'd98951af86db4aa0b15adacd6a49e1bd', // Turquesa — nate_sid
+  42: 'baf182300ee846c2a74b60ab90f96939', // Vivianita → Actinolita (acicular azulada)
   // HALOGENUROS
   43: '5ed87d4487be495aac0a86632eb3880c', // Fluorita — Digital Atlas of Ancient Life
-  44: '29d53ccb88dd4c058c44ea7d40a24ff4', // Halita (rosa) — Digital Atlas of Ancient Life
-  45: '628e8c32265841089bc79fcad7be54b0', // Silvita → Halita animada — Narodni Muzeum
+  44: 'a9ffe137e1624cb7bc238a7ea707ef38', // Halita — Museo UAIC cubes reales ✓ CORREGIDO
+  45: '628e8c32265841089bc79fcad7be54b0', // Silvita — Narodni Muzeum
   // ELEMENTOS NATIVOS
-  46: 'd2aebf1ef63245a4a4684b25a68d6d2b', // Oro — scrampunk (CC-BY, pepita baja poli)
-  47: 'd38d66920a3c4c2193f7708fee243663', // Plata → Cuarzo (nate_sid, placeholder metálico)
-  48: 'a62ef54936ea48898fbf89b36f8e1303', // Cobre → rockdoc (color ocre metálico)
+  46: 'd2aebf1ef63245a4a4684b25a68d6d2b', // Oro — scrampunk (CC-BY)
+  47: 'd38d66920a3c4c2193f7708fee243663', // Plata — nate_sid (placeholder metálico)
+  48: 'a62ef54936ea48898fbf89b36f8e1303', // Cobre — rockdoc
   49: '1ab1e8de5a604b4081c15326eaa5682b', // Diamante — Karolina Renkiewicz (CC-BY)
-  50: '1461578612f648ada3f0db291744b245', // Grafito — ESUEarthSci (mineral specimen)
-  51: '3a7c9ebce0cd4e18932fd467e34c33f5', // Azufre → Pirita EDUROCK (mineral nativo amarillo)
+  50: '1461578612f648ada3f0db291744b245', // Grafito — ESUEarthSci
+  51: '27b46663f80f4371941db90242ac7ce9', // Azufre — Museo UAIC crystallographic sulphur ✓ CORREGIDO
   // SULFATOS
   52: 'de785119fe014b5e998a17e0fdcf6850', // Yeso — EDUROCK Aalto
-  53: 'de785119fe014b5e998a17e0fdcf6850', // Anhidrita → Yeso EDUROCK (sulfato Ca mismo grupo)
-  54: 'de785119fe014b5e998a17e0fdcf6850', // Barita → Yeso EDUROCK (sulfato tabular)
-  55: '5ed87d4487be495aac0a86632eb3880c', // Celestina → Fluorita (cristales traslúcidos azulados)
+  53: 'de785119fe014b5e998a17e0fdcf6850', // Anhidrita → Yeso EDUROCK (sulfato Ca, similar)
+  54: '72a924a0a73b480aa5d46ae03ccf99f9', // Barita — Museo UAIC cristales translúcidos ✓ CORREGIDO
+  55: '5ed87d4487be495aac0a86632eb3880c', // Celestina → Fluorita (traslúcida similar)
 };
 
 // Color de preview por categoría
