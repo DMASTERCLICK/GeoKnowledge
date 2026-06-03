@@ -244,7 +244,7 @@
 // Imágenes servidas via wsrv.nl (proxy CDN libre) — evita bloqueo de hotlinking de Wikimedia
 const MINERAL_IMAGES = {
   // SILICATOS
-  1:  'https://mineriaenlinea.com/wp-content/uploads/2018/10/roca-cuarzo.jpg',
+  1:  'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Quartz%2C_Tibet.jpg/400px-Quartz%2C_Tibet.jpg&w=300&h=200&fit=cover&output=webp',
   2:  'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Orthoclase-1-Madagas.jpg/400px-Orthoclase-1-Madagas.jpg&w=300&h=200&fit=cover&output=webp',
   3:  'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/9/97/Plagioclase_feldspar_in_gneiss.jpg/400px-Plagioclase_feldspar_in_gneiss.jpg&w=300&h=200&fit=cover&output=webp',
   4:  'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/8/84/Peridot_Olivin_Peridotit.jpg/400px-Peridot_Olivin_Peridotit.jpg&w=300&h=200&fit=cover&output=webp',
@@ -306,6 +306,12 @@ const MINERAL_IMAGES = {
   53: 'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Anhydrite-Cuchillo.jpg/400px-Anhydrite-Cuchillo.jpg&w=300&h=200&fit=cover&output=webp',
   54: 'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Baryte-118837.jpg/400px-Baryte-118837.jpg&w=300&h=200&fit=cover&output=webp',
   55: 'https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Celestine-118823.jpg/400px-Celestine-118823.jpg&w=300&h=200&fit=cover&output=webp',
+};
+
+// Fallback emoji icons por categoría, en caso de que la imagen no cargue
+const CAT_FALLBACK = {
+  silicatos:'🔷', oxidos:'🔴', sulfuros:'🟡', carbonatos:'🔵',
+  fosfatos:'🟣', halogenuros:'🟢', nativos:'🟠', sulfatos:'⚪'
 };
 
 // ─── DATOS DE MINERALES ────────────────────────────────────────────────────────
