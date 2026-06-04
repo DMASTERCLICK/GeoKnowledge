@@ -1,3 +1,4 @@
+cat > /mnt/user-data/outputs/tiempo-geologico.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,6 +21,87 @@ html{scroll-behavior:smooth;font-size:16px}
 body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
 ::selection{background:var(--amber-dim);color:var(--amber)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--warm2);border-radius:99px}
+
+/* ─── PLACEHOLDER DE IMAGEN ─── */
+.img-placeholder {
+  width:100%;
+  height:100%;
+  min-height:inherit;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(196,164,107,0.04),
+    rgba(196,164,107,0.04) 10px,
+    rgba(196,164,107,0.08) 10px,
+    rgba(196,164,107,0.08) 20px
+  );
+  border: 1.5px dashed rgba(196,164,107,0.4);
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.img-placeholder:hover {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(196,164,107,0.08),
+    rgba(196,164,107,0.08) 10px,
+    rgba(196,164,107,0.14) 10px,
+    rgba(196,164,107,0.14) 20px
+  );
+  border-color: var(--amber);
+}
+.img-placeholder-icon {
+  font-size: 32px;
+  opacity: 0.6;
+}
+.img-placeholder-text {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--amber);
+  opacity: 0.8;
+  text-align: center;
+  padding: 0 1rem;
+  line-height: 1.5;
+}
+.img-placeholder-sub {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  padding: 0 1rem;
+  line-height: 1.4;
+}
+
+/* Placeholders inline (no absolute) */
+.img-placeholder-block {
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(196,164,107,0.04),
+    rgba(196,164,107,0.04) 10px,
+    rgba(196,164,107,0.08) 10px,
+    rgba(196,164,107,0.08) 20px
+  );
+  border: 1.5px dashed rgba(196,164,107,0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.img-placeholder-block:hover {
+  border-color: var(--amber);
+}
 
 /* ─── NAV ─── */
 nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(6,9,15,0.92);backdrop-filter:blur(14px);border-bottom:0.5px solid var(--border)}
@@ -45,8 +127,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 
 /* ─── HERO ─── */
 #hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding-top:58px}
-.hero-bg-image{position:absolute;inset:0;z-index:0}
-.hero-bg-image img{width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(0.4) brightness(0.35)}
+.hero-bg-image{position:absolute;inset:0;z-index:0;overflow:hidden}
 .hero-bg-image::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom, rgba(6,9,15,0.5) 0%, rgba(6,9,15,0.2) 40%, rgba(6,9,15,0.7) 80%, rgba(6,9,15,1) 100%)}
 .hero-strata{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;z-index:1}
 .stratum{height:clamp(18px,3vw,40px);opacity:0.7}
@@ -69,8 +150,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 /* ─── IMAGE FEATURE STRIP ─── */
 .image-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;height:320px;overflow:hidden;position:relative}
 .image-strip-item{position:relative;overflow:hidden;cursor:pointer}
-.image-strip-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease, filter .4s ease;filter:saturate(0.5) brightness(0.6)}
-.image-strip-item:hover img{transform:scale(1.06);filter:saturate(0.8) brightness(0.75)}
 .image-strip-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(6,9,15,0.85) 0%, transparent 60%)}
 .image-strip-caption{position:absolute;bottom:0;left:0;right:0;padding:1.25rem 1.5rem;z-index:2}
 .image-strip-caption h3{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:2px}
@@ -82,8 +161,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 .photo-accent-row.reverse{direction:rtl}
 .photo-accent-row.reverse > *{direction:ltr}
 .photo-accent-img{border-radius:16px;overflow:hidden;position:relative;aspect-ratio:4/3}
-.photo-accent-img img{width:100%;height:100%;object-fit:cover;filter:saturate(0.6) brightness(0.7);transition:filter .5s}
-.photo-accent-img:hover img{filter:saturate(0.85) brightness(0.85)}
 .photo-accent-img::before{content:'';position:absolute;inset:0;border:1px solid var(--border);border-radius:16px;z-index:2;pointer-events:none}
 .photo-accent-img-caption{position:absolute;bottom:12px;left:12px;right:12px;z-index:3;font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:1px;opacity:0.7}
 .photo-accent-text{}
@@ -96,346 +173,56 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 /* ═══════════════════════════════════════════
    NUEVA SECCIÓN: TIMELINE GEOLÓGICO INMERSIVO
    ═══════════════════════════════════════════ */
-
-#timeline-section{
-  background:var(--bg);
-  padding:5rem 0 6rem;
-  overflow:hidden;
-}
+#timeline-section{background:var(--bg);padding:5rem 0 6rem;overflow:hidden;}
 .tl-inner{max-width:1400px;margin:0 auto;padding:0 2.5rem}
-
-/* Header */
 .tl-header{text-align:center;margin-bottom:3.5rem}
-
-/* ─── BANDA DE EONES (top) ─── */
-.tl-eons-band{
-  display:flex;
-  height:28px;
-  border-radius:6px;
-  overflow:hidden;
-  margin-bottom:6px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-.tl-eon-band-seg{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:9px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.8px;
-  color:rgba(255,255,255,0.7);
-  cursor:pointer;
-  transition:filter .2s;
-  white-space:nowrap;
-  overflow:hidden;
-  padding:0 6px;
-}
+.tl-eons-band{display:flex;height:28px;border-radius:6px;overflow:hidden;margin-bottom:6px;border:1px solid rgba(255,255,255,0.06);}
+.tl-eon-band-seg{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,0.7);cursor:pointer;transition:filter .2s;white-space:nowrap;overflow:hidden;padding:0 6px;}
 .tl-eon-band-seg:hover{filter:brightness(1.3)}
-
-/* ─── PISTA DE PERÍODOS (scrollable) ─── */
-.tl-track-wrap{
-  overflow-x:auto;
-  padding-bottom:8px;
-  scrollbar-width:thin;
-  scrollbar-color:var(--warm2) transparent;
-  margin-bottom:1.5rem;
-}
+.tl-track-wrap{overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--warm2) transparent;margin-bottom:1.5rem;}
 .tl-track-wrap::-webkit-scrollbar{height:4px}
 .tl-track-wrap::-webkit-scrollbar-track{background:transparent}
 .tl-track-wrap::-webkit-scrollbar-thumb{background:var(--warm2);border-radius:99px}
-
-.tl-track{
-  display:flex;
-  min-width:1100px;
-  height:72px;
-  gap:2px;
-  position:relative;
-}
-
-.tl-period-seg{
-  flex:var(--flex,1);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
-  cursor:pointer;
-  position:relative;
-  overflow:hidden;
-  transition:transform .2s, filter .2s, box-shadow .25s;
-  border:1.5px solid transparent;
-  min-width:36px;
-}
-.tl-period-seg::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
-  pointer-events:none;
-}
-.tl-period-seg:hover{
-  transform:translateY(-4px) scaleY(1.06);
-  filter:brightness(1.25);
-  z-index:10;
-}
-.tl-period-seg.active{
-  transform:translateY(-6px) scaleY(1.1);
-  border-color:var(--amber);
-  box-shadow:0 0 20px rgba(196,164,107,0.3), 0 8px 24px rgba(0,0,0,0.5);
-  z-index:20;
-  filter:brightness(1.3);
-}
-.tl-seg-name{
-  font-size:8px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-  color:rgba(255,255,255,0.8);
-  text-align:center;
-  padding:0 4px;
-  line-height:1.2;
-  z-index:1;
-  pointer-events:none;
-}
-.tl-seg-age{
-  font-size:7px;
-  color:rgba(255,255,255,0.45);
-  margin-top:2px;
-  z-index:1;
-  pointer-events:none;
-}
-
-/* ─── PANEL PRINCIPAL DE DETALLE ─── */
-.tl-detail-panel{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0;
-  border-radius:20px;
-  overflow:hidden;
-  background:var(--surface2);
-  border:1px solid var(--border);
-  min-height:480px;
-  position:relative;
-}
-
-/* Imagen principal */
-.tl-detail-img-wrap{
-  position:relative;
-  overflow:hidden;
-}
-.tl-detail-img-main{
-  width:100%;
-  height:100%;
-  min-height:480px;
-  object-fit:cover;
-  filter:saturate(0.65) brightness(0.7);
-  transition:filter .5s ease, transform .7s ease;
-}
-.tl-detail-img-wrap:hover .tl-detail-img-main{
-  filter:saturate(0.85) brightness(0.8);
-  transform:scale(1.03);
-}
-.tl-detail-img-overlay{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to right, transparent 60%, var(--surface2) 100%),
-             linear-gradient(to top, rgba(6,9,15,0.7) 0%, transparent 40%);
-  pointer-events:none;
-}
-.tl-detail-img-caption{
-  position:absolute;
-  bottom:1rem;
-  left:1rem;
-  right:2rem;
-  font-size:10px;
-  color:rgba(196,164,107,0.7);
-  text-transform:uppercase;
-  letter-spacing:.8px;
-  line-height:1.4;
-}
+.tl-track{display:flex;min-width:1100px;height:72px;gap:2px;position:relative;}
+.tl-period-seg{flex:var(--flex,1);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s, filter .2s, box-shadow .25s;border:1.5px solid transparent;min-width:36px;}
+.tl-period-seg::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);pointer-events:none;}
+.tl-period-seg:hover{transform:translateY(-4px) scaleY(1.06);filter:brightness(1.25);z-index:10;}
+.tl-period-seg.active{transform:translateY(-6px) scaleY(1.1);border-color:var(--amber);box-shadow:0 0 20px rgba(196,164,107,0.3), 0 8px 24px rgba(0,0,0,0.5);z-index:20;filter:brightness(1.3);}
+.tl-seg-name{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,0.8);text-align:center;padding:0 4px;line-height:1.2;z-index:1;pointer-events:none;}
+.tl-seg-age{font-size:7px;color:rgba(255,255,255,0.45);margin-top:2px;z-index:1;pointer-events:none;}
+.tl-detail-panel{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:20px;overflow:hidden;background:var(--surface2);border:1px solid var(--border);min-height:480px;position:relative;}
+.tl-detail-img-wrap{position:relative;overflow:hidden;min-height:480px;}
+.tl-detail-img-overlay{position:absolute;inset:0;background:linear-gradient(to right, transparent 60%, var(--surface2) 100%),linear-gradient(to top, rgba(6,9,15,0.7) 0%, transparent 40%);pointer-events:none;z-index:2;}
+.tl-detail-img-caption{position:absolute;bottom:1rem;left:1rem;right:2rem;font-size:10px;color:rgba(196,164,107,0.7);text-transform:uppercase;letter-spacing:.8px;line-height:1.4;z-index:3;}
 .tl-detail-img-caption strong{display:block;color:var(--amber);font-size:11px;margin-bottom:2px}
-
-/* Contenido de texto */
-.tl-detail-content{
-  padding:2.5rem 2rem 2rem 1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  overflow-y:auto;
-  max-height:480px;
-}
-.tl-detail-era-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  font-size:10px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:1.2px;
-  color:var(--amber);
-  border:.5px solid var(--border);
-  padding:4px 12px;
-  border-radius:99px;
-  background:var(--amber-glow);
-  width:fit-content;
-}
-.tl-detail-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(22px,2.5vw,32px);
-  font-weight:900;
-  color:var(--text);
-  line-height:1.1;
-  letter-spacing:-.5px;
-}
-.tl-detail-age{
-  font-size:14px;
-  color:var(--muted);
-  font-weight:300;
-}
+.tl-detail-content{padding:2.5rem 2rem 2rem 1.5rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;max-height:480px;}
+.tl-detail-era-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber);border:.5px solid var(--border);padding:4px 12px;border-radius:99px;background:var(--amber-glow);width:fit-content;}
+.tl-detail-title{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,32px);font-weight:900;color:var(--text);line-height:1.1;letter-spacing:-.5px;}
+.tl-detail-age{font-size:14px;color:var(--muted);font-weight:300;}
 .tl-detail-age strong{color:var(--amber);font-weight:600}
-
-.tl-detail-desc{
-  font-size:14px;
-  color:var(--muted);
-  line-height:1.75;
-  border-top:.5px solid var(--border2);
-  padding-top:1rem;
-}
-
-/* Metadata científica en grid */
-.tl-meta-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:.75rem;
-}
-.tl-meta-card{
-  background:rgba(0,0,0,0.3);
-  border:.5px solid var(--border2);
-  border-radius:10px;
-  padding:.75rem;
-}
-.tl-meta-label{
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  color:var(--amber);
-  font-weight:700;
-  margin-bottom:4px;
-}
-.tl-meta-value{
-  font-size:12px;
-  color:var(--text);
-  line-height:1.4;
-}
-
-/* Mini galería */
-.tl-gallery-strip{
-  display:flex;
-  gap:6px;
-  padding-top:.5rem;
-}
-.tl-gallery-thumb{
-  width:72px;
-  height:52px;
-  border-radius:8px;
-  overflow:hidden;
-  cursor:pointer;
-  border:1.5px solid transparent;
-  transition:all .2s;
-  flex-shrink:0;
-}
-.tl-gallery-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:saturate(0.5) brightness(0.65);
-  transition:filter .3s;
-}
+.tl-detail-desc{font-size:14px;color:var(--muted);line-height:1.75;border-top:.5px solid var(--border2);padding-top:1rem;}
+.tl-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.tl-meta-card{background:rgba(0,0,0,0.3);border:.5px solid var(--border2);border-radius:10px;padding:.75rem;}
+.tl-meta-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--amber);font-weight:700;margin-bottom:4px;}
+.tl-meta-value{font-size:12px;color:var(--text);line-height:1.4;}
+.tl-gallery-strip{display:flex;gap:6px;padding-top:.5rem;}
+.tl-gallery-thumb{width:72px;height:52px;border-radius:8px;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:all .2s;flex-shrink:0;position:relative;}
 .tl-gallery-thumb:hover{border-color:var(--amber)}
-.tl-gallery-thumb:hover img{filter:saturate(0.8) brightness(0.8)}
 .tl-gallery-thumb.active-thumb{border-color:var(--amber)}
-.tl-gallery-thumb.active-thumb img{filter:saturate(0.75) brightness(0.75)}
-
-/* Organismos representativos */
-.tl-organisms{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.4rem;
-  padding-top:.25rem;
-}
-.tl-org-badge{
-  font-size:10px;
-  color:var(--muted);
-  border:.5px solid var(--border2);
-  border-radius:99px;
-  padding:3px 10px;
-  background:rgba(196,164,107,0.04);
-  transition:all .2s;
-}
+.tl-organisms{display:flex;flex-wrap:wrap;gap:.4rem;padding-top:.25rem;}
+.tl-org-badge{font-size:10px;color:var(--muted);border:.5px solid var(--border2);border-radius:99px;padding:3px 10px;background:rgba(196,164,107,0.04);transition:all .2s;}
 .tl-org-badge:hover{border-color:var(--border);color:var(--text)}
-
-/* Animaciones de transición */
-.tl-detail-panel.animating .tl-detail-img-main{
-  opacity:0;
-  transform:scale(1.05);
-}
-.tl-detail-panel.animating .tl-detail-content{
-  opacity:0;
-  transform:translateY(10px);
-}
-.tl-detail-img-main,.tl-detail-content{
-  transition:opacity .4s ease, transform .4s ease;
-}
-
-/* Botones de navegación */
-.tl-nav-buttons{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:1.5rem;
-}
-.tl-nav-btn{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:12px;
-  font-weight:600;
-  color:var(--muted);
-  background:transparent;
-  border:.5px solid var(--border2);
-  padding:8px 18px;
-  border-radius:99px;
-  cursor:pointer;
-  transition:all .2s;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
+.tl-detail-panel.animating .tl-detail-content{opacity:0;transform:translateY(10px);}
+.tl-detail-content{transition:opacity .4s ease, transform .4s ease;}
+.tl-nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;}
+.tl-nav-btn{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted);background:transparent;border:.5px solid var(--border2);padding:8px 18px;border-radius:99px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;}
 .tl-nav-btn:hover{color:var(--amber);border-color:var(--border)}
 .tl-nav-btn:disabled{opacity:.25;cursor:default}
 .tl-nav-btn svg{width:14px;height:14px}
-
-/* Indicador de posición */
-.tl-position-indicator{
-  font-size:12px;
-  color:var(--muted);
-}
+.tl-position-indicator{font-size:12px;color:var(--muted);}
 .tl-position-indicator strong{color:var(--amber)}
-
-/* Línea de tiempo colapsada para mobile */
-@media(max-width:900px){
-  .tl-detail-panel{grid-template-columns:1fr}
-  .tl-detail-img-main{min-height:260px}
-  .tl-detail-img-overlay{background:linear-gradient(to bottom, transparent 50%, var(--surface2) 100%)}
-  .tl-detail-content{max-height:none}
-}
-@media(max-width:600px){
-  .tl-meta-grid{grid-template-columns:1fr}
-}
-
-/* ═══════════════════════════════════════════
-   FIN NUEVA SECCIÓN TIMELINE
-   ═══════════════════════════════════════════ */
+@media(max-width:900px){.tl-detail-panel{grid-template-columns:1fr}.tl-detail-img-wrap{min-height:260px}.tl-detail-img-overlay{background:linear-gradient(to bottom, transparent 50%, var(--surface2) 100%)}.tl-detail-content{max-height:none}}
+@media(max-width:600px){.tl-meta-grid{grid-template-columns:1fr}}
 
 /* ─── 1. VIAJE EN EL TIEMPO ─── */
 #viaje{background:linear-gradient(180deg,var(--bg) 0%,var(--surface) 100%)}
@@ -556,8 +343,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 .fossil-card{background:var(--surface2);border:.5px solid var(--border2);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s}
 .fossil-card:hover{border-color:var(--amber);transform:translateY(-3px)}
 .fossil-thumb{height:140px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden}
-.fossil-thumb img{width:100%;height:100%;object-fit:cover;filter:saturate(0.5) brightness(0.65);transition:filter .4s,transform .4s}
-.fossil-card:hover .fossil-thumb img{filter:saturate(0.75) brightness(0.8);transform:scale(1.05)}
 .fossil-thumb-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,20,32,0.85) 0%,transparent 60%)}
 .fossil-period-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:99px;background:var(--amber-glow);border:.5px solid var(--border);color:var(--amber)}
 .fossil-body{padding:1rem}
@@ -623,8 +408,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:58px;display:flex;ali
 .photo-gallery-inset{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;border-radius:20px;overflow:hidden;height:380px;margin:2rem 0}
 .pgi-item{position:relative;overflow:hidden}
 .pgi-item:first-child{grid-row:1/3}
-.pgi-item img{width:100%;height:100%;object-fit:cover;filter:saturate(0.55) brightness(0.65);transition:filter .5s,transform .5s}
-.pgi-item:hover img{filter:saturate(0.85) brightness(0.8);transform:scale(1.04)}
 .pgi-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,9,15,0.6) 0%,transparent 50%)}
 .pgi-caption{position:absolute;bottom:10px;left:12px;right:12px;z-index:2;font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
 @media(max-width:700px){.photo-gallery-inset{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}.pgi-item{height:150px}.pgi-item:first-child{grid-row:auto;grid-column:1/3}}
@@ -645,9 +428,6 @@ footer{background:var(--surface2);color:var(--muted);padding:2.5rem;display:flex
 /* ─── ANIMATIONS ─── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-
-/* ─── IMG FALLBACK ─── */
-img.geo-img{background:var(--surface2);color:transparent}
 </style>
 </head>
 <body>
@@ -670,7 +450,12 @@ img.geo-img{background:var(--surface2);color:transparent}
 <!-- ═══ HERO ═══ -->
 <section id="hero">
   <div class="hero-bg-image">
-    <img src="https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=1800&q=80&auto=format&fit=crop" alt="Estratos geológicos del Gran Cañón" class="geo-img"/>
+    <!-- IMAGEN HERO FONDO: reemplazá el placeholder por tu <img> o background-image -->
+    <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;border-bottom:2px dashed rgba(196,164,107,0.4);">
+      <div class="img-placeholder-icon">🖼</div>
+      <div class="img-placeholder-text">Pegar imagen aquí</div>
+      <div class="img-placeholder-sub">Foto de fondo del Hero<br>Recomendado: 1800×1000px, panorámica<br>Ej: estratos del Gran Cañón</div>
+    </div>
     <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,9,15,0.45) 0%,rgba(6,9,15,0.15) 35%,rgba(6,9,15,0.65) 75%,rgba(6,9,15,1) 100%)"></div>
   </div>
   <div class="hero-glow"></div>
@@ -693,21 +478,33 @@ img.geo-img{background:var(--surface2);color:transparent}
 <!-- ═══ IMAGE STRIP — después del hero ═══ -->
 <div class="image-strip">
   <div class="image-strip-item">
-    <img src="https://images.unsplash.com/photo-1548504773-429e84f586d2?w=800&q=80&auto=format&fit=crop" alt="Fósil de ammonite" class="geo-img"/>
+    <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;border-right:1px dashed rgba(196,164,107,0.3);">
+      <div class="img-placeholder-icon">🦐</div>
+      <div class="img-placeholder-text">Pegar imagen aquí</div>
+      <div class="img-placeholder-sub">Paleontología / Fósil de ammonite<br>~800×400px</div>
+    </div>
     <div class="image-strip-caption">
       <p>Paleontología</p>
       <h3>Registro fósil</h3>
     </div>
   </div>
   <div class="image-strip-item">
-    <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=80&auto=format&fit=crop" alt="Tierra desde el espacio" class="geo-img"/>
+    <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;border-right:1px dashed rgba(196,164,107,0.3);">
+      <div class="img-placeholder-icon">🌍</div>
+      <div class="img-placeholder-text">Pegar imagen aquí</div>
+      <div class="img-placeholder-sub">Tierra desde el espacio<br>~800×400px</div>
+    </div>
     <div class="image-strip-caption">
       <p>Astronomía</p>
       <h3>Nuestro planeta</h3>
     </div>
   </div>
   <div class="image-strip-item">
-    <img src="https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=800&q=80&auto=format&fit=crop" alt="Estratos de roca sedimentaria" class="geo-img"/>
+    <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+      <div class="img-placeholder-icon">🪨</div>
+      <div class="img-placeholder-text">Pegar imagen aquí</div>
+      <div class="img-placeholder-sub">Estratos de roca sedimentaria<br>~800×400px</div>
+    </div>
     <div class="image-strip-caption">
       <p>Geología</p>
       <h3>Capas del tiempo</h3>
@@ -718,7 +515,6 @@ img.geo-img{background:var(--surface2);color:transparent}
 <!-- ═══ NUEVA SECCIÓN TIMELINE INMERSIVO ═══ -->
 <section id="timeline-section">
   <div class="tl-inner">
-
     <div class="tl-header reveal">
       <div class="section-eyebrow">📊 Línea del tiempo</div>
       <h2 class="section-title">La Escala <em>Geológica</em></h2>
@@ -726,34 +522,23 @@ img.geo-img{background:var(--surface2);color:transparent}
         Hacé clic en cualquier período para explorar sus imágenes, fauna característica y datos científicos. 4.540 millones de años condensados en una sola vista.
       </p>
     </div>
-
-    <!-- Banda de eones -->
     <div class="tl-eons-band reveal" id="tl-eons-band"></div>
-
-    <!-- Etiquetas de escala temporal -->
     <div class="reveal" style="display:flex;justify-content:space-between;padding:0 2px;margin-bottom:4px">
       <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">← Más antiguo</span>
       <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Más reciente →</span>
     </div>
-
-    <!-- Pista de períodos -->
     <div class="tl-track-wrap reveal">
       <div class="tl-track" id="tl-track"></div>
     </div>
-
-    <!-- Panel de detalle principal -->
     <div class="tl-detail-panel reveal" id="tl-detail-panel">
+      <!-- Imagen principal del timeline -->
       <div class="tl-detail-img-wrap" id="tl-img-wrap">
-        <img class="tl-detail-img-main geo-img" id="tl-img-main" src="" alt=""/>
+        <!-- El placeholder se inserta dinámicamente via JS -->
         <div class="tl-detail-img-overlay"></div>
         <div class="tl-detail-img-caption" id="tl-img-caption"></div>
       </div>
-      <div class="tl-detail-content" id="tl-detail-content">
-        <!-- Se llena dinámicamente -->
-      </div>
+      <div class="tl-detail-content" id="tl-detail-content"></div>
     </div>
-
-    <!-- Navegación entre períodos -->
     <div class="tl-nav-buttons reveal">
       <button class="tl-nav-btn" id="tl-btn-prev" disabled>
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 11L4 7l4.5-4"/></svg>
@@ -765,7 +550,6 @@ img.geo-img{background:var(--surface2);color:transparent}
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.5 3L10 7l-4.5 4"/></svg>
       </button>
     </div>
-
   </div>
 </section>
 
@@ -848,25 +632,46 @@ img.geo-img{background:var(--surface2);color:transparent}
       <p class="section-lead">Cinco catástrofes que remodelaron la vida en la Tierra. Cada una borró del mapa entre el 70% y el 96% de todas las especies.</p>
     </div>
 
+    <!-- GALERÍA DE 5 IMÁGENES — Extinciones -->
     <div class="photo-gallery-inset reveal">
       <div class="pgi-item">
-        <img src="https://images.unsplash.com/photo-1615811648503-479d06ce5b8e?w=800&q=80&auto=format&fit=crop" alt="Volcán en erupción" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+          <div class="img-placeholder-icon">🌋</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Imagen grande (ocupa 2 filas)<br>Ej: volcán en erupción</div>
+        </div>
         <div class="pgi-caption">Vulcanismo masivo — causa principal de la extinción Pérmico-Triásica</div>
       </div>
       <div class="pgi-item">
-        <img src="https://images.unsplash.com/photo-1457269449834-928af64c684d?w=600&q=80&auto=format&fit=crop" alt="Cráter de impacto" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+          <div class="img-placeholder-icon">☄️</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Cráter de impacto<br>~600×300px</div>
+        </div>
         <div class="pgi-caption">Impacto de asteroide</div>
       </div>
       <div class="pgi-item">
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&auto=format&fit=crop" alt="Glaciación" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+          <div class="img-placeholder-icon">❄️</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Glaciación<br>~600×300px</div>
+        </div>
         <div class="pgi-caption">Glaciación global</div>
       </div>
       <div class="pgi-item">
-        <img src="https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=600&q=80&auto=format&fit=crop" alt="Arrecife marino" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+          <div class="img-placeholder-icon">🌊</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Arrecife marino<br>~600×300px</div>
+        </div>
         <div class="pgi-caption">Colapso de ecosistemas marinos</div>
       </div>
       <div class="pgi-item">
-        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80&auto=format&fit=crop" alt="Bosque primitivo" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:0;border:none;">
+          <div class="img-placeholder-icon">🌿</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Recuperación de la biósfera<br>~600×300px</div>
+        </div>
         <div class="pgi-caption">Recuperación de la biósfera</div>
       </div>
     </div>
@@ -920,9 +725,14 @@ img.geo-img{background:var(--surface2);color:transparent}
       <p class="section-lead">Cada período geológico tuvo sus organismos emblemáticos. Explorá la biodiversidad a través del tiempo.</p>
     </div>
 
+    <!-- FOTO ACCENT — Sección Fósiles -->
     <div class="photo-accent-row reveal">
       <div class="photo-accent-img">
-        <img src="https://images.unsplash.com/photo-1548504773-429e84f586d2?w=900&q=80&auto=format&fit=crop" alt="Fósil de ammonite espiral" class="geo-img"/>
+        <div class="img-placeholder" style="position:absolute;inset:0;border-radius:16px;border:none;">
+          <div class="img-placeholder-icon">🌀</div>
+          <div class="img-placeholder-text">Pegar imagen aquí</div>
+          <div class="img-placeholder-sub">Fósil de ammonite en espiral<br>~900×700px, relación 4:3</div>
+        </div>
         <div class="photo-accent-img-caption">Ammonites — Cefalópodos extintos, fósiles guía del Mesozoico</div>
       </div>
       <div class="photo-accent-text">
@@ -946,10 +756,15 @@ img.geo-img{background:var(--surface2);color:transparent}
       <p class="section-lead">Los hitos que definieron la forma y la vida en nuestro planeta.</p>
     </div>
 
+    <!-- BANNER PANORÁMICO — Sección Eventos -->
     <div class="reveal" style="border-radius:20px;overflow:hidden;position:relative;height:280px;margin-bottom:3rem">
-      <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80&auto=format&fit=crop" alt="Montañas y estratos geológicos" class="geo-img" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.45) brightness(0.55)"/>
-      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,9,15,0.85) 0%,rgba(6,9,15,0.2) 60%,rgba(6,9,15,0.4) 100%)"></div>
-      <div style="position:absolute;top:50%;left:3rem;transform:translateY(-50%)">
+      <div class="img-placeholder" style="position:absolute;inset:0;border-radius:20px;border:none;">
+        <div class="img-placeholder-icon">⛰</div>
+        <div class="img-placeholder-text">Pegar imagen aquí</div>
+        <div class="img-placeholder-sub">Banner panorámico — Montañas y estratos geológicos<br>~1400×280px, relación 5:1</div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,9,15,0.85) 0%,rgba(6,9,15,0.2) 60%,rgba(6,9,15,0.4) 100%);z-index:2;pointer-events:none;border-radius:20px"></div>
+      <div style="position:absolute;top:50%;left:3rem;transform:translateY(-50%);z-index:3">
         <p style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--amber);margin-bottom:.5rem">Tectónica de placas</p>
         <h3 style="font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,36px);font-weight:900;color:var(--text);line-height:1.1;max-width:400px">La Tierra en <em style="color:var(--amber)">constante movimiento</em></h3>
       </div>
@@ -1005,7 +820,7 @@ const EON_DATA = [
 const TIME_DATA = [
   { age:0, eon:'Fanerozoico', era:'Cenozoico', period:'Cuaternario', climate:'Glaciaciones periódicas, actualmente interglacial', life:'Mamíferos, aves, Homo sapiens', events:'Glaciaciones del Pleistoceno. Aparición del Homo sapiens (~300.000 años). Civilizaciones, escritura, tecnología.' },
   { age:5, eon:'Fanerozoico', era:'Cenozoico', period:'Neógeno', climate:'Enfriamiento progresivo, aparición del hielo polar', life:'Grandes mamíferos, primates, pastos', events:'Formación de los Andes. Gran Intercambio Biótico Americano. Evolución de los homínidos.' },
-  { age:23, eon:'Fanerozoico', era:'Cenozoico', period:'Paleógeno', climate:'Tropical a templado, enfriamiento hacia el final', life:'Mamíferos, aves modernas, angiospermas dominantes', events:'Eoceno cálido extremo. Aparición de ballenas y primates. Formación del Canal de Drake.' },
+  { age:23, eon:'Fanerozoico', era:'Cenozoico', period:'Paleógeno', climate:'Tropical a templado, enfriamiento hacia el final', life:'Mamíferos diversificados, aves modernas, angiospermas dominantes', events:'Eoceno cálido extremo. Aparición de ballenas y primates. Formación del Canal de Drake.' },
   { age:66, eon:'Fanerozoico', era:'Mesozoico', period:'Cretácico', climate:'Muy cálido, sin hielo polar, mares cálidos', life:'Dinosaurios, primeras angiospermas, reptiles marinos', events:'5ª extinción masiva (asteroide + vulcanismo). Pico de diversidad de dinosaurios. Expansión de Gondwana.' },
   { age:145, eon:'Fanerozoico', era:'Mesozoico', period:'Jurásico', climate:'Cálido y húmedo, CO₂ elevado', life:'Dinosaurios dominantes, pterosaurios, primeras aves', events:'Ruptura de Pangea. Formación del Atlántico. Primeras aves (Archaeopteryx).' },
   { age:201, eon:'Fanerozoico', era:'Mesozoico', period:'Triásico', climate:'Árido y cálido, desértico en el interior', life:'Primeros dinosaurios, mamíferos, cocodrilos', events:'4ª extinción masiva (vulcanismo). Formación de Pangea estable. Primeros dinosaurios.' },
@@ -1055,46 +870,22 @@ const DURATION_DATA = [
 
 const FOSSILS_DATA = {
   'Paleozoico':[
-    { name:'Trilobites', sci:'Orden Trilobita', icon:'🦐', period:'Cámbrico-Pérmico',
-      img:'https://images.unsplash.com/photo-1578916012-a9df3e2bfe8f?w=400&q=80&auto=format&fit=crop',
-      desc:'Artrópodos marinos que dominaron los océanos por 270 millones de años. Con ojos compuestos complejos, fueron de los primeros animales con visión.' },
-    { name:'Nautilo primitivo', sci:'Nautiloidea', icon:'🐚', period:'Cámbrico-Devónico',
-      img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80&auto=format&fit=crop',
-      desc:'Cefalópodos con concha externa en espiral que fueron los depredadores dominantes de los mares paleozoicos.' },
-    { name:'Coelacanth', sci:'Latimeria chalumnae', icon:'🐟', period:'Devónico-Actual',
-      img:'https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=400&q=80&auto=format&fit=crop',
-      desc:'Pez de aletas lobuladas considerado extinto durante 65 millones de años hasta 1938. Su estructura aleteante fue precursora de las extremidades de los tetrápodos.' },
-    { name:'Glosóptero', sci:'Glossopteris', icon:'🌿', period:'Pérmico',
-      img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80&auto=format&fit=crop',
-      desc:'Árbol del hemisferio sur cuyas hojas fosilizadas se encuentran en todos los continentes gondwánicos, siendo la primera evidencia de la deriva continental.' },
+    { name:'Trilobites', sci:'Orden Trilobita', icon:'🦐', period:'Cámbrico-Pérmico', imgLabel:'Fósil de trilobites', imgHint:'~400×280px', desc:'Artrópodos marinos que dominaron los océanos por 270 millones de años. Con ojos compuestos complejos, fueron de los primeros animales con visión.' },
+    { name:'Nautilo primitivo', sci:'Nautiloidea', icon:'🐚', period:'Cámbrico-Devónico', imgLabel:'Nautilo fosilizado', imgHint:'~400×280px', desc:'Cefalópodos con concha externa en espiral que fueron los depredadores dominantes de los mares paleozoicos.' },
+    { name:'Coelacanth', sci:'Latimeria chalumnae', icon:'🐟', period:'Devónico-Actual', imgLabel:'Pez Coelacanth', imgHint:'~400×280px', desc:'Pez de aletas lobuladas considerado extinto durante 65 millones de años hasta 1938. Su estructura aleteante fue precursora de las extremidades de los tetrápodos.' },
+    { name:'Glosóptero', sci:'Glossopteris', icon:'🌿', period:'Pérmico', imgLabel:'Hoja de Glossopteris fosilizada', imgHint:'~400×280px', desc:'Árbol del hemisferio sur cuyas hojas fosilizadas se encuentran en todos los continentes gondwánicos, siendo la primera evidencia de la deriva continental.' },
   ],
   'Mesozoico':[
-    { name:'Diplodocus', sci:'Diplodocus carnegii', icon:'🦕', period:'Jurásico',
-      img:'https://images.unsplash.com/photo-1555169062-013468b47731?w=400&q=80&auto=format&fit=crop',
-      desc:'Uno de los dinosaurios saurópodos más largos conocidos, alcanzando hasta 27 metros. Herbívoro con cuello y cola extremadamente largos.' },
-    { name:'Archaeopteryx', sci:'Archaeopteryx lithographica', icon:'🦅', period:'Jurásico',
-      img:'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=80&auto=format&fit=crop',
-      desc:'El eslabón entre dinosaurios y aves modernas. Tenía plumas pero también dientes y una larga cola ósea. Vivió hace 150 millones de años.' },
-    { name:'Ammonites', sci:'Subclase Ammonoidea', icon:'🌀', period:'Devónico-Cretácico',
-      img:'https://images.unsplash.com/photo-1548504773-429e84f586d2?w=400&q=80&auto=format&fit=crop',
-      desc:'Cefalópodos con concha enrollada que son fósiles guía por excelencia. Sus suturas complejas permiten fechar las rocas con precisión.' },
-    { name:'Mosasaurus', sci:'Mosasaurus hoffmannii', icon:'🐊', period:'Cretácico',
-      img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80&auto=format&fit=crop',
-      desc:'Reptil marino gigante del Cretácico tardío. Podía alcanzar 13 metros y era el predador dominante de los mares.' },
+    { name:'Diplodocus', sci:'Diplodocus carnegii', icon:'🦕', period:'Jurásico', imgLabel:'Esqueleto de Diplodocus', imgHint:'~400×280px', desc:'Uno de los dinosaurios saurópodos más largos conocidos, alcanzando hasta 27 metros. Herbívoro con cuello y cola extremadamente largos.' },
+    { name:'Archaeopteryx', sci:'Archaeopteryx lithographica', icon:'🦅', period:'Jurásico', imgLabel:'Fósil de Archaeopteryx', imgHint:'~400×280px', desc:'El eslabón entre dinosaurios y aves modernas. Tenía plumas pero también dientes y una larga cola ósea. Vivió hace 150 millones de años.' },
+    { name:'Ammonites', sci:'Subclase Ammonoidea', icon:'🌀', period:'Devónico-Cretácico', imgLabel:'Fósil de ammonite en espiral', imgHint:'~400×280px', desc:'Cefalópodos con concha enrollada que son fósiles guía por excelencia. Sus suturas complejas permiten fechar las rocas con precisión.' },
+    { name:'Mosasaurus', sci:'Mosasaurus hoffmannii', icon:'🐊', period:'Cretácico', imgLabel:'Reconstrucción de Mosasaurus', imgHint:'~400×280px', desc:'Reptil marino gigante del Cretácico tardío. Podía alcanzar 13 metros y era el predador dominante de los mares.' },
   ],
   'Cenozoico':[
-    { name:'Mamut lanudo', sci:'Mammuthus primigenius', icon:'🦣', period:'Pleistoceno',
-      img:'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=400&q=80&auto=format&fit=crop',
-      desc:'Icónico de las glaciaciones del Pleistoceno. Su gruesa capa de pelo lo adaptaba al frío extremo. Se extinguió hace ~4.000 años.' },
-    { name:'Megatherium', sci:'Megatherium americanum', icon:'🦥', period:'Plioceno-Pleistoceno',
-      img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80&auto=format&fit=crop',
-      desc:'El perezoso gigante, del tamaño de un elefante. Endémico de Sudamérica, podía erguirse sobre sus patas traseras para alcanzar hojas altas.' },
-    { name:'Dientes de sable', sci:'Smilodon fatalis', icon:'🐯', period:'Pleistoceno',
-      img:'https://images.unsplash.com/photo-1462953491269-9aff00919695?w=400&q=80&auto=format&fit=crop',
-      desc:'Felino con caninos superiores de hasta 28 cm. No era pariente directo de los leones modernos sino parte de un linaje independiente.' },
-    { name:'Nummulites', sci:'Nummulites gizehensis', icon:'💰', period:'Eoceno',
-      img:'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=400&q=80&auto=format&fit=crop',
-      desc:'Foraminífero del tamaño de una moneda. Las pirámides de Giza están construidas con caliza nummulítica.' },
+    { name:'Mamut lanudo', sci:'Mammuthus primigenius', icon:'🦣', period:'Pleistoceno', imgLabel:'Mamut lanudo reconstruido', imgHint:'~400×280px', desc:'Icónico de las glaciaciones del Pleistoceno. Su gruesa capa de pelo lo adaptaba al frío extremo. Se extinguió hace ~4.000 años.' },
+    { name:'Megatherium', sci:'Megatherium americanum', icon:'🦥', period:'Plioceno-Pleistoceno', imgLabel:'Esqueleto de Megatherium', imgHint:'~400×280px', desc:'El perezoso gigante, del tamaño de un elefante. Endémico de Sudamérica, podía erguirse sobre sus patas traseras para alcanzar hojas altas.' },
+    { name:'Dientes de sable', sci:'Smilodon fatalis', icon:'🐯', period:'Pleistoceno', imgLabel:'Cráneo de Smilodon', imgHint:'~400×280px', desc:'Felino con caninos superiores de hasta 28 cm. No era pariente directo de los leones modernos sino parte de un linaje independiente.' },
+    { name:'Nummulites', sci:'Nummulites gizehensis', icon:'💰', period:'Eoceno', imgLabel:'Nummulites fosilizados en roca', imgHint:'~400×280px', desc:'Foraminífero del tamaño de una moneda. Las pirámides de Giza están construidas con caliza nummulítica.' },
   ],
 };
 
@@ -1139,7 +930,7 @@ const QUIZ_DATA = [
 ];
 
 // ═══════════════════════════════════════════
-// DATOS PARA EL NUEVO TIMELINE INMERSIVO
+// DATOS PARA EL TIMELINE INMERSIVO
 // ═══════════════════════════════════════════
 
 const TL_PERIODS = [
@@ -1147,309 +938,286 @@ const TL_PERIODS = [
     id:'hadico', name:'Hádico', eon:'Hádico', eonColor:'#78290f',
     start:4540, end:4000, durationLabel:'540 M.a.',
     color:'#78290f', colorLight:'#9e4220',
-    badge:'Eón Hádico',
-    title:'El Hádico',
-    subtitle:'El Infierno Primordial',
+    badge:'Eón Hádico', title:'El Hádico', subtitle:'El Infierno Primordial',
     ageRange:'4.540 — 4.000 M.a.',
     desc:'La Tierra recién nacida era un mundo infernal: océanos de magma ardiente, bombardeos constantes de meteoritos y la ausencia total de atmósfera estable. La colisión del protoplaneta Theia con la Tierra primitiva expulsó el material que formaría la Luna. No existía ninguna forma de vida conocida.',
     climate:'Magmático y volcánico. Sin atmósfera estable. Temperaturas superficiales de cientos de grados.',
     life:'Sin vida. Posibles moléculas orgánicas abióticas.',
-    oxygen:'<0.001%',
-    tempLabel:'~230°C promedio superficial',
+    oxygen:'<0.001%', tempLabel:'~230°C promedio superficial',
     organisms:['Sin organismos','Moléculas orgánicas abióticas','Océanos de magma'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1615811648503-479d06ce5b8e?w=1200&q=85&auto=format&fit=crop', cap:'Volcán en erupción masiva', capDetail:'Similar al vulcanismo hádico global' },
-      { url:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=900&q=80&auto=format&fit=crop', cap:'La Tierra primitiva', capDetail:'Vista orbital de un planeta en formación' },
-      { url:'https://images.unsplash.com/photo-1457269449834-928af64c684d?w=900&q=80&auto=format&fit=crop', cap:'Impacto de meteorito', capDetail:'El Gran Bombardeo Tardío (4.100–3.800 M.a.)' },
+      { cap:'Volcán en erupción masiva', capDetail:'Similar al vulcanismo hádico global', imgLabel:'Volcán activo', imgHint:'1200×700px panorámica' },
+      { cap:'La Tierra primitiva', capDetail:'Vista orbital de un planeta en formación', imgLabel:'Planeta en formación', imgHint:'900×600px' },
+      { cap:'Impacto de meteorito', capDetail:'El Gran Bombardeo Tardío (4.100–3.800 M.a.)', imgLabel:'Cráter de impacto', imgHint:'900×600px' },
     ]
   },
   {
     id:'eoarcaico', name:'Arcaico', eon:'Arcaico', eonColor:'#4a1942',
     start:4000, end:2500, durationLabel:'1.500 M.a.',
     color:'#4a1942', colorLight:'#6b3060',
-    badge:'Eón Arcaico',
-    title:'El Arcaico',
-    subtitle:'El Origen de la Vida',
+    badge:'Eón Arcaico', title:'El Arcaico', subtitle:'El Origen de la Vida',
     ageRange:'4.000 — 2.500 M.a.',
-    desc:'El bombardeo meteorítico se redujo y los primeros océanos líquidos se estabilizaron. En las profundidades hidrotermales surgieron las primeras formas de vida: bacterias primitivas y arqueobacterias. Los estromatolitos —colonias de cianobacterias— comenzaron a construir estructuras minerales en aguas poco profundas. El cielo era anaranjado por la ausencia de oxígeno.',
+    desc:'El bombardeo meteorítico se redujo y los primeros océanos líquidos se estabilizaron. En las profundidades hidrotermales surgieron las primeras formas de vida: bacterias primitivas y arqueobacterias. Los estromatolitos comenzaron a construir estructuras minerales en aguas poco profundas.',
     climate:'Cálido a muy cálido. Atmósfera de metano, CO₂ y nitrógeno. Sin oxígeno libre.',
-    life:'Bacterias, arqueobacterias, primeros estromatolitos (cianobacterias).',
-    oxygen:'<0.001%',
-    tempLabel:'~70°C océanos tempranos',
+    life:'Bacterias, arqueobacterias, primeros estromatolitos.',
+    oxygen:'<0.001%', tempLabel:'~70°C océanos tempranos',
     organisms:['Bacterias procariotas','Arqueobacterias','Estromatolitos','Cianobacterias primitivas'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85&auto=format&fit=crop', cap:'Océanos primitivos', capDetail:'Los primeros mares del Arcaico eran cálidos y ricos en hierro' },
-      { url:'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=900&q=80&auto=format&fit=crop', cap:'Estromatolitos modernos', capDetail:'Shark Bay, Australia — vivientes relictos del Arcaico' },
-      { url:'https://images.unsplash.com/photo-1615811648503-479d06ce5b8e?w=900&q=80&auto=format&fit=crop', cap:'Actividad volcánica submarina', capDetail:'Las fuentes hidrotermales fueron la cuna de la vida' },
+      { cap:'Océanos primitivos', capDetail:'Los primeros mares del Arcaico eran cálidos y ricos en hierro', imgLabel:'Océano primordial', imgHint:'1200×700px panorámica' },
+      { cap:'Estromatolitos modernos', capDetail:'Shark Bay, Australia — vivientes relictos del Arcaico', imgLabel:'Estromatolitos', imgHint:'900×600px' },
+      { cap:'Actividad volcánica submarina', capDetail:'Las fuentes hidrotermales fueron la cuna de la vida', imgLabel:'Fuente hidrotermal', imgHint:'900×600px' },
     ]
   },
   {
     id:'proterozoico', name:'Proterozoico', eon:'Proterozoico', eonColor:'#1d4e89',
     start:2500, end:538, durationLabel:'1.962 M.a.',
     color:'#1d4e89', colorLight:'#2a6bb5',
-    badge:'Eón Proterozoico',
-    title:'El Proterozoico',
-    subtitle:'La Gran Oxidación y los Primeros Animales',
+    badge:'Eón Proterozoico', title:'El Proterozoico', subtitle:'La Gran Oxidación y los Primeros Animales',
     ageRange:'2.500 — 538 M.a.',
-    desc:'El evento más transformador de la historia biológica de la Tierra: las cianobacterias saturaron los océanos con oxígeno libre, que se escapó a la atmósfera. Este Gran Evento de Oxigenación (2.400 M.a.) fue una catástrofe para la vida anaeróbica dominante, pero abrió el camino a formas de vida más complejas. Surgieron las primeras células con núcleo (eucariotas) y, al final, los primeros animales multicelulares de la Fauna de Ediacara.',
-    climate:'Variable. Glaciaciones globales extremas ("Tierra Bola de Nieve") entre 750–580 M.a. Oxígeno en aumento progresivo.',
-    life:'Cianobacterias, algas, primeros eucariotas, Fauna de Ediacara (primeros animales blandos).',
-    oxygen:'0.1% → 2% (creciente)',
-    tempLabel:'Variable: tropical a glacial global',
+    desc:'Las cianobacterias saturaron los océanos con oxígeno libre, que se escapó a la atmósfera. Este Gran Evento de Oxigenación fue una catástrofe para la vida anaeróbica, pero abrió el camino a formas de vida más complejas. Surgieron las primeras células con núcleo y los primeros animales multicelulares.',
+    climate:'Variable. Glaciaciones globales extremas ("Tierra Bola de Nieve") entre 750–580 M.a.',
+    life:'Cianobacterias, algas, primeros eucariotas, Fauna de Ediacara.',
+    oxygen:'0.1% → 2%', tempLabel:'Variable: tropical a glacial global',
     organisms:['Cianobacterias','Algas eucariotas','Organismos de Ediacara','Primeros animales blandos'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=1200&q=85&auto=format&fit=crop', cap:'Océano proterozoico', capDetail:'Los mares cambiaban de color rojizo a azul por la oxidación del hierro' },
-      { url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80&auto=format&fit=crop', cap:'Glaciación global', capDetail:'La Tierra Bola de Nieve cubrió el planeta de hielo tropical' },
-      { url:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80&auto=format&fit=crop', cap:'Inicio de la vida compleja', capDetail:'Los primeros ecosistemas multicelulares en mares poco profundos' },
+      { cap:'Océano proterozoico', capDetail:'Los mares cambiaban de color rojizo a azul', imgLabel:'Océano antiguo', imgHint:'1200×700px panorámica' },
+      { cap:'Glaciación global', capDetail:'La Tierra Bola de Nieve cubrió el planeta de hielo tropical', imgLabel:'Glaciación extrema', imgHint:'900×600px' },
+      { cap:'Inicio de la vida compleja', capDetail:'Los primeros ecosistemas multicelulares', imgLabel:'Ecosistema primitivo', imgHint:'900×600px' },
     ]
   },
   {
     id:'cambrico', name:'Cámbrico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:538, end:485, durationLabel:'53 M.a.',
     color:'#3a7d5a', colorLight:'#4d9e73',
-    badge:'Paleozoico · Cámbrico',
-    title:'El Cámbrico',
-    subtitle:'La Explosión de la Vida',
+    badge:'Paleozoico · Cámbrico', title:'El Cámbrico', subtitle:'La Explosión de la Vida',
     ageRange:'538 — 485 M.a.',
-    desc:'En un período geológicamente breve, aparecieron casi todos los grandes grupos (filos) del reino animal. Este evento —la Explosión del Cámbrico— revolucionó la vida en la Tierra. Por primera vez existían animales con ojos, esqueletos mineralizados, depredadores activos y presas con defensas. Los trilobites se convirtieron en los artrópodos dominantes de los mares.',
-    climate:'Cálido y húmedo. Sin hielo polar. Mares cálidos y ricos en nutrientes. CO₂ elevado.',
-    life:'Trilobites, medusas, gusanos, braquiópodos, primeros moluscos, artrópodos marinos.',
-    oxygen:'~5% (creciendo)',
-    tempLabel:'~22°C temperatura media global',
+    desc:'En un período geológicamente breve, aparecieron casi todos los grandes grupos del reino animal. Por primera vez existían animales con ojos, esqueletos mineralizados, depredadores activos y presas con defensas. Los trilobites se convirtieron en los artrópodos dominantes.',
+    climate:'Cálido y húmedo. Sin hielo polar. CO₂ elevado.',
+    life:'Trilobites, medusas, gusanos, braquiópodos, primeros moluscos.',
+    oxygen:'~5%', tempLabel:'~22°C temperatura media global',
     organisms:['Trilobites','Anomalocaris','Opabinia','Hallucigenia','Pikaia (primer cordado)'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1544551763-92ab472cad5d?w=1200&q=85&auto=format&fit=crop', cap:'Arrecifes cámbricos', capDetail:'Los primeros ecosistemas marinos complejos del Fanerozoico' },
-      { url:'https://images.unsplash.com/photo-1578916012-a9df3e2bfe8f?w=900&q=80&auto=format&fit=crop', cap:'Trilobites fosilizados', capDetail:'Dominaron los fondos marinos por 270 millones de años' },
-      { url:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=900&q=80&auto=format&fit=crop', cap:'Mar somero del Cámbrico', capDetail:'Los mares tropicales cubrían gran parte de los continentes' },
+      { cap:'Arrecifes cámbricos', capDetail:'Los primeros ecosistemas marinos complejos', imgLabel:'Fondo marino cámbrico', imgHint:'1200×700px panorámica' },
+      { cap:'Trilobites fosilizados', capDetail:'Dominaron los fondos marinos por 270 millones de años', imgLabel:'Trilobites fósiles', imgHint:'900×600px' },
+      { cap:'Mar somero del Cámbrico', capDetail:'Los mares tropicales cubrían gran parte de los continentes', imgLabel:'Mar tropical primitivo', imgHint:'900×600px' },
     ]
   },
   {
     id:'ordovicico', name:'Ordovícico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:485, end:444, durationLabel:'41 M.a.',
     color:'#2e6e62', colorLight:'#3d8f7e',
-    badge:'Paleozoico · Ordovícico',
-    title:'El Ordovícico',
-    subtitle:'Diversificación Marina',
+    badge:'Paleozoico · Ordovícico', title:'El Ordovícico', subtitle:'Diversificación Marina',
     ageRange:'485 — 444 M.a.',
-    desc:'La vida marina alcanzó su primera gran diversificación. Surgieron corales, briozoos, equinodermos y los primeros peces sin mandíbula. Los graptolitos flotaban en las aguas abiertas, mientras que en los fondos proliferaban braquiópodos y trilobites. El período terminó con la primera gran extinción masiva, causada por una glaciación súbita que bajó el nivel del mar globalmente.',
-    climate:'Cálido al inicio, glaciación severa al final. El enfriamiento fue catastrófico para la vida tropical.',
-    life:'Corales, graptolitos, braquiópodos, primeros peces sin mandíbula (ostracodermos).',
-    oxygen:'~10%',
-    tempLabel:'~16°C → glaciación terminal',
+    desc:'La vida marina alcanzó su primera gran diversificación. Surgieron corales, briozoos, equinodermos y los primeros peces sin mandíbula. El período terminó con la primera gran extinción masiva, causada por una glaciación súbita.',
+    climate:'Cálido al inicio, glaciación severa al final.',
+    life:'Corales, graptolitos, braquiópodos, primeros peces sin mandíbula.',
+    oxygen:'~10%', tempLabel:'~16°C → glaciación terminal',
     organisms:['Trilobites','Graptolitos','Braquiópodos','Ostracodermos','Corales tabulados'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=1200&q=85&auto=format&fit=crop', cap:'Fondos marinos ordovícicos', capDetail:'Mares tropicales repletos de invertebrados' },
-      { url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80&auto=format&fit=crop', cap:'Glaciación ordovícica', capDetail:'El hielo avanzó hasta los trópicos, causando la 1ª extinción masiva' },
-      { url:'https://images.unsplash.com/photo-1548504773-429e84f586d2?w=900&q=80&auto=format&fit=crop', cap:'Fósiles del Paleozoico', capDetail:'El registro fósil ordovícico es extraordinariamente rico' },
+      { cap:'Fondos marinos ordovícicos', capDetail:'Mares tropicales repletos de invertebrados', imgLabel:'Fondo marino ordovícico', imgHint:'1200×700px panorámica' },
+      { cap:'Glaciación ordovícica', capDetail:'El hielo avanzó hasta los trópicos, 1ª extinción masiva', imgLabel:'Glaciación', imgHint:'900×600px' },
+      { cap:'Fósiles del Paleozoico', capDetail:'El registro fósil ordovícico es extraordinariamente rico', imgLabel:'Fósiles paleozoicos', imgHint:'900×600px' },
     ]
   },
   {
     id:'silurico', name:'Silúrico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:444, end:419, durationLabel:'25 M.a.',
     color:'#3a7a55', colorLight:'#4d9e6e',
-    badge:'Paleozoico · Silúrico',
-    title:'El Silúrico',
-    subtitle:'Conquista de la Tierra Firme',
+    badge:'Paleozoico · Silúrico', title:'El Silúrico', subtitle:'Conquista de la Tierra Firme',
     ageRange:'444 — 419 M.a.',
-    desc:'Después de la extinción ordovícica, la vida se recuperó y dio un paso revolucionario: la conquista de la tierra firme. Las primeras plantas vasculares —pequeñas y sin raíces— colonizaron los márgenes costeros húmedos. En el mar, aparecieron los primeros peces con mandíbulas, y los euriptéridos (escorpiones de mar) alcanzaron tallas gigantescas.',
-    climate:'Cálido y estable. Sin glaciaciones. Mares poco profundos y cálidos. CO₂ moderado.',
+    desc:'Las primeras plantas vasculares colonizaron los márgenes costeros húmedos. En el mar, aparecieron los primeros peces con mandíbulas, y los euriptéridos alcanzaron tallas gigantescas.',
+    climate:'Cálido y estable. Sin glaciaciones.',
     life:'Primeras plantas vasculares terrestres, peces con mandíbulas, euriptéridos gigantes.',
-    oxygen:'~14%',
-    tempLabel:'~17°C temperatura media global',
+    oxygen:'~14%', tempLabel:'~17°C temperatura media global',
     organisms:['Cooksonia (primera planta vascular)','Euriptéridos','Peces con mandíbulas','Graptolitos','Corales'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=85&auto=format&fit=crop', cap:'Primeras plantas terrestres', capDetail:'Las costas silúricas comenzaban a teñirse de verde' },
-      { url:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=900&q=80&auto=format&fit=crop', cap:'Arrecifes silúricos', capDetail:'Los arrecifes de corales y briozoos dominaban los mares' },
-      { url:'https://images.unsplash.com/photo-1544551763-92ab472cad5d?w=900&q=80&auto=format&fit=crop', cap:'Vida marina silúrica', capDetail:'Los primeros peces con mandíbulas revolucionaron los ecosistemas acuáticos' },
+      { cap:'Primeras plantas terrestres', capDetail:'Las costas silúricas comenzaban a teñirse de verde', imgLabel:'Costas con plantas primitivas', imgHint:'1200×700px panorámica' },
+      { cap:'Arrecifes silúricos', capDetail:'Los arrecifes de corales y briozoos dominaban los mares', imgLabel:'Arrecife primitivo', imgHint:'900×600px' },
+      { cap:'Vida marina silúrica', capDetail:'Los primeros peces con mandíbulas', imgLabel:'Peces primitivos', imgHint:'900×600px' },
     ]
   },
   {
     id:'devonico', name:'Devónico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:419, end:359, durationLabel:'60 M.a.',
     color:'#4a7a38', colorLight:'#5e9e47',
-    badge:'Paleozoico · Devónico',
-    title:'El Devónico',
-    subtitle:'La Era de los Peces',
+    badge:'Paleozoico · Devónico', title:'El Devónico', subtitle:'La Era de los Peces',
     ageRange:'419 — 359 M.a.',
-    desc:'El Devónico fue la edad de oro de los peces: tiburones primitivos, peces acorazados (placodermos) y peces de aletas lobuladas que darían origen a los tetrápodos. En tierra, los bosques de helechos arborescentes y licofitas crecieron por primera vez. Los primeros anfibios salieron del agua. Una extinción masiva al final destruyó el 75% de las especies.',
-    climate:'Cálido y húmedo en la primera mitad. Bosques absorben CO₂, causando enfriamiento.',
-    life:'Peces placodermos, tiburones, primeros anfibios (Tiktaalik), bosques de helechos arborescentes.',
-    oxygen:'~15%',
-    tempLabel:'~20°C temperatura media global',
-    organisms:['Dunkleosteus (placodermo gigante)','Tiktaalik (transición pez-tetrápodo)','Coelacantos','Tiburones primitivos','Licofitas gigantes'],
+    desc:'El Devónico fue la edad de oro de los peces. En tierra, los bosques de helechos arborescentes crecieron por primera vez. Los primeros anfibios salieron del agua. Una extinción masiva al final destruyó el 75% de las especies.',
+    climate:'Cálido y húmedo en la primera mitad.',
+    life:'Peces placodermos, tiburones, primeros anfibios (Tiktaalik), bosques de helechos.',
+    oxygen:'~15%', tempLabel:'~20°C temperatura media global',
+    organisms:['Dunkleosteus (placodermo gigante)','Tiktaalik','Coelacantos','Tiburones primitivos','Licofitas gigantes'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=1200&q=85&auto=format&fit=crop', cap:'Peces primitivos del Devónico', capDetail:'Los mares estaban dominados por formas sin precedentes de peces acorazados' },
-      { url:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80&auto=format&fit=crop', cap:'Primeros bosques devónicos', capDetail:'Los bosques de helechos arborescentes cambiaron para siempre la atmósfera terrestre' },
-      { url:'https://images.unsplash.com/photo-1548504773-429e84f586d2?w=900&q=80&auto=format&fit=crop', cap:'Registro fósil del Devónico', capDetail:'La transición pez-tetrápodo es uno de los hitos evolutivos más documentados' },
+      { cap:'Peces primitivos del Devónico', capDetail:'Mares dominados por peces acorazados', imgLabel:'Dunkleosteus o pez placodermo', imgHint:'1200×700px panorámica' },
+      { cap:'Primeros bosques devónicos', capDetail:'Helechos arborescentes cambiaron la atmósfera terrestre', imgLabel:'Bosque de helechos', imgHint:'900×600px' },
+      { cap:'Registro fósil del Devónico', capDetail:'La transición pez-tetrápodo', imgLabel:'Fósil Tiktaalik o tetrápodo', imgHint:'900×600px' },
     ]
   },
   {
     id:'carbonifero', name:'Carbonífero', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:359, end:299, durationLabel:'60 M.a.',
     color:'#3d6b2a', colorLight:'#508a36',
-    badge:'Paleozoico · Carbonífero',
-    title:'El Carbonífero',
-    subtitle:'Los Bosques que Crearon el Carbón',
+    badge:'Paleozoico · Carbonífero', title:'El Carbonífero', subtitle:'Los Bosques que Crearon el Carbón',
     ageRange:'359 — 299 M.a.',
-    desc:'Inmensos bosques pantanosos de licofitas gigantes (Lepidodendron, 30 m de altura), helechos arborescentes y colas de caballo cubrían los continentes ecuatoriales. Sus restos acumulados formarían los yacimientos de carbón que alimentarían la Revolución Industrial millones de años después. Los anfibios gigantes dominaban tierra y agua; los reptiles primitivos hicieron su debut. El oxígeno alcanzó el 35%, permitiendo insectos gigantes.',
-    climate:'Cálido y muy húmedo, luego glaciación gondwánica. Oxígeno atmosférico máximo histórico.',
-    life:'Anfibios gigantes, primeros reptiles, insectos gigantes, bosques de licofitas y helechos arborescentes.',
-    oxygen:'~35% (máximo histórico)',
-    tempLabel:'~14°C temperatura media global',
-    organisms:['Meganeura (libélula gigante, 70 cm)','Arthropleura (milpiés de 2 m)','Eryops (anfibio gigante)','Hylonomus (primer reptil)','Lepidodendron (árbol de 30 m)'],
+    desc:'Inmensos bosques pantanosos de licofitas gigantes cubrían los continentes ecuatoriales. Sus restos acumulados formarían los yacimientos de carbón. El oxígeno alcanzó el 35%, permitiendo insectos gigantes.',
+    climate:'Cálido y muy húmedo, luego glaciación gondwánica.',
+    life:'Anfibios gigantes, primeros reptiles, insectos gigantes, bosques de licofitas.',
+    oxygen:'~35% (máximo histórico)', tempLabel:'~14°C temperatura media global',
+    organisms:['Meganeura (libélula gigante, 70 cm)','Arthropleura (milpiés de 2 m)','Eryops','Hylonomus','Lepidodendron'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=85&auto=format&fit=crop', cap:'Bosques carboníferos', capDetail:'Selvas tropicales de 30 metros de altura cubrían los continentes ecuatoriales' },
-      { url:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=80&auto=format&fit=crop', cap:'Helechos y licofitas gigantes', capDetail:'El alto oxígeno permitió el gigantismo en plantas e invertebrados' },
-      { url:'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=900&q=80&auto=format&fit=crop', cap:'Humedales carboníferos', capDetail:'Los pantanos carboníferos eran el equivalente de los manglares modernos' },
+      { cap:'Bosques carboníferos', capDetail:'Selvas tropicales de 30 metros de altura', imgLabel:'Bosque carbonífero', imgHint:'1200×700px panorámica' },
+      { cap:'Helechos y licofitas gigantes', capDetail:'El alto oxígeno permitió el gigantismo', imgLabel:'Licofitas gigantes', imgHint:'900×600px' },
+      { cap:'Humedales carboníferos', capDetail:'Los pantanos carboníferos', imgLabel:'Pantano prehistórico', imgHint:'900×600px' },
     ]
   },
   {
     id:'permico', name:'Pérmico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:299, end:252, durationLabel:'47 M.a.',
     color:'#5a6a25', colorLight:'#748a30',
-    badge:'Paleozoico · Pérmico',
-    title:'El Pérmico',
-    subtitle:'El Fin del Paleozoico',
+    badge:'Paleozoico · Pérmico', title:'El Pérmico', subtitle:'El Fin del Paleozoico',
     ageRange:'299 — 252 M.a.',
-    desc:'Pangea se completó durante el Pérmico, creando un supercontinente con un interior profundamente continental y árido. Los reptiles diversificaron enormemente, incluyendo los "reptiles mamiferoides" (Therapsida), ancestros directos de los mamíferos. El período terminó con la peor catástrofe biológica de la historia: el vulcanismo siberiano masivo causó el colapso del 96% de todas las especies.',
-    climate:'Glaciaciones al inicio, calentamiento extremo al final. Interior de Pangea hiperdésértico.',
-    life:'Reptiles mamiferoides (Therapsida), anfibios, pelicosaurios, bosques de coníferas.',
-    oxygen:'~23% → declinando',
-    tempLabel:'~16°C → +6°C al final (catástrofe)',
-    organisms:['Dimetrodon (pelicosaurio)','Lystrosaurus (dictinodonte)','Moschops','Gorgonops','Mesosaurus'],
+    desc:'Pangea se completó durante el Pérmico. Los reptiles mamiferoides (Therapsida), ancestros de los mamíferos, dominaban la tierra. El período terminó con la peor catástrofe biológica: el 96% de todas las especies desapareció.',
+    climate:'Glaciaciones al inicio, calentamiento extremo al final.',
+    life:'Reptiles mamiferoides (Therapsida), anfibios, pelicosaurios.',
+    oxygen:'~23% → declinando', tempLabel:'~16°C → +6°C al final',
+    organisms:['Dimetrodon','Lystrosaurus','Moschops','Gorgonops','Mesosaurus'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=85&auto=format&fit=crop', cap:'Paisaje pérmico', capDetail:'El interior de Pangea era un desierto vasto y extremo' },
-      { url:'https://images.unsplash.com/photo-1615811648503-479d06ce5b8e?w=900&q=80&auto=format&fit=crop', cap:'Trampas Siberianas', capDetail:'El vulcanismo masivo que causó la extinción del Pérmico' },
-      { url:'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=900&q=80&auto=format&fit=crop', cap:'Estratos del límite P-T', capDetail:'La capa de roca que marca el fin del Paleozoico es visible en todo el mundo' },
+      { cap:'Paisaje pérmico', capDetail:'El interior de Pangea era un desierto vasto', imgLabel:'Paisaje desértico pérmico', imgHint:'1200×700px panorámica' },
+      { cap:'Trampas Siberianas', capDetail:'El vulcanismo masivo que causó la extinción', imgLabel:'Erupción volcánica masiva', imgHint:'900×600px' },
+      { cap:'Estratos del límite P-T', capDetail:'La capa de roca que marca el fin del Paleozoico', imgLabel:'Estratos geológicos', imgHint:'900×600px' },
     ]
   },
   {
     id:'triasico', name:'Triásico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:252, end:201, durationLabel:'51 M.a.',
     color:'#6a5a20', colorLight:'#8a7528',
-    badge:'Mesozoico · Triásico',
-    title:'El Triásico',
-    subtitle:'El Alba de los Dinosaurios',
+    badge:'Mesozoico · Triásico', title:'El Triásico', subtitle:'El Alba de los Dinosaurios',
     ageRange:'252 — 201 M.a.',
-    desc:'Tras la devastación del Pérmico, la vida se recuperó lentamente en un mundo árido y cálido. Pangea seguía unida. Los arcosaurios —el grupo que daría origen a cocodrilos, pterosaurios y dinosaurios— surgieron y se diversificaron. Los primeros dinosaurios aparecieron hace unos 230 millones de años: eran pequeños, bípedos y ágiles. Los primeros mamíferos también emergieron desde los Therapsida sobrevivientes.',
-    climate:'Árido y muy cálido. Pangea sin hielo polar. Desiertos extensos en el interior continental.',
-    life:'Primeros dinosaurios, primeros mamíferos, pterosaurios primitivos, reptiles marinos (ictiosaurios).',
-    oxygen:'~16%',
-    tempLabel:'~17°C temperatura media global',
-    organisms:['Eoraptor (primer dinosaurio)','Plateosaurus','Morganucodon (primer mamífero)','Ictiosaurios','Pterosaurios primitivos'],
+    desc:'Los primeros dinosaurios aparecieron hace unos 230 millones de años: pequeños, bípedos y ágiles. Los primeros mamíferos también emergieron. Pangea seguía unida y el mundo era árido y cálido.',
+    climate:'Árido y muy cálido. Pangea sin hielo polar.',
+    life:'Primeros dinosaurios, primeros mamíferos, pterosaurios primitivos, ictiosaurios.',
+    oxygen:'~16%', tempLabel:'~17°C temperatura media global',
+    organisms:['Eoraptor (primer dinosaurio)','Plateosaurus','Morganucodon','Ictiosaurios','Pterosaurios primitivos'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=85&auto=format&fit=crop', cap:'Paisaje triásico', capDetail:'Pangea era una inmensa masa continental árida y calurosa' },
-      { url:'https://images.unsplash.com/photo-1555169062-013468b47731?w=900&q=80&auto=format&fit=crop', cap:'Los primeros dinosaurios', capDetail:'Pequeños y bípedos, los primeros dinosaurios aparecieron hace 230 millones de años' },
-      { url:'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=900&q=80&auto=format&fit=crop', cap:'Estratos triásicos', capDetail:'Las rocas rojas del Triásico testimonian un clima árido y cálido' },
+      { cap:'Paisaje triásico', capDetail:'Pangea era una inmensa masa continental árida', imgLabel:'Paisaje triásico árido', imgHint:'1200×700px panorámica' },
+      { cap:'Los primeros dinosaurios', capDetail:'Pequeños y bípedos, hace 230 millones de años', imgLabel:'Dinosaurio triásico', imgHint:'900×600px' },
+      { cap:'Estratos triásicos', capDetail:'Las rocas rojas del Triásico', imgLabel:'Roca roja triásica', imgHint:'900×600px' },
     ]
   },
   {
     id:'jurasico', name:'Jurásico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:201, end:145, durationLabel:'56 M.a.',
     color:'#2d7a3a', colorLight:'#3a9e4a',
-    badge:'Mesozoico · Jurásico',
-    title:'El Jurásico',
-    subtitle:'El Reinado de los Dinosaurios',
+    badge:'Mesozoico · Jurásico', title:'El Jurásico', subtitle:'El Reinado de los Dinosaurios',
     ageRange:'201 — 145 M.a.',
-    desc:'Pangea se fragmentó, el Atlántico comenzó a abrirse y los océanos invadieron los continentes, creando mares poco profundos y cálidos. Los dinosaurios explosionaron en diversidad: saurópodos gigantes (Brachiosaurus, Diplodocus) se convirtieron en los animales terrestres más grandes jamás vistos. Archaeopteryx —el primer pájaro conocido— voló hace 150 millones de años. Los ammonites dominaban los mares.',
-    climate:'Cálido y húmedo. Sin hielo polar. CO₂ 5x más alto que hoy. Mares cálidos e interiores someros.',
-    life:'Saurópodos gigantes, estegosaurios, pterosaurios, primeras aves (Archaeopteryx), ammonites.',
-    oxygen:'~20%',
-    tempLabel:'~17°C temperatura media global',
+    desc:'Los dinosaurios explosionaron en diversidad: saurópodos gigantes se convirtieron en los animales terrestres más grandes jamás vistos. Archaeopteryx voló hace 150 millones de años. El Atlántico comenzó a abrirse.',
+    climate:'Cálido y húmedo. Sin hielo polar. CO₂ muy elevado.',
+    life:'Saurópodos gigantes, estegosaurios, pterosaurios, primeras aves (Archaeopteryx).',
+    oxygen:'~20%', tempLabel:'~17°C temperatura media global',
     organisms:['Brachiosaurus','Diplodocus','Stegosaurus','Archaeopteryx','Allosaurus','Pterodáctilo'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1555169062-013468b47731?w=1200&q=85&auto=format&fit=crop', cap:'Paisaje jurásico', capDetail:'Saurópodos gigantes dominaban llanuras verdes y exuberantes' },
-      { url:'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=900&q=80&auto=format&fit=crop', cap:'Archaeopteryx en vuelo', capDetail:'El fósil de Archaeopteryx es el vínculo entre dinosaurios y aves modernas' },
-      { url:'https://images.unsplash.com/photo-1548504773-429e84f586d2?w=900&q=80&auto=format&fit=crop', cap:'Ammonites del Jurásico', capDetail:'Los cefalópodos de concha enrollada dominaban los mares mesozoicos' },
+      { cap:'Paisaje jurásico', capDetail:'Saurópodos gigantes en llanuras exuberantes', imgLabel:'Dinosaurios jurásicos', imgHint:'1200×700px panorámica' },
+      { cap:'Archaeopteryx en vuelo', capDetail:'Vínculo entre dinosaurios y aves modernas', imgLabel:'Archaeopteryx o ave primitiva', imgHint:'900×600px' },
+      { cap:'Ammonites del Jurásico', capDetail:'Los cefalópodos dominaban los mares mesozoicos', imgLabel:'Ammonites fósiles', imgHint:'900×600px' },
     ]
   },
   {
     id:'cretacico', name:'Cretácico', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:145, end:66, durationLabel:'79 M.a.',
     color:'#1e7a5a', colorLight:'#289e75',
-    badge:'Mesozoico · Cretácico',
-    title:'El Cretácico',
-    subtitle:'El Apogeo de los Dinosaurios',
+    badge:'Mesozoico · Cretácico', title:'El Cretácico', subtitle:'El Apogeo de los Dinosaurios',
     ageRange:'145 — 66 M.a.',
-    desc:'El período más largo del Mesozoico vio la mayor diversidad de dinosaurios: T. rex, Triceratops, Parasaurolophus. El nivel del mar era hasta 200 metros más alto que hoy, inundando gran parte de los continentes. En los mares, mosasaurios y plesiosaurios eran los depredadores supremos. Las plantas con flores (angiospermas) revolucionaron los ecosistemas terrestres. Todo acabó abruptamente con el impacto del asteroide Chicxulub.',
-    climate:'Muy cálido. Sin hielo polar. Mares interiores en todos los continentes. CO₂ extremadamente alto.',
-    life:'T. rex, Triceratops, pterosaurios gigantes, mosasaurios, angiospermas (plantas con flores).',
-    oxygen:'~30%',
-    tempLabel:'~17°C temperatura media global (máximo cálido)',
+    desc:'El período más largo del Mesozoico vio la mayor diversidad de dinosaurios: T. rex, Triceratops, Parasaurolophus. Todo acabó con el impacto del asteroide Chicxulub hace 66 millones de años.',
+    climate:'Muy cálido. Sin hielo polar. CO₂ extremadamente alto.',
+    life:'T. rex, Triceratops, pterosaurios gigantes, mosasaurios, angiospermas.',
+    oxygen:'~30%', tempLabel:'~17°C temperatura media global (máximo cálido)',
     organisms:['T. rex','Triceratops','Mosasaurus','Quetzalcoatlus','Parasaurolophus','Elasmosaurus'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1555169062-013468b47731?w=1200&q=85&auto=format&fit=crop', cap:'Era de los dinosaurios', capDetail:'El Cretácico fue el apogeo de la diversidad dinosauriana' },
-      { url:'https://images.unsplash.com/photo-1457269449834-928af64c684d?w=900&q=80&auto=format&fit=crop', cap:'Impacto del asteroide Chicxulub', capDetail:'Hace 66 millones de años, todo cambió en cuestión de horas' },
-      { url:'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?w=900&q=80&auto=format&fit=crop', cap:'Mares cretácicos', capDetail:'Los reptiles marinos eran los depredadores absolutos de los océanos mesozoicos' },
+      { cap:'Era de los dinosaurios', capDetail:'El Cretácico fue el apogeo de la diversidad dinosauriana', imgLabel:'T. rex o dinosaurio cretácico', imgHint:'1200×700px panorámica' },
+      { cap:'Impacto del asteroide Chicxulub', capDetail:'Hace 66 millones de años, todo cambió', imgLabel:'Impacto de asteroide', imgHint:'900×600px' },
+      { cap:'Mares cretácicos', capDetail:'Los reptiles marinos eran depredadores absolutos', imgLabel:'Mosasaurus o reptil marino', imgHint:'900×600px' },
     ]
   },
   {
     id:'paleogeno', name:'Paleógeno', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:66, end:23, durationLabel:'43 M.a.',
     color:'#2d9e6b', colorLight:'#3ac280',
-    badge:'Cenozoico · Paleógeno',
-    title:'El Paleógeno',
-    subtitle:'El Amanecer de los Mamíferos',
+    badge:'Cenozoico · Paleógeno', title:'El Paleógeno', subtitle:'El Amanecer de los Mamíferos',
     ageRange:'66 — 23 M.a.',
-    desc:'Tras la extinción de los dinosaurios, los mamíferos —pequeños, nocturnos y marginados durante 165 millones de años— se diversificaron explosivamente para ocupar todos los nichos ecológicos vacantes. Los bosques tropicales cubrían gran parte del planeta. Las primeras ballenas evolucionaron de ancestros terrestres. Los primates emergieron. El Eoceno fue el período más cálido de los últimos 50 millones de años.',
-    climate:'Tropical a templado. Eoceno muy cálido (~12°C más que hoy). Progresivo enfriamiento hacia el Oligoceno.',
-    life:'Mamíferos diversificados, primeras ballenas, primates, aves gigantes (diatryma), angiospermas dominantes.',
-    oxygen:'~21%',
-    tempLabel:'~25°C eoceno → enfriando',
-    organisms:['Pakicetus (ancestro de ballenas)','Paraceratherium (mayor mamífero terrestre)','Andrewsarchus','Primeros primates','Diatryma (ave gigante)'],
+    desc:'Tras la extinción de los dinosaurios, los mamíferos se diversificaron explosivamente. Los primeros primates emergieron. Las primeras ballenas evolucionaron de ancestros terrestres.',
+    climate:'Tropical a templado. Eoceno muy cálido. Enfriamiento hacia el Oligoceno.',
+    life:'Mamíferos diversificados, primeras ballenas, primates, aves gigantes.',
+    oxygen:'~21%', tempLabel:'~25°C eoceno → enfriando',
+    organisms:['Pakicetus (ancestro de ballenas)','Paraceratherium','Andrewsarchus','Primeros primates','Diatryma'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=1200&q=85&auto=format&fit=crop', cap:'Fauna paleógena', capDetail:'Los mamíferos se diversificaron para ocupar todos los nichos ecológicos disponibles' },
-      { url:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80&auto=format&fit=crop', cap:'Bosques tropicales del Eoceno', capDetail:'El Eoceno fue el período más cálido de los últimos 50 millones de años' },
-      { url:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=900&q=80&auto=format&fit=crop', cap:'Primeros cetáceos', capDetail:'Las ballenas evolucionaron de mamíferos terrestres durante el Eoceno' },
+      { cap:'Fauna paleógena', capDetail:'Mamíferos ocupando nichos ecológicos nuevos', imgLabel:'Mamífero paleógeno grande', imgHint:'1200×700px panorámica' },
+      { cap:'Bosques tropicales del Eoceno', capDetail:'El período más cálido de los últimos 50 millones de años', imgLabel:'Bosque tropical denso', imgHint:'900×600px' },
+      { cap:'Primeros cetáceos', capDetail:'Las ballenas evolucionaron de mamíferos terrestres', imgLabel:'Ballena primitiva Pakicetus', imgHint:'900×600px' },
     ]
   },
   {
     id:'neogeno', name:'Neógeno', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:23, end:2.6, durationLabel:'20 M.a.',
     color:'#3d9e4a', colorLight:'#4dc05a',
-    badge:'Cenozoico · Neógeno',
-    title:'El Neógeno',
-    subtitle:'La Tierra Moderna',
+    badge:'Cenozoico · Neógeno', title:'El Neógeno', subtitle:'La Tierra Moderna',
     ageRange:'23 — 2,6 M.a.',
-    desc:'Los continentes alcanzaron posiciones casi actuales. La apertura del Canal de Drake aisló la Antártida, iniciando su glaciación permanente. Los Andes, el Himalaya y los Alpes alcanzaron grandes alturas por colisiones tectónicas. Los pastos (gramíneas) se extendieron globalmente, impulsando la evolución de los herbívoros modernos. Los homínidos surgieron en África hace unos 7 millones de años.',
-    climate:'Enfriamiento progresivo. Glaciación antártica permanente. Pastizales reemplazan bosques.',
-    life:'Grandes mamíferos herbívoros, homínidos, megatiburones (Megalodon), delfines, ballenas modernas.',
-    oxygen:'~21%',
-    tempLabel:'~14°C temperatura media global',
-    organisms:['Megalodon','Sivatherium (jirafa gigante)','Dinofelis','Primeros Australopithecus','Mastodonte'],
+    desc:'Los continentes alcanzaron posiciones casi actuales. Los Andes, el Himalaya y los Alpes alcanzaron grandes alturas. Los homínidos surgieron en África hace unos 7 millones de años.',
+    climate:'Enfriamiento progresivo. Glaciación antártica permanente.',
+    life:'Grandes mamíferos herbívoros, homínidos, Megalodon, delfines.',
+    oxygen:'~21%', tempLabel:'~14°C temperatura media global',
+    organisms:['Megalodon','Sivatherium','Dinofelis','Primeros Australopithecus','Mastodonte'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1462953491269-9aff00919695?w=1200&q=85&auto=format&fit=crop', cap:'Megafauna del Neógeno', capDetail:'El Mioceno y Plioceno vieron la mayor diversidad de mamíferos de todos los tiempos' },
-      { url:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80&auto=format&fit=crop', cap:'Formación de los Andes', capDetail:'La subducción de la placa de Nazca elevó los Andes durante el Neógeno' },
-      { url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80&auto=format&fit=crop', cap:'Enfriamiento global', capDetail:'El Neógeno marcó el inicio de las glaciaciones en el hemisferio norte' },
+      { cap:'Megafauna del Neógeno', capDetail:'Mayor diversidad de mamíferos de todos los tiempos', imgLabel:'Megafauna neógena', imgHint:'1200×700px panorámica' },
+      { cap:'Formación de los Andes', capDetail:'La subducción de la placa de Nazca', imgLabel:'Andes o cordillera', imgHint:'900×600px' },
+      { cap:'Enfriamiento global', capDetail:'El Neógeno marcó el inicio de las glaciaciones', imgLabel:'Paisaje glaciar', imgHint:'900×600px' },
     ]
   },
   {
     id:'cuaternario', name:'Cuaternario', eon:'Fanerozoico', eonColor:'#2d6a4f',
     start:2.6, end:0, durationLabel:'2,6 M.a.',
     color:'#5a9e38', colorLight:'#72c247',
-    badge:'Cenozoico · Cuaternario',
-    title:'El Cuaternario',
-    subtitle:'El Tiempo de los Humanos',
+    badge:'Cenozoico · Cuaternario', title:'El Cuaternario', subtitle:'El Tiempo de los Humanos',
     ageRange:'2,6 M.a. — Presente',
-    desc:'Glaciaciones cíclicas esculpieron el paisaje del mundo moderno. En los períodos glaciales, capas de hielo de 3 km de espesor cubrían el norte de Europa y América. La megafauna pleistocénica —mamuts, mastodontes, tigres dientes de sable— reinó hasta que la expansión del Homo sapiens contribuyó a su extinción. Toda la historia de la civilización humana cabe en los últimos 12.000 años, un parpadeo geológico.',
-    climate:'Glaciaciones cíclicas (Milankovitch). Actualmente en un interglacial. Calentamiento antropogénico reciente.',
-    life:'Homo sapiens, mamuts, mastodontes, grandes felinos, megafauna moderna.',
-    oxygen:'~21%',
-    tempLabel:'~14°C interglacial / ~9°C glacial',
+    desc:'Glaciaciones cíclicas esculpieron el paisaje del mundo moderno. La megafauna pleistocénica reinó hasta que la expansión del Homo sapiens contribuyó a su extinción. Toda la historia de la civilización cabe en los últimos 12.000 años.',
+    climate:'Glaciaciones cíclicas. Actualmente interglacial. Calentamiento antropogénico reciente.',
+    life:'Homo sapiens, mamuts, mastodontes, grandes felinos.',
+    oxygen:'~21%', tempLabel:'~14°C interglacial / ~9°C glacial',
     organisms:['Homo sapiens','Mammuthus primigenius (mamut)','Smilodon (dientes de sable)','Megatherium','Diprotodon'],
     imgs:[
-      { url:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85&auto=format&fit=crop', cap:'Glaciaciones del Pleistoceno', capDetail:'El hielo cubrió un tercio de la superficie terrestre durante los máximos glaciales' },
-      { url:'https://images.unsplash.com/photo-1484406566174-9da000fda645?w=900&q=80&auto=format&fit=crop', cap:'Megafauna pleistocénica', capDetail:'Los mamuts lanudos sobrevivieron hasta hace apenas 4.000 años en la isla de Wrangel' },
-      { url:'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=900&q=80&auto=format&fit=crop', cap:'Estratos del Cuaternario', capDetail:'Los cañones revelan las capas de sedimento depositadas durante las glaciaciones' },
+      { cap:'Glaciaciones del Pleistoceno', capDetail:'El hielo cubrió un tercio de la superficie terrestre', imgLabel:'Glaciar o paisaje glacial', imgHint:'1200×700px panorámica' },
+      { cap:'Megafauna pleistocénica', capDetail:'Los mamuts sobrevivieron hasta hace 4.000 años', imgLabel:'Mamut lanudo', imgHint:'900×600px' },
+      { cap:'Estratos del Cuaternario', capDetail:'Los cañones revelan capas de sedimento glacial', imgLabel:'Cañón con estratos', imgHint:'900×600px' },
     ]
   },
 ];
 
 // ═══════════════════════════════════════════
-// UTILITIES
+// UTILIDADES
 // ═══════════════════════════════════════════
 function lerp(a,b,t){return a+(b-a)*t}
 function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
+
+// Crear placeholder de imagen para el timeline (div, no img)
+function makePlaceholder(imgObj, extraStyle) {
+  const div = document.createElement('div');
+  div.style.cssText = `width:100%;height:100%;min-height:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:repeating-linear-gradient(45deg,rgba(196,164,107,0.04),rgba(196,164,107,0.04) 10px,rgba(196,164,107,0.08) 10px,rgba(196,164,107,0.08) 20px);border:1.5px dashed rgba(196,164,107,0.4);position:absolute;inset:0;cursor:pointer;transition:background .2s,border-color .2s;${extraStyle||''}`;
+  div.innerHTML = `
+    <div style="font-size:28px;opacity:.6">🖼</div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#C4A46B;opacity:.8;text-align:center;padding:0 1rem;line-height:1.5">Pegar imagen aquí</div>
+    <div style="font-size:10px;color:rgba(240,234,224,0.5);text-align:center;padding:0 1rem;line-height:1.4">${imgObj.imgLabel||''}<br>${imgObj.imgHint||''}</div>
+  `;
+  div.addEventListener('mouseenter', () => { div.style.borderColor = '#C4A46B'; div.style.background = 'repeating-linear-gradient(45deg,rgba(196,164,107,0.08),rgba(196,164,107,0.08) 10px,rgba(196,164,107,0.14) 10px,rgba(196,164,107,0.14) 20px)'; });
+  div.addEventListener('mouseleave', () => { div.style.borderColor = 'rgba(196,164,107,0.4)'; div.style.background = 'repeating-linear-gradient(45deg,rgba(196,164,107,0.04),rgba(196,164,107,0.04) 10px,rgba(196,164,107,0.08) 10px,rgba(196,164,107,0.08) 20px)'; });
+  return div;
+}
+
+// Crear placeholder de thumbnail
+function makeThumbPlaceholder(imgObj) {
+  const div = document.createElement('div');
+  div.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:repeating-linear-gradient(45deg,rgba(196,164,107,0.04),rgba(196,164,107,0.04) 6px,rgba(196,164,107,0.08) 6px,rgba(196,164,107,0.08) 12px);';
+  div.innerHTML = `<div style="font-size:14px;opacity:.7">🖼</div><div style="font-size:8px;color:rgba(196,164,107,0.7);text-align:center;padding:0 3px;line-height:1.2">${imgObj.imgLabel||'Imagen'}</div>`;
+  return div;
+}
 
 // ═══════════════════════════════════════════
 // HERO PARTICLES
@@ -1492,13 +1260,12 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
 })();
 
 // ═══════════════════════════════════════════
-// NUEVO TIMELINE INMERSIVO
+// TIMELINE INMERSIVO
 // ═══════════════════════════════════════════
 (function(){
   const TOTAL_TIME = 4540;
   let activeIdx = 0;
 
-  // ── Banda de eones ──
   const eonsBand = document.getElementById('tl-eons-band');
   const eons = [
     { name:'Hádico', start:4540, end:4000, color:'#78290f' },
@@ -1509,13 +1276,11 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
   eons.forEach(eon => {
     const seg = document.createElement('div');
     seg.className = 'tl-eon-band-seg';
-    const pct = ((eon.start - eon.end) / TOTAL_TIME * 100).toFixed(2);
     seg.style.cssText = `background:${eon.color};flex:${(eon.start-eon.end)};`;
     seg.textContent = eon.name;
     eonsBand.appendChild(seg);
   });
 
-  // ── Pista de períodos ──
   const track = document.getElementById('tl-track');
   TL_PERIODS.forEach((p, i) => {
     const dur = p.start - p.end;
@@ -1537,33 +1302,22 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
     track.appendChild(seg);
   });
 
-  // ── Renderizar detalle ──
   function selectPeriod(idx) {
     if (idx < 0 || idx >= TL_PERIODS.length) return;
     activeIdx = idx;
     const p = TL_PERIODS[idx];
 
-    // Actualizar activo en pista
     document.querySelectorAll('.tl-period-seg').forEach((seg, i) => {
       seg.classList.toggle('active', i === idx);
     });
 
-    // Scroll al segmento activo
     const activeSeg = track.querySelector('.tl-period-seg.active');
-    if (activeSeg) {
-      activeSeg.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-    }
+    if (activeSeg) activeSeg.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
 
-    // Transición de salida
     const panel = document.getElementById('tl-detail-panel');
     panel.classList.add('animating');
+    setTimeout(() => { renderDetail(p); panel.classList.remove('animating'); }, 200);
 
-    setTimeout(() => {
-      renderDetail(p);
-      panel.classList.remove('animating');
-    }, 200);
-
-    // Navegación
     document.getElementById('tl-btn-prev').disabled = idx === 0;
     document.getElementById('tl-btn-next').disabled = idx === TL_PERIODS.length - 1;
     document.getElementById('tl-position-indicator').innerHTML =
@@ -1573,37 +1327,40 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
   function renderDetail(p) {
     let currentImgIdx = 0;
 
-    // Imagen principal
-    const imgEl = document.getElementById('tl-img-main');
-    imgEl.src = p.imgs[0].url;
-    imgEl.alt = p.imgs[0].cap;
+    // Imagen principal — placeholder
+    const imgWrap = document.getElementById('tl-img-wrap');
+    // Limpiar contenido anterior (excepto overlay y caption)
+    Array.from(imgWrap.children).forEach(child => {
+      if (!child.classList.contains('tl-detail-img-overlay') && !child.classList.contains('tl-detail-img-caption')) {
+        child.remove();
+      }
+    });
+    const mainPlaceholder = makePlaceholder(p.imgs[0]);
+    imgWrap.insertBefore(mainPlaceholder, imgWrap.firstChild);
 
-    // Caption de imagen
     const capEl = document.getElementById('tl-img-caption');
     capEl.innerHTML = `<strong>${p.imgs[0].cap}</strong>${p.imgs[0].capDetail}`;
 
-    // Función para cambiar imagen
     function switchImg(imgIdx) {
       currentImgIdx = imgIdx;
-      imgEl.style.opacity = '0';
-      imgEl.style.transform = 'scale(1.04)';
-      setTimeout(() => {
-        imgEl.src = p.imgs[imgIdx].url;
-        imgEl.alt = p.imgs[imgIdx].cap;
-        capEl.innerHTML = `<strong>${p.imgs[imgIdx].cap}</strong>${p.imgs[imgIdx].capDetail}`;
-        imgEl.style.opacity = '1';
-        imgEl.style.transform = 'scale(1)';
-        // Actualizar thumbs activos
-        document.querySelectorAll('.tl-gallery-thumb').forEach((th, j) => {
-          th.classList.toggle('active-thumb', j === imgIdx);
-        });
-      }, 200);
+      // Limpiar y poner nuevo placeholder
+      Array.from(imgWrap.children).forEach(child => {
+        if (!child.classList.contains('tl-detail-img-overlay') && !child.classList.contains('tl-detail-img-caption')) {
+          child.remove();
+        }
+      });
+      const newPlaceholder = makePlaceholder(p.imgs[imgIdx]);
+      newPlaceholder.style.opacity = '0';
+      newPlaceholder.style.transform = 'scale(1.03)';
+      newPlaceholder.style.transition = 'opacity .35s ease, transform .45s ease';
+      imgWrap.insertBefore(newPlaceholder, imgWrap.firstChild);
+      setTimeout(() => { newPlaceholder.style.opacity = '1'; newPlaceholder.style.transform = 'scale(1)'; }, 30);
+      capEl.innerHTML = `<strong>${p.imgs[imgIdx].cap}</strong>${p.imgs[imgIdx].capDetail}`;
+      document.querySelectorAll('.tl-gallery-thumb').forEach((th, j) => {
+        th.classList.toggle('active-thumb', j === imgIdx);
+      });
     }
 
-    // Estilos de transición para imagen
-    imgEl.style.cssText = 'width:100%;height:100%;min-height:480px;object-fit:cover;filter:saturate(0.65) brightness(0.7);transition:opacity .35s ease, transform .45s ease, filter .5s ease;';
-
-    // Contenido de texto
     const content = document.getElementById('tl-detail-content');
     content.innerHTML = `
       <div class="tl-detail-era-badge">${p.badge}</div>
@@ -1616,22 +1373,10 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
       </div>
       <p class="tl-detail-desc">${p.desc}</p>
       <div class="tl-meta-grid">
-        <div class="tl-meta-card">
-          <div class="tl-meta-label">🌡 Clima</div>
-          <div class="tl-meta-value">${p.climate}</div>
-        </div>
-        <div class="tl-meta-card">
-          <div class="tl-meta-label">🌿 Vida dominante</div>
-          <div class="tl-meta-value">${p.life}</div>
-        </div>
-        <div class="tl-meta-card">
-          <div class="tl-meta-label">💨 O₂ atmosférico</div>
-          <div class="tl-meta-value">${p.oxygen}</div>
-        </div>
-        <div class="tl-meta-card">
-          <div class="tl-meta-label">🌡 Temperatura</div>
-          <div class="tl-meta-value">${p.tempLabel}</div>
-        </div>
+        <div class="tl-meta-card"><div class="tl-meta-label">🌡 Clima</div><div class="tl-meta-value">${p.climate}</div></div>
+        <div class="tl-meta-card"><div class="tl-meta-label">🌿 Vida dominante</div><div class="tl-meta-value">${p.life}</div></div>
+        <div class="tl-meta-card"><div class="tl-meta-label">💨 O₂ atmosférico</div><div class="tl-meta-value">${p.oxygen}</div></div>
+        <div class="tl-meta-card"><div class="tl-meta-label">🌡 Temperatura</div><div class="tl-meta-value">${p.tempLabel}</div></div>
       </div>
       <div>
         <div class="tl-meta-label" style="margin-bottom:.5rem">🦴 Organismos representativos</div>
@@ -1643,7 +1388,6 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
       </div>
     `;
 
-    // Organismos
     const orgsList = document.getElementById('tl-organisms-list');
     p.organisms.forEach(org => {
       const badge = document.createElement('div');
@@ -1652,24 +1396,18 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
       orgsList.appendChild(badge);
     });
 
-    // Galería de thumbnails
     const galleryStrip = document.getElementById('tl-gallery-strip');
     p.imgs.forEach((img, j) => {
       const thumb = document.createElement('div');
       thumb.className = 'tl-gallery-thumb' + (j === 0 ? ' active-thumb' : '');
       thumb.title = img.cap;
-      const imgThumb = document.createElement('img');
-      imgThumb.src = img.url;
-      imgThumb.alt = img.cap;
-      imgThumb.className = 'geo-img';
-      imgThumb.loading = 'lazy';
-      thumb.appendChild(imgThumb);
+      const thumbPlaceholder = makeThumbPlaceholder(img);
+      thumb.appendChild(thumbPlaceholder);
       thumb.addEventListener('click', () => switchImg(j));
       galleryStrip.appendChild(thumb);
     });
   }
 
-  // ── Botones de navegación ──
   document.getElementById('tl-btn-prev').addEventListener('click', () => {
     if (activeIdx > 0) selectPeriod(activeIdx - 1);
   });
@@ -1677,9 +1415,7 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
     if (activeIdx < TL_PERIODS.length - 1) selectPeriod(activeIdx + 1);
   });
 
-  // ── Inicializar ──
   selectPeriod(0);
-
 })();
 
 // ═══════════════════════════════════════════
@@ -1884,10 +1620,22 @@ function clamp(v,a,b){return Math.min(b,Math.max(a,v))}
     grid.innerHTML='';
     FOSSILS_DATA[period].forEach(f=>{
       const card=document.createElement('div');card.className='fossil-card';
-      const thumbContent=f.img
-        ? `<img src="${f.img}" alt="${f.name}" class="geo-img" loading="lazy"/>`
-        : `<div style="font-size:56px;z-index:1;position:relative">${f.icon}</div>`;
-      card.innerHTML=`<div class="fossil-thumb">${thumbContent}<div class="fossil-thumb-overlay"></div><div class="fossil-period-badge">${f.period}</div></div><div class="fossil-body"><div class="fossil-name">${f.name}</div><div class="fossil-sci">${f.sci}</div><div class="fossil-desc">${f.desc}</div></div>`;
+      // Placeholder en lugar de imagen
+      card.innerHTML=`
+        <div class="fossil-thumb" style="position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:repeating-linear-gradient(45deg,rgba(196,164,107,0.03),rgba(196,164,107,0.03) 8px,rgba(196,164,107,0.07) 8px,rgba(196,164,107,0.07) 16px);">
+            <div style="font-size:22px;opacity:.6">🖼</div>
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(196,164,107,0.7);text-align:center;padding:0 6px;line-height:1.3">Pegar imagen aquí</div>
+            <div style="font-size:8px;color:rgba(240,234,224,0.4);text-align:center;padding:0 6px;line-height:1.3">${f.imgLabel||f.name}<br>${f.imgHint||'~400×280px'}</div>
+          </div>
+          <div class="fossil-thumb-overlay"></div>
+          <div class="fossil-period-badge">${f.period}</div>
+        </div>
+        <div class="fossil-body">
+          <div class="fossil-name">${f.name}</div>
+          <div class="fossil-sci">${f.sci}</div>
+          <div class="fossil-desc">${f.desc}</div>
+        </div>`;
       card.addEventListener('click',()=>{card.classList.toggle('open');});
       grid.appendChild(card);
     });
