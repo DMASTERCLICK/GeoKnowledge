@@ -5,206 +5,352 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Geología Argentina — GeoKnowledge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Libre+Franklin:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --brown-dark:#4A2E1A; --brown-mid:#7A5C3A; --brown-light:#9E7B56;
-      --sand:#C4A46B; --cream:#FAF3E8; --cream-dark:#F0E4CC;
-      --text-primary:#1A1208; --text-muted:#7A6A5A;
-      --border:rgba(122,92,58,0.18); --white:#ffffff;
+      --ink:#0e0d0b;
+      --ink-mid:#2a2520;
+      --ink-light:#6b6258;
+      --gold:#b8955a;
+      --gold-light:#d4b07a;
+      --gold-pale:#f2e8d4;
+      --stone:#e8e0d3;
+      --stone-mid:#d6ccbe;
+      --parchment:#f7f3ec;
+      --parchment-dark:#ece5d8;
+      --white:#ffffff;
+      --border:rgba(90,75,55,0.14);
+      --border-strong:rgba(90,75,55,0.28);
+      --red-geo:#8b2020;
+      --blue-geo:#1a3d6b;
+      --green-geo:#1e5c3a;
+      --purple-geo:#4a2e6b;
     }
     html{scroll-behavior:smooth}
-    body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text-primary);overflow-x:hidden}
+    body{font-family:'Libre Franklin',sans-serif;background:var(--parchment);color:var(--ink);overflow-x:hidden}
 
-    /* ── NAV ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(250,243,232,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);padding:0 2.5rem;height:58px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .nav-logo-icon{width:32px;height:32px;border-radius:8px;background:var(--brown-mid);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:16px}
-    .nav-logo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text-primary)}
-    .nav-logo-text span{color:var(--brown-light)}
-    .nav-links{display:flex;gap:2rem;list-style:none}
-    .nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color .2s}
-    .nav-links a:hover,.nav-links a.active{color:var(--text-primary);font-weight:600}
-    .nav-cta{font-size:12px;font-weight:600;background:var(--brown-mid);color:var(--cream);padding:7px 18px;border-radius:99px;text-decoration:none;transition:background .2s}
-    .nav-cta:hover{background:var(--brown-dark)}
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--parchment)}
+    ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
 
-    /* ── HERO ── */
-    .hero{min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;padding:7rem 2.5rem 4rem;position:relative;overflow:hidden;background:#0d1a0a}
-    .hero-bg-map{position:absolute;inset:0;opacity:.18;background:
-      radial-gradient(ellipse 40% 60% at 30% 60%,#4A8C2A 0%,transparent 60%),
-      radial-gradient(ellipse 60% 40% at 70% 40%,#1A4A8C 0%,transparent 55%),
-      radial-gradient(ellipse 30% 50% at 80% 80%,#8C4A1A 0%,transparent 50%)}
-    .hero-strata{position:absolute;top:0;left:0;right:0;height:5px;display:flex}
-    .hero-strata div{flex:1}
-    .hero-content{position:relative;z-index:1;max-width:700px}
-    .hero-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#A8D88A;background:rgba(168,216,138,0.12);border:.5px solid rgba(168,216,138,0.3);padding:5px 12px;border-radius:99px;margin-bottom:1.5rem}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,64px);font-weight:900;line-height:1.08;letter-spacing:-2px;color:#fff;margin-bottom:1.25rem}
-    .hero-title em{font-style:italic;color:#C4A46B}
-    .hero-lead{font-size:17px;font-weight:300;line-height:1.7;color:rgba(255,255,255,0.6);max-width:540px;margin-bottom:2.5rem}
-    .hero-stats{display:flex;gap:2.5rem;padding-top:2rem;border-top:.5px solid rgba(255,255,255,0.1);flex-wrap:wrap}
-    .hstat-num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:#C4A46B}
-    .hstat-label{font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+    /* ─── ANIMACIONES ─── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes slideRight{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes scaleIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+    @keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+    @keyframes lineGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
+    .reveal.visible{opacity:1;transform:none}
+    .reveal-delay-1{transition-delay:.1s}
+    .reveal-delay-2{transition-delay:.2s}
+    .reveal-delay-3{transition-delay:.3s}
+    .reveal-delay-4{transition-delay:.4s}
+    .reveal-delay-5{transition-delay:.5s}
 
-    /* ── SECCIONES COMUNES ── */
-    section{padding:5rem 2.5rem}
-    .sec-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--brown-light);margin-bottom:.75rem}
-    .sec-title{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,40px);font-weight:900;letter-spacing:-1px;color:var(--text-primary);line-height:1.15;margin-bottom:1rem}
-    .sec-title em{font-style:italic;color:var(--brown-light)}
-    .sec-sub{font-size:15px;font-weight:300;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:2.5rem}
+    /* ─── NAV ─── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(247,243,236,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 3rem;height:62px;display:flex;align-items:center;justify-content:space-between;transition:box-shadow .3s}
+    nav.scrolled{box-shadow:0 2px 24px rgba(14,13,11,.07)}
+    .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .nav-logo-emblem{width:36px;height:36px;border-radius:0;background:var(--ink);display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:14px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:-1px;flex-shrink:0}
+    .nav-logo-text{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+    .nav-logo-text span{color:var(--gold)}
+    .nav-links{display:flex;gap:2.5rem;list-style:none}
+    .nav-links a{font-size:12px;font-weight:500;letter-spacing:.4px;color:var(--ink-light);text-decoration:none;transition:color .2s;text-transform:uppercase}
+    .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+    .nav-cta{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;border:1px solid var(--ink);color:var(--ink);padding:8px 20px;text-decoration:none;transition:all .25s}
+    .nav-cta:hover{background:var(--ink);color:var(--parchment)}
 
-    /* ── NAV INTERNA ── */
-    .internal-nav{position:sticky;top:58px;z-index:100;background:rgba(250,243,232,0.96);backdrop-filter:blur(10px);border-bottom:.5px solid var(--border);padding:0 2.5rem;display:flex;gap:0;overflow-x:auto}
+    /* ─── HERO ─── */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
+    .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(8,6,4,.92) 0%, rgba(8,6,4,.55) 45%, rgba(8,6,4,.2) 100%)}
+    .hero-overlay-side{position:absolute;inset:0;background:linear-gradient(to right, rgba(8,6,4,.4) 0%, transparent 60%)}
+    .hero-grain{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+    .hero-strata{position:absolute;bottom:0;left:0;right:0;height:6px;display:flex;z-index:5}
+    .hero-strata div{flex:1;opacity:.8}
+    .hero-content{position:relative;z-index:10;padding:0 3rem 5rem;max-width:760px}
+    .hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:1.75rem;animation:fadeUp .7s ease both .1s}
+    .hero-eyebrow-line{width:32px;height:1px;background:var(--gold);animation:lineGrow .6s ease both .4s;transform-origin:left}
+    .hero-eyebrow-text{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-light)}
+    .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,7vw,82px);font-weight:600;line-height:1.02;letter-spacing:-2px;color:#fff;margin-bottom:1.5rem;animation:fadeUp .7s ease both .2s}
+    .hero-title em{font-style:italic;color:var(--gold-light)}
+    .hero-lead{font-size:16px;font-weight:300;line-height:1.75;color:rgba(255,255,255,.58);max-width:520px;margin-bottom:3rem;animation:fadeUp .7s ease both .32s}
+    .hero-stats{display:grid;grid-template-columns:repeat(4,auto);gap:0;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;width:fit-content;animation:fadeUp .7s ease both .42s}
+    .hstat{padding-right:2.5rem;position:relative}
+    .hstat+.hstat{padding-left:2.5rem;border-left:1px solid rgba(255,255,255,.1)}
+    .hstat-num{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:var(--gold-light);line-height:1;letter-spacing:-1px}
+    .hstat-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;line-height:1.4}
+    .hero-scroll{position:absolute;bottom:2rem;right:3rem;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeIn 1.2s ease both 1s}
+    .hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.3));animation:shimmer 2s infinite}
+    .hero-scroll-text{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);writing-mode:vertical-rl}
+
+    /* ─── NAV INTERNA ─── */
+    .internal-nav{position:sticky;top:62px;z-index:200;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.06);padding:0 3rem;display:flex;gap:0;overflow-x:auto}
     .internal-nav::-webkit-scrollbar{display:none}
-    .inav-btn{font-size:12px;font-weight:600;color:var(--text-muted);padding:14px 18px;border:none;background:transparent;cursor:pointer;white-space:nowrap;font-family:'Source Sans 3',sans-serif;border-bottom:2px solid transparent;transition:all .2s}
-    .inav-btn:hover{color:var(--text-primary)}
-    .inav-btn.active{color:var(--brown-mid);border-bottom-color:var(--brown-mid)}
+    .inav-btn{font-size:11px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.35);padding:16px 20px;border:none;background:transparent;cursor:pointer;white-space:nowrap;font-family:'Libre Franklin',sans-serif;border-bottom:2px solid transparent;transition:all .2s}
+    .inav-btn:hover{color:rgba(255,255,255,.7)}
+    .inav-btn.active{color:var(--gold-light);border-bottom-color:var(--gold)}
 
-    /* ── PROVINCIAS GEOLÓGICAS ── */
+    /* ─── SECTION COMMONS ─── */
+    section{padding:6rem 3rem}
+    .section-header{margin-bottom:3.5rem}
+    .sec-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+    .sec-eyebrow-line{width:24px;height:1px;background:var(--gold)}
+    .sec-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4.5vw,52px);font-weight:600;letter-spacing:-1.5px;color:var(--ink);line-height:1.1;margin-bottom:1.1rem}
+    .sec-title em{font-style:italic;color:var(--gold)}
+    .sec-sub{font-size:15px;font-weight:300;color:var(--ink-light);max-width:580px;line-height:1.8}
+    .section-divider{width:100%;height:1px;background:linear-gradient(to right,var(--gold) 0%,transparent 60%);margin-bottom:3rem;opacity:.3}
+
+    /* ─── HIGHLIGHT STRIP ─── */
+    .highlight-strip{background:var(--ink);padding:3.5rem 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
+    .hs-item{padding:0 2.5rem;text-align:center;border-right:1px solid rgba(255,255,255,.07)}
+    .hs-item:first-child{padding-left:0}
+    .hs-item:last-child{border-right:none}
+    .hs-icon{font-size:28px;margin-bottom:.75rem;filter:grayscale(30%)}
+    .hs-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:.3rem;font-style:italic}
+    .hs-desc{font-size:12px;color:rgba(255,255,255,.4);line-height:1.6}
+    .hs-fig{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);margin-top:.5rem}
+
+    /* ─── PROVINCIAS ─── */
     #provincias{background:var(--white)}
-    .provincias-layout{display:grid;grid-template-columns:300px 1fr;gap:0;border:.5px solid var(--border);border-radius:16px;overflow:hidden}
-    .prov-list{border-right:.5px solid var(--border);overflow-y:auto;max-height:600px}
-    .prov-item{padding:1rem 1.25rem;cursor:pointer;border-bottom:.5px solid var(--border);transition:background .15s;display:flex;align-items:flex-start;gap:.75rem}
-    .prov-item:hover{background:var(--cream)}
-    .prov-item.active{background:var(--cream-dark);border-left:3px solid var(--brown-mid)}
-    .prov-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
-    .prov-name{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
-    .prov-era{font-size:11px;color:var(--text-muted)}
-    .prov-detail{padding:2rem 2.5rem;background:var(--cream)}
-    .pd-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
-    .pd-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--text-primary);letter-spacing:-.5px}
-    .pd-badge{font-size:11px;font-weight:600;color:var(--white);padding:4px 12px;border-radius:99px;white-space:nowrap}
-    .pd-desc{font-size:14px;line-height:1.75;color:var(--text-primary);margin-bottom:1.5rem}
-    .pd-props{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
-    .pd-prop{background:var(--white);border-radius:10px;padding:.75rem 1rem;border:.5px solid var(--border)}
-    .pd-prop-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:3px}
-    .pd-prop-val{font-size:13px;font-weight:600;color:var(--text-primary)}
-    .pd-highlights{display:flex;flex-direction:column;gap:.6rem}
-    .pd-highlight{display:flex;align-items:flex-start;gap:.6rem;font-size:13px;line-height:1.55;padding:.6rem .75rem;background:var(--white);border-radius:8px;border:.5px solid var(--border)}
-    .pd-hi-icon{font-size:16px;flex-shrink:0}
+    .provincias-layout{display:grid;grid-template-columns:280px 1fr;gap:0;border:1px solid var(--border);overflow:hidden}
+    .prov-list{border-right:1px solid var(--border);overflow-y:auto;max-height:640px;background:var(--parchment)}
+    .prov-item{padding:1.1rem 1.25rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:flex-start;gap:.85rem}
+    .prov-item:hover{background:var(--stone)}
+    .prov-item.active{background:var(--ink);border-left:3px solid var(--gold)}
+    .prov-item.active .prov-name{color:#fff}
+    .prov-item.active .prov-era{color:rgba(255,255,255,.4)}
+    .prov-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .prov-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;letter-spacing:-.1px}
+    .prov-era{font-size:11px;color:var(--ink-light)}
+    .prov-detail{padding:2.5rem 3rem;background:var(--parchment);overflow-y:auto;max-height:640px}
+    .pd-img{width:100%;height:200px;object-fit:cover;margin-bottom:1.75rem;display:block}
+    .pd-img-placeholder{width:100%;height:200px;background:var(--stone);margin-bottom:1.75rem;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.4}
+    .pd-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;flex-wrap:wrap}
+    .pd-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+    .pd-badge{font-size:10px;font-weight:600;color:var(--white);padding:4px 14px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+    .pd-desc{font-size:14px;line-height:1.8;color:var(--ink-mid);margin-bottom:1.75rem}
+    .pd-props{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.75rem}
+    .pd-prop{background:var(--white);padding:.85rem 1rem;border-left:3px solid var(--gold);border:1px solid var(--border);border-left:3px solid var(--gold)}
+    .pd-prop-key{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-light);margin-bottom:4px}
+    .pd-prop-val{font-size:12px;font-weight:600;color:var(--ink)}
+    .pd-highlights-title{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-light);margin-bottom:.7rem}
+    .pd-highlights{display:flex;flex-direction:column;gap:.5rem}
+    .pd-highlight{display:flex;align-items:flex-start;gap:.7rem;font-size:13px;line-height:1.6;padding:.7rem .85rem;background:var(--white);border:1px solid var(--border)}
+    .pd-hi-icon{font-size:14px;flex-shrink:0;margin-top:1px}
 
-    /* ── FORMACIONES CLAVE ── */
-    #formaciones{background:var(--cream-dark)}
-    .formaciones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
-    .form-card{background:var(--white);border:.5px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s}
-    .form-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(74,46,26,0.10)}
-    .form-card-top{padding:1.5rem 1.5rem 1rem;border-bottom:.5px solid var(--border)}
-    .form-card-era{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--brown-light);margin-bottom:.4rem}
-    .form-card-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:.25rem}
-    .form-card-loc{font-size:12px;color:var(--text-muted)}
-    .form-card-body{padding:1rem 1.5rem 1.5rem}
-    .form-card-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:.75rem}
-    .form-tags{display:flex;flex-wrap:wrap;gap:5px}
-    .form-tag{font-size:10px;padding:3px 8px;border-radius:99px;border:.5px solid var(--border);color:var(--text-muted);background:var(--cream)}
-    .form-bar{height:4px;width:100%;margin-bottom:0}
-
-    /* ── PALEONTOLOGÍA ── */
-    #paleontologia{background:var(--white)}
-    .paleo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;margin-top:2rem}
-    .paleo-card{border:.5px solid var(--border);border-radius:14px;overflow:hidden;background:var(--cream);cursor:pointer;transition:all .2s}
-    .paleo-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,46,26,0.10)}
-    .paleo-icon{font-size:48px;text-align:center;padding:1.5rem 1rem .75rem;background:var(--white)}
-    .paleo-body{padding:1rem 1.25rem 1.5rem}
-    .paleo-period{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--brown-light);margin-bottom:.25rem}
-    .paleo-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:.25rem;font-style:italic}
-    .paleo-common{font-size:12px;color:var(--text-muted);margin-bottom:.5rem}
-    .paleo-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:.75rem}
-    .paleo-loc{font-size:11px;color:var(--brown-mid);font-weight:600}
-
-    /* ── RECURSOS MINERALES ── */
-    #recursos{background:#0d1a0a}
-    #recursos .sec-label{color:#6AAA44}
-    #recursos .sec-title{color:#fff}
-    #recursos .sec-sub{color:rgba(255,255,255,.5)}
-    .recursos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:rgba(255,255,255,0.06);border:.5px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden}
-    .rec-card{background:#0d1a0a;padding:1.75rem;transition:background .15s}
-    .rec-card:hover{background:rgba(255,255,255,0.04)}
-    .rec-icon{font-size:28px;margin-bottom:.75rem}
-    .rec-mineral{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,0.35);margin-bottom:.25rem}
-    .rec-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:.4rem}
-    .rec-desc{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:.75rem}
-    .rec-loc{font-size:11px;color:#6AAA44;font-weight:600}
-
-    /* ── HISTORIA GEOLÓGICA ── */
-    #historia{background:var(--cream-dark)}
-    .historia-timeline{display:flex;flex-direction:column;gap:0;position:relative;max-width:900px}
-    .historia-timeline::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:var(--border)}
-    .hist-item{display:flex;gap:1.5rem;position:relative;padding-bottom:2.5rem}
+    /* ─── HISTORIA GEOLÓGICA ─── */
+    #historia{background:var(--ink);padding:6rem 3rem}
+    #historia .sec-title{color:#fff}
+    #historia .sec-sub{color:rgba(255,255,255,.4)}
+    #historia .sec-label{color:var(--gold)}
+    #historia .sec-eyebrow-line{background:var(--gold)}
+    .historia-layout{display:grid;grid-template-columns:1fr 520px;gap:5rem;align-items:start}
+    .historia-timeline{display:flex;flex-direction:column;gap:0;position:relative}
+    .historia-timeline::before{content:'';position:absolute;left:22px;top:0;bottom:0;width:1px;background:rgba(255,255,255,.08)}
+    .hist-item{display:flex;gap:1.75rem;position:relative;padding-bottom:2.75rem;cursor:pointer}
     .hist-item:last-child{padding-bottom:0}
-    .hist-dot{width:56px;height:56px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;z-index:1;border:3px solid var(--cream-dark)}
-    .hist-body{flex:1;padding-top:.5rem}
-    .hist-era{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--brown-light);margin-bottom:.25rem}
-    .hist-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:.5rem}
-    .hist-ma{font-family:'Space Mono',monospace;font-size:12px;color:var(--brown-mid);margin-bottom:.75rem}
-    .hist-desc{font-size:14px;line-height:1.7;color:var(--text-muted)}
+    .hist-item.active .hist-body{opacity:1}
+    .hist-dot{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:1;border:2px solid rgba(255,255,255,.08);transition:all .3s;background:#1a1712}
+    .hist-item.active .hist-dot{border-color:var(--gold);background:var(--ink-mid)}
+    .hist-body{flex:1;padding-top:.35rem;opacity:.5;transition:opacity .3s}
+    .hist-era{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:.2rem}
+    .hist-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:#fff;margin-bottom:.2rem;line-height:1.2}
+    .hist-ma{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);margin-bottom:.6rem}
+    .hist-desc{font-size:13px;line-height:1.7;color:rgba(255,255,255,.4);display:none}
+    .hist-item.active .hist-desc{display:block;color:rgba(255,255,255,.55)}
+    .hist-visual{position:sticky;top:120px}
+    .hist-visual-img{width:100%;height:340px;object-fit:cover;display:block}
+    .hist-visual-caption{padding:1.25rem 1.5rem;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.06)}
+    .hist-visual-era{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem}
+    .hist-visual-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:#fff}
 
-    /* ── VOLCANES ACTIVOS ── */
+    /* ─── FORMACIONES ─── */
+    #formaciones{background:var(--parchment-dark)}
+    .formaciones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5px;background:var(--border-strong)}
+    .form-card{background:var(--white);cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+    .form-card:hover{background:var(--parchment)}
+    .form-card:hover .form-card-img img{transform:scale(1.06)}
+    .form-card-img{height:180px;overflow:hidden;position:relative}
+    .form-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+    .form-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,13,11,.7),transparent 60%)}
+    .form-card-era-badge{position:absolute;top:.75rem;left:.75rem;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:3px 9px;z-index:1}
+    .form-bar{height:3px;width:100%}
+    .form-card-content{padding:1.5rem}
+    .form-card-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:.2rem;letter-spacing:-.3px}
+    .form-card-loc{font-size:11px;color:var(--ink-light);margin-bottom:.75rem;display:flex;align-items:center;gap:4px}
+    .form-card-desc{font-size:13px;color:var(--ink-light);line-height:1.65;margin-bottom:1rem}
+    .form-tags{display:flex;flex-wrap:wrap;gap:4px}
+    .form-tag{font-size:9px;padding:3px 8px;letter-spacing:.4px;text-transform:uppercase;border:1px solid var(--border);color:var(--ink-light);background:var(--parchment)}
+
+    /* ─── PALEONTOLOGÍA ─── */
+    #paleontologia{background:var(--white)}
+    .paleo-hero-banner{width:100%;height:280px;position:relative;overflow:hidden;margin-bottom:3rem}
+    .paleo-hero-banner img{width:100%;height:100%;object-fit:cover}
+    .paleo-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right, rgba(14,13,11,.75) 0%,rgba(14,13,11,.2) 60%)}
+    .paleo-hero-text{position:absolute;bottom:0;left:0;padding:2.5rem 3rem}
+    .paleo-hero-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-light);margin-bottom:.5rem}
+    .paleo-hero-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:#fff;line-height:1;letter-spacing:-1px}
+    .paleo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+    .paleo-card{border:1px solid var(--border);background:var(--parchment);cursor:pointer;transition:all .25s;overflow:hidden}
+    .paleo-card:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(14,13,11,.08);transform:translateY(-3px)}
+    .paleo-card-img{height:200px;overflow:hidden;position:relative}
+    .paleo-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+    .paleo-card:hover .paleo-card-img img{transform:scale(1.06)}
+    .paleo-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,13,11,.6),transparent 55%)}
+    .paleo-period-badge{position:absolute;top:.75rem;left:.75rem;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(14,13,11,.75);color:var(--gold-light);padding:3px 9px;border:1px solid rgba(184,149,90,.3)}
+    .paleo-body{padding:1.5rem}
+    .paleo-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:.2rem;font-style:italic;letter-spacing:-.2px}
+    .paleo-common{font-size:12px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.6rem}
+    .paleo-desc{font-size:13px;color:var(--ink-light);line-height:1.65;margin-bottom:.85rem}
+    .paleo-loc{font-size:11px;color:var(--ink-light);display:flex;align-items:center;gap:4px}
+    .paleo-loc::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+
+    /* ─── SPOTLIGHT (Aconcagua, Vaca Muerta, Argentinosaurus) ─── */
+    .spotlight-section{padding:0;background:var(--ink)}
+    .spotlight-item{display:grid;grid-template-columns:1fr 1fr;min-height:480px}
+    .spotlight-item:nth-child(even) .spotlight-img{order:-1}
+    .spotlight-img{position:relative;overflow:hidden}
+    .spotlight-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 8s ease}
+    .spotlight-item:hover .spotlight-img img{transform:scale(1.04)}
+    .spotlight-img-overlay{position:absolute;inset:0;background:rgba(14,13,11,.25)}
+    .spotlight-content{padding:4rem 3.5rem;display:flex;flex-direction:column;justify-content:center;border-top:1px solid rgba(255,255,255,.04)}
+    .spotlight-number{font-family:'Space Mono',monospace;font-size:72px;font-weight:700;color:rgba(255,255,255,.04);line-height:1;margin-bottom:-1.5rem;letter-spacing:-3px}
+    .spotlight-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+    .spotlight-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:700;color:#fff;line-height:1.05;letter-spacing:-1px;margin-bottom:1rem}
+    .spotlight-desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,.5);margin-bottom:1.75rem}
+    .spotlight-stats{display:flex;gap:2rem;flex-wrap:wrap}
+    .sp-stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--gold-light)}
+    .sp-stat-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+    /* ─── RECURSOS ─── */
+    #recursos{background:var(--parchment-dark)}
+    .recursos-intro-img{width:100%;height:240px;object-fit:cover;display:block;margin-bottom:3.5rem}
+    .recursos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5px;background:var(--border)}
+    .rec-card{background:var(--white);padding:2rem;transition:background .2s;position:relative;overflow:hidden;cursor:default}
+    .rec-card:hover{background:var(--parchment)}
+    .rec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .rec-accent{position:absolute;top:0;left:0;right:0;height:3px}
+    .rec-img{width:100%;height:150px;object-fit:cover;display:block;margin-bottom:1.25rem}
+    .rec-mineral{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);margin-bottom:.3rem}
+    .rec-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:.5rem;letter-spacing:-.3px}
+    .rec-desc{font-size:13px;color:var(--ink-light);line-height:1.65;margin-bottom:.85rem}
+    .rec-loc{font-size:11px;font-weight:600;color:var(--gold)}
+
+    /* ─── VOLCANES ─── */
     #volcanes{background:var(--white)}
-    .volcanes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin-top:2rem}
-    .volc-card{border:.5px solid var(--border);border-radius:14px;overflow:hidden;background:var(--cream);transition:all .2s}
-    .volc-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,46,26,0.10)}
-    .volc-top{background:linear-gradient(135deg,#4a1a1a,#8b2020);padding:1.25rem 1.5rem;position:relative;overflow:hidden}
-    .volc-top::after{content:'🌋';position:absolute;right:-10px;bottom:-10px;font-size:64px;opacity:.15}
-    .volc-estado{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;padding:3px 8px;border-radius:99px;margin-bottom:.5rem;display:inline-block}
-    .volc-estado.activo{background:rgba(231,76,60,.2);color:#ff6b6b}
-    .volc-estado.potencialmente{background:rgba(231,180,60,.2);color:#ffd93d}
-    .volc-nombre{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:.2rem}
-    .volc-alt{font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,.5)}
-    .volc-body{padding:1.25rem 1.5rem}
-    .volc-prov{font-size:11px;font-weight:600;color:var(--brown-mid);margin-bottom:.4rem}
-    .volc-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+    .volcanes-banner{width:100%;height:260px;position:relative;overflow:hidden;margin-bottom:3.5rem}
+    .volcanes-banner img{width:100%;height:100%;object-fit:cover}
+    .volcanes-banner-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(14,13,11,.8) 0%,rgba(14,13,11,.2) 70%)}
+    .volcanes-banner-text{position:absolute;inset:0;display:flex;align-items:flex-end;padding:2.5rem 3rem}
+    .volcanes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+    .volc-card{border:1px solid var(--border);overflow:hidden;background:var(--parchment);transition:all .25s}
+    .volc-card:hover{border-color:var(--gold);box-shadow:0 6px 24px rgba(14,13,11,.07)}
+    .volc-img{height:160px;overflow:hidden;position:relative}
+    .volc-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+    .volc-card:hover .volc-img img{transform:scale(1.06)}
+    .volc-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,13,11,.65),transparent 50%)}
+    .volc-estado-badge{position:absolute;top:.6rem;left:.6rem;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;z-index:1}
+    .volc-estado-badge.activo{background:rgba(139,32,32,.85);color:#ff9090;border:1px solid rgba(139,32,32,.5)}
+    .volc-estado-badge.potencialmente{background:rgba(139,110,32,.85);color:#ffd080;border:1px solid rgba(139,110,32,.5)}
+    .volc-alt-badge{position:absolute;bottom:.6rem;right:.6rem;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.7);background:rgba(0,0,0,.5);padding:3px 7px;z-index:1}
+    .volc-top{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
+    .volc-nombre{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.2px}
+    .volc-body{padding:1rem 1.5rem 1.25rem}
+    .volc-prov{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:.4rem}
+    .volc-desc{font-size:13px;color:var(--ink-light);line-height:1.6}
 
-    /* ── MODAL ── */
-    .modal-overlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(26,18,8,.65);backdrop-filter:blur(8px);padding:2rem;overflow-y:auto;align-items:flex-start;justify-content:center}
+    /* ─── MODAL ─── */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(8,6,4,.78);backdrop-filter:blur(10px);padding:2rem;overflow-y:auto;align-items:flex-start;justify-content:center}
     .modal-overlay.open{display:flex}
-    .modal-box{background:var(--white);border-radius:20px;max-width:680px;width:100%;margin:auto;overflow:hidden;box-shadow:0 32px 80px rgba(26,18,8,.30);animation:mIn .25s ease}
-    @keyframes mIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .modal-header{padding:2rem 2.5rem;position:relative}
-    .modal-close{position:absolute;top:1.25rem;right:1.25rem;background:rgba(0,0,0,.06);border:none;cursor:pointer;width:32px;height:32px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center}
-    .modal-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.6);margin-bottom:.4rem}
-    .modal-title{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:900;letter-spacing:-.5px;color:#fff;margin-bottom:.25rem}
-    .modal-sub{font-size:13px;color:rgba(255,255,255,.5);font-family:'Space Mono',monospace}
-    .modal-body{padding:1.5rem 2.5rem 2.5rem;display:flex;flex-direction:column;gap:1.25rem}
-    .modal-sec-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.5rem}
-    .modal-desc-text{font-size:15px;line-height:1.8;color:var(--text-primary)}
-    .modal-props{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-    .mprop{background:var(--cream);border-radius:10px;padding:.75rem 1rem}
-    .mprop-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:3px}
-    .mprop-val{font-size:13px;font-weight:600;color:var(--text-primary)}
+    .modal-box{background:var(--white);max-width:720px;width:100%;margin:auto;overflow:hidden;animation:modalIn .3s cubic-bezier(.22,1,.36,1)}
+    .modal-img{width:100%;height:260px;object-fit:cover;display:block}
+    .modal-header{padding:2rem 2.5rem 1.5rem;position:relative;border-bottom:1px solid var(--border)}
+    .modal-close{position:absolute;top:1.5rem;right:1.5rem;background:var(--parchment);border:1px solid var(--border);cursor:pointer;width:34px;height:34px;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--ink)}
+    .modal-close:hover{background:var(--ink);color:#fff}
+    .modal-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:.4rem}
+    .modal-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,4vw,34px);font-weight:700;letter-spacing:-.5px;color:var(--ink);margin-bottom:.25rem;font-style:italic}
+    .modal-sub{font-size:12px;color:var(--ink-light);font-family:'Space Mono',monospace}
+    .modal-body{padding:1.75rem 2.5rem 2.5rem;display:flex;flex-direction:column;gap:1.5rem}
+    .modal-sec-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-light);margin-bottom:.6rem}
+    .modal-desc-text{font-size:15px;line-height:1.85;color:var(--ink-mid)}
+    .modal-props{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .mprop{background:var(--parchment);padding:.85rem 1rem;border-left:3px solid var(--gold)}
+    .mprop-key{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-light);margin-bottom:4px}
+    .mprop-val{font-size:13px;font-weight:600;color:var(--ink)}
 
-    /* ── FOOTER ── */
-    footer{background:var(--brown-dark);color:rgba(250,243,232,.5);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-    .footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--cream)}
-    .footer-logo span{color:var(--sand)}
-    .footer-links{display:flex;gap:1.5rem;list-style:none}
-    .footer-links a{font-size:12px;color:rgba(250,243,232,.4);text-decoration:none}
-    .footer-links a:hover{color:var(--cream)}
+    /* ─── FOOTER ─── */
+    footer{background:var(--ink-mid);color:rgba(247,243,236,.35);padding:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(255,255,255,.05)}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--parchment)}
+    .footer-logo span{color:var(--gold)}
+    .footer-tagline{font-size:11px;color:rgba(247,243,236,.25);margin-top:4px}
+    .footer-links{display:flex;gap:2rem;list-style:none}
+    .footer-links a{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(247,243,236,.3);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:rgba(247,243,236,.7)}
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .hero-content>*{animation:fadeUp .7s ease both}
-    .hero-badge{animation-delay:.05s}.hero-title{animation-delay:.15s}.hero-lead{animation-delay:.25s}.hero-stats{animation-delay:.35s}
+    /* ─── MAPA SVG ESTILIZADO ─── */
+    .map-section{background:var(--ink);padding:5rem 3rem}
+    .map-section .sec-title{color:#fff}
+    .map-section .sec-label{color:var(--gold)}
+    .map-section .sec-eyebrow-line{background:var(--gold)}
+    .map-section .sec-sub{color:rgba(255,255,255,.4)}
+    .map-layout{display:grid;grid-template-columns:1fr 360px;gap:4rem;align-items:start;margin-top:3rem}
+    .map-container{position:relative}
+    .geo-map-svg{width:100%;max-width:500px;filter:drop-shadow(0 20px 60px rgba(0,0,0,.4))}
+    .map-legend{display:flex;flex-direction:column;gap:1.25rem;padding-top:.5rem}
+    .map-legend-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;border:1px solid rgba(255,255,255,.06);transition:background .2s;cursor:default}
+    .map-legend-item:hover{background:rgba(255,255,255,.03)}
+    .map-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .map-legend-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:2px}
+    .map-legend-desc{font-size:11px;color:rgba(255,255,255,.3);line-height:1.5}
 
-    @media(max-width:820px){
-      nav{padding:0 1.25rem}.nav-links{display:none}
-      .hero{padding:6rem 1.25rem 3rem}
-      section{padding:3.5rem 1.25rem}
+    /* ─── SEPARADORES ─── */
+    .section-separator{padding:0 3rem;overflow:hidden;height:60px;position:relative}
+    .section-separator svg{width:100%;height:100%}
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:960px){
+      nav{padding:0 1.5rem}
+      .nav-links{display:none}
+      .hero-content{padding:0 1.5rem 4rem}
+      .hero-stats{grid-template-columns:1fr 1fr;gap:1rem}
+      .hstat+.hstat{padding-left:0;border-left:none}
+      section{padding:4rem 1.5rem}
       .provincias-layout{grid-template-columns:1fr}
-      .prov-list{max-height:260px;display:flex;flex-wrap:wrap;gap:4px;padding:.75rem;border-right:none;border-bottom:.5px solid var(--border)}
-      .prov-item{border-radius:8px;border-bottom:none;padding:.5rem .75rem}
-      .prov-item.active{border-left:none;border-bottom:2px solid var(--brown-mid)}
+      .prov-list{max-height:240px;display:flex;flex-wrap:wrap;gap:4px;padding:.75rem;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto}
+      .prov-item{border-radius:0;border-bottom:none;padding:.5rem .85rem}
+      .prov-item.active{border-left:none;border-bottom:2px solid var(--gold)}
+      .prov-detail{max-height:none}
       .pd-props{grid-template-columns:1fr}
-      .internal-nav{padding:0 1.25rem}
+      .internal-nav{padding:0 1.5rem}
       .modal-overlay{padding:0}
-      .modal-box{border-radius:0;min-height:100vh}
+      .modal-box{margin:0;min-height:100dvh}
+      .historia-layout{grid-template-columns:1fr}
+      .hist-visual{display:none}
+      .spotlight-item{grid-template-columns:1fr}
+      .spotlight-item:nth-child(even) .spotlight-img{order:0}
+      .spotlight-img{height:260px}
+      .highlight-strip{grid-template-columns:1fr;gap:2rem}
+      .hs-item{padding:0;border-right:none;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:2rem}
+      .hs-item:last-child{border-bottom:none;padding-bottom:0}
+      .map-layout{grid-template-columns:1fr}
+      .map-section{padding:4rem 1.5rem}
+      .volcanes-banner-text{padding:1.5rem 1.5rem}
+      .paleo-hero-text{padding:1.5rem 1.5rem}
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
+<!-- ══ NAV ══ -->
+<nav id="main-nav">
   <a class="nav-logo" href="index.html">
-    <div class="nav-logo-icon">⛰</div>
+    <div class="nav-logo-emblem">GK</div>
     <span class="nav-logo-text">Geo<span>Knowledge</span></span>
   </a>
   <ul class="nav-links">
@@ -216,41 +362,53 @@
   <a class="nav-cta" href="index.html">← Inicio</a>
 </nav>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <header class="hero">
-  <div class="hero-bg-map"></div>
+  <img class="hero-img" src="https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=1800&q=85&auto=format&fit=crop" alt="Cordillera de los Andes Argentina" loading="eager"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay-side"></div>
+  <div class="hero-grain"></div>
   <div class="hero-strata">
-    <div style="background:#2A4A1A"></div><div style="background:#1A3A5C"></div>
-    <div style="background:#4A2A1A"></div><div style="background:#1A5C2A"></div>
-    <div style="background:#5C4A1A"></div><div style="background:#2A1A5C"></div>
-    <div style="background:#C4A46B"></div><div style="background:#4A2E1A"></div>
+    <div style="background:#3d246e"></div>
+    <div style="background:#1a6648"></div>
+    <div style="background:#5c3a1a"></div>
+    <div style="background:#2a5c8a"></div>
+    <div style="background:#8a5c2a"></div>
+    <div style="background:#b8955a"></div>
   </div>
   <div class="hero-content">
-    <div class="hero-badge">🗺 Geología Argentina</div>
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">Geología Argentina · GeoKnowledge</span>
+    </div>
     <h1 class="hero-title">Un país construido<br>por <em>millones de años</em><br>de historia.</h1>
     <p class="hero-lead">Argentina posee una de las historias geológicas más ricas y variadas del planeta. Desde los dinosaurios más grandes conocidos hasta los Andes más jóvenes, el territorio argentino es un laboratorio geológico natural.</p>
     <div class="hero-stats">
-      <div>
-        <div class="hstat-num">4</div>
-        <div class="hstat-label">Provincias geológicas principales</div>
+      <div class="hstat">
+        <div class="hstat-num">12</div>
+        <div class="hstat-label">Provincias geológicas</div>
       </div>
-      <div>
+      <div class="hstat">
         <div class="hstat-num">+200</div>
-        <div class="hstat-label">Especies de dinosaurios halladas</div>
+        <div class="hstat-label">Especies de dinosaurios</div>
       </div>
-      <div>
+      <div class="hstat">
         <div class="hstat-num">35</div>
         <div class="hstat-label">Volcanes activos</div>
       </div>
-      <div>
+      <div class="hstat">
         <div class="hstat-num">2000</div>
         <div class="hstat-label">Ma: rocas más antiguas</div>
       </div>
     </div>
   </div>
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">Explorar</span>
+    <div class="hero-scroll-line"></div>
+  </div>
 </header>
 
-<!-- NAV INTERNA -->
+<!-- ══ NAV INTERNA ══ -->
 <nav class="internal-nav" id="internal-nav">
   <button class="inav-btn active" onclick="scrollTo('provincias',this)">Provincias geológicas</button>
   <button class="inav-btn" onclick="scrollTo('historia',this)">Historia geológica</button>
@@ -260,63 +418,271 @@
   <button class="inav-btn" onclick="scrollTo('volcanes',this)">Volcanes</button>
 </nav>
 
+<!-- ══ HIGHLIGHT STRIP ══ -->
+<div class="highlight-strip">
+  <div class="hs-item reveal">
+    <div class="hs-icon">🏔</div>
+    <div class="hs-name">Aconcagua</div>
+    <div class="hs-desc">El punto más alto del hemisferio occidental y de América, forjado por la subducción de la placa de Nazca.</div>
+    <div class="hs-fig">6.961 m s.n.m.</div>
+  </div>
+  <div class="hs-item reveal reveal-delay-2">
+    <div class="hs-icon">🛢</div>
+    <div class="hs-name">Vaca Muerta</div>
+    <div class="hs-desc">El segundo yacimiento de shale gas y cuarto de shale oil más grandes del mundo. Jurásico de la Cuenca Neuquina.</div>
+    <div class="hs-fig">2.° shale gas del mundo</div>
+  </div>
+  <div class="hs-item reveal reveal-delay-3">
+    <div class="hs-icon">🦕</div>
+    <div class="hs-name">Argentinosaurus</div>
+    <div class="hs-desc">El vertebrado terrestre más grande en la historia de la Tierra, descubierto en Neuquén en 1987 por un productor rural.</div>
+    <div class="hs-fig">~70–80 toneladas</div>
+  </div>
+</div>
+
 <!-- ══ PROVINCIAS GEOLÓGICAS ══ -->
 <section id="provincias">
-  <div class="sec-label">Tectónica y estructura</div>
-  <h2 class="sec-title">Provincias <em>Geológicas</em></h2>
-  <p class="sec-sub">El territorio argentino se divide en grandes provincias geológicas según su historia tectónica, tipo de rocas y estructura. Hacé clic en cada una para ver su descripción completa.</p>
-
-  <div class="provincias-layout">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-label">Tectónica y estructura</span></div>
+    <h2 class="sec-title">Provincias <em>Geológicas</em></h2>
+    <p class="sec-sub">El territorio argentino se divide en grandes provincias geológicas según su historia tectónica, tipo de rocas y estructura. Hacé clic en cada una para ver su descripción completa.</p>
+  </div>
+  <div class="provincias-layout reveal reveal-delay-2">
     <div class="prov-list" id="prov-list"></div>
     <div class="prov-detail" id="prov-detail">
-      <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:14px">← Seleccioná una provincia</div>
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--ink-light);font-size:14px;min-height:300px">← Seleccioná una provincia</div>
     </div>
   </div>
 </section>
 
+<!-- ══ MAPA GEOLÓGICO ══ -->
+<div class="map-section" id="mapa">
+  <div class="section-header reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-label">Geografía tectónica</span></div>
+    <h2 class="sec-title" style="color:#fff">Mapa <em>Geológico</em></h2>
+    <p class="sec-sub">Distribución de las principales provincias geológicas y estructuras tectónicas del territorio argentino.</p>
+  </div>
+  <div class="map-layout">
+    <div class="map-container reveal">
+      <svg class="geo-map-svg" viewBox="0 0 340 620" xmlns="http://www.w3.org/2000/svg">
+        <!-- Argentina simplified geological map -->
+        <!-- Background -->
+        <rect width="340" height="620" fill="#0e0d0b"/>
+        <!-- Border grid lines -->
+        <line x1="0" y1="0" x2="340" y2="0" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+        <line x1="0" y1="0" x2="0" y2="620" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+        <!-- Argentina outline simplified -->
+        <path d="M 110,20 L 200,18 L 240,30 L 260,50 L 265,80 L 255,110 L 270,140 L 275,170 L 265,195 L 255,210 L 260,230 L 255,255 L 245,270 L 240,290 L 230,310 L 225,330 L 215,350 L 210,370 L 200,395 L 195,415 L 185,440 L 170,460 L 160,480 L 145,500 L 130,520 L 115,540 L 100,555 L 90,570 L 85,585 L 95,595 L 110,600 L 125,595 L 140,590 L 150,580 L 155,570 L 150,555 L 140,545 L 125,540 L 130,525 L 145,510 L 155,495 L 160,480 L 145,500 L 130,520 L 115,540 L 100,555 L 90,570 L 85,585 L 95,595 L 110,600 L 125,595 L 140,590 L 150,580 L 155,570 L 150,555 L 140,545 L 130,535 L 125,520 L 110,510 L 100,495 L 90,480 L 85,460 L 80,440 L 75,420 L 72,395 L 75,370 L 80,345 L 85,315 L 88,285 L 90,255 L 88,225 L 90,195 L 92,165 L 88,135 L 85,105 L 88,75 L 95,50 L 105,30 Z" fill="rgba(30,25,18,0.3)" stroke="rgba(184,149,90,0.3)" stroke-width="1"/>
+        <!-- Andes region -->
+        <path d="M 88,30 L 110,20 L 105,45 L 95,75 L 88,105 L 85,135 L 88,165 L 90,195 L 88,225 L 90,255 L 88,285 L 85,315 L 80,345 L 75,375 L 72,400 L 75,425 L 80,455 L 85,475 L 90,490 L 100,500 L 110,510 L 120,515 L 115,530 L 105,545 L 95,555 L 85,565 L 80,575 L 85,585 L 90,590 L 85,580 L 78,560 L 72,540 L 68,515 L 65,490 L 62,465 L 60,440 L 58,415 L 57,390 L 58,365 L 62,340 L 65,315 L 68,285 L 68,255 L 65,225 L 64,195 L 65,165 L 63,135 L 62,105 L 65,75 L 72,48 L 80,28 Z" fill="rgba(42,92,138,0.35)" stroke="rgba(42,92,138,0.5)" stroke-width="0.5"/>
+        <!-- Patagonia -->
+        <path d="M 90,330 L 255,330 L 260,355 L 255,380 L 250,405 L 245,430 L 235,455 L 220,480 L 205,505 L 190,525 L 175,545 L 162,565 L 152,580 L 148,590 L 135,598 L 120,600 L 108,596 L 98,590 L 90,585 L 83,572 L 80,558 L 82,540 L 90,525 L 100,510 L 112,500 L 122,490 L 128,475 L 125,460 L 118,448 L 110,438 L 100,425 L 88,410 L 80,395 L 75,378 L 75,360 L 78,345 Z" fill="rgba(42,92,92,0.35)" stroke="rgba(42,92,92,0.5)" stroke-width="0.5"/>
+        <!-- Sierras Pampeanas -->
+        <path d="M 145,115 L 240,115 L 250,145 L 248,175 L 240,200 L 225,220 L 200,230 L 175,235 L 155,230 L 138,215 L 132,195 L 130,170 L 135,145 Z" fill="rgba(92,138,42,0.35)" stroke="rgba(92,138,42,0.5)" stroke-width="0.5"/>
+        <!-- NOA / Puna -->
+        <path d="M 110,20 L 200,18 L 220,30 L 240,50 L 248,80 L 240,115 L 145,115 L 130,100 L 120,80 L 112,55 Z" fill="rgba(92,42,92,0.35)" stroke="rgba(92,42,92,0.5)" stroke-width="0.5"/>
+        <!-- Cuenca del Paraná -->
+        <path d="M 240,115 L 275,105 L 280,135 L 275,165 L 268,190 L 260,210 L 255,235 L 255,260 L 250,285 L 245,305 L 240,325 L 230,330 L 200,330 L 175,325 L 150,320 L 130,310 L 130,290 L 135,265 L 138,240 L 135,215 L 138,195 L 145,170 L 145,145 L 148,115 Z" fill="rgba(92,92,42,0.3)" stroke="rgba(92,92,42,0.4)" stroke-width="0.5"/>
+        <!-- Precordillera -->
+        <path d="M 88,105 L 145,115 L 138,145 L 130,170 L 132,195 L 138,215 L 135,240 L 130,270 L 128,300 L 128,330 L 90,330 L 88,300 L 88,270 L 88,240 L 88,210 L 88,180 L 88,150 Z" fill="rgba(138,92,42,0.35)" stroke="rgba(138,92,42,0.5)" stroke-width="0.5"/>
+        <!-- Province labels -->
+        <text x="72" y="230" fill="rgba(184,149,90,0.8)" font-size="8" font-family="Space Mono" text-anchor="middle" transform="rotate(-75,72,230)">ANDES</text>
+        <text x="195" y="75" fill="rgba(184,149,90,0.7)" font-size="7.5" font-family="Space Mono" text-anchor="middle">PUNA · NOA</text>
+        <text x="195" y="170" fill="rgba(184,149,90,0.7)" font-size="7.5" font-family="Space Mono" text-anchor="middle">SIERRAS PAMPEANAS</text>
+        <text x="108" y="215" fill="rgba(184,149,90,0.7)" font-size="7.5" font-family="Space Mono" text-anchor="middle" transform="rotate(-85,108,215)">PRECORD.</text>
+        <text x="205" y="250" fill="rgba(184,149,90,0.7)" font-size="7.5" font-family="Space Mono" text-anchor="middle">CUENCA PARANÁ</text>
+        <text x="168" y="418" fill="rgba(184,149,90,0.7)" font-size="8" font-family="Space Mono" text-anchor="middle">PATAGONIA</text>
+        <!-- Aconcagua marker -->
+        <circle cx="80" cy="195" r="4" fill="rgba(184,149,90,0.9)" stroke="#fff" stroke-width="1"/>
+        <text x="95" y="192" fill="rgba(255,255,255,0.6)" font-size="6.5" font-family="Space Mono">Aconcagua</text>
+        <text x="95" y="201" fill="rgba(184,149,90,0.7)" font-size="6" font-family="Space Mono">6.961 m</text>
+        <!-- Ischigualasto marker -->
+        <circle cx="150" cy="128" r="3" fill="rgba(92,138,42,0.9)" stroke="#fff" stroke-width="0.7"/>
+        <text x="157" y="132" fill="rgba(255,255,255,0.5)" font-size="6" font-family="Space Mono">Ischigualasto</text>
+        <!-- Vaca Muerta marker -->
+        <circle cx="105" cy="278" r="3" fill="rgba(42,92,138,0.9)" stroke="#fff" stroke-width="0.7"/>
+        <text x="112" y="282" fill="rgba(255,255,255,0.5)" font-size="6" font-family="Space Mono">Vaca Muerta</text>
+        <!-- Scale bar -->
+        <line x1="240" y1="595" x2="310" y2="595" stroke="rgba(184,149,90,0.5)" stroke-width="1"/>
+        <line x1="240" y1="592" x2="240" y2="598" stroke="rgba(184,149,90,0.5)" stroke-width="1"/>
+        <line x1="310" y1="592" x2="310" y2="598" stroke="rgba(184,149,90,0.5)" stroke-width="1"/>
+        <text x="275" y="607" fill="rgba(255,255,255,0.3)" font-size="6" font-family="Space Mono" text-anchor="middle">~1000 km</text>
+        <!-- Border frame -->
+        <rect x="1" y="1" width="338" height="618" fill="none" stroke="rgba(184,149,90,0.15)" stroke-width="1"/>
+        <rect x="5" y="5" width="330" height="610" fill="none" stroke="rgba(184,149,90,0.07)" stroke-width="0.5"/>
+        <!-- Title -->
+        <text x="170" y="16" fill="rgba(184,149,90,0.5)" font-size="6.5" font-family="Space Mono" text-anchor="middle" letter-spacing="2">MAPA GEOLÓGICO ESQUEMÁTICO</text>
+      </svg>
+    </div>
+    <div class="map-legend reveal reveal-delay-2">
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#2a5c8a"></div>
+        <div><div class="map-legend-name">Cordillera de los Andes</div><div class="map-legend-desc">Orogénica mesozoica-cenozoica. Subducción de placa Nazca</div></div>
+      </div>
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#5c8a2a"></div>
+        <div><div class="map-legend-name">Sierras Pampeanas</div><div class="map-legend-desc">Basamento cristalino proterozoico-paleozoico</div></div>
+      </div>
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#8a5c2a"></div>
+        <div><div class="map-legend-name">Precordillera</div><div class="map-legend-desc">Terreno alóctono lauréntico. Cámbrico–Carbonífero</div></div>
+      </div>
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#2a5c5c"></div>
+        <div><div class="map-legend-name">Patagonia</div><div class="map-legend-desc">Macizo del Deseado + Batolito + cuencas mesozoicas</div></div>
+      </div>
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#5c2a5c"></div>
+        <div><div class="map-legend-name">Puna y NOA</div><div class="map-legend-desc">Altiplano andino. Proterozoico–Cenozoico. Triángulo del litio</div></div>
+      </div>
+      <div class="map-legend-item">
+        <div class="map-legend-dot" style="background:#5c5c2a"></div>
+        <div><div class="map-legend-name">Cuenca del Paraná</div><div class="map-legend-desc">Cuenca intracratónica. Basaltos Serra Geral + amatistas</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ HISTORIA GEOLÓGICA ══ -->
 <section id="historia">
-  <div class="sec-label">A través del tiempo</div>
-  <h2 class="sec-title">Historia geológica<br><em>del territorio</em></h2>
-  <p class="sec-sub">Un viaje desde el Proterozoico hasta hoy: cómo se formó el territorio que hoy conocemos como Argentina.</p>
-  <div class="historia-timeline" id="historia-timeline"></div>
+  <div class="section-header reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-label">A través del tiempo</span></div>
+    <h2 class="sec-title">Historia geológica<br><em>del territorio</em></h2>
+    <p class="sec-sub">Un viaje desde el Proterozoico hasta hoy: cómo se formó el territorio que hoy conocemos como Argentina.</p>
+  </div>
+  <div class="historia-layout">
+    <div class="historia-timeline" id="historia-timeline"></div>
+    <div class="hist-visual reveal reveal-delay-3" id="hist-visual">
+      <img class="hist-visual-img" id="hist-visual-img" src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80&auto=format&fit=crop" alt="Historia Geológica"/>
+      <div class="hist-visual-caption">
+        <div class="hist-visual-era" id="hist-visual-era">Proterozoico · ~2000–600 Ma</div>
+        <div class="hist-visual-title" id="hist-visual-title">El basamento cristalino</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ══ FORMACIONES CLAVE ══ -->
 <section id="formaciones">
-  <div class="sec-label">Estratigrafía</div>
-  <h2 class="sec-title">Formaciones <em>geológicas</em> clave</h2>
-  <p class="sec-sub">Las secuencias de rocas más importantes del país, desde el Precámbrico hasta el Cuaternario.</p>
-  <div class="formaciones-grid" id="formaciones-grid"></div>
+  <div class="section-header reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-label">Estratigrafía</span></div>
+    <h2 class="sec-title">Formaciones <em>geológicas</em> clave</h2>
+    <p class="sec-sub">Las secuencias de rocas más importantes del país, desde el Precámbrico hasta el Cuaternario.</p>
+  </div>
+  <div class="formaciones-grid reveal reveal-delay-2" id="formaciones-grid"></div>
 </section>
 
 <!-- ══ PALEONTOLOGÍA ══ -->
-<section id="paleontologia">
-  <div class="sec-label">Fósiles y vida antigua</div>
-  <h2 class="sec-title">Argentina:<br><em>cuna de dinosaurios</em></h2>
-  <p class="sec-sub">Argentina es uno de los países con mayor riqueza paleontológica del mundo. Aquí se encontraron el dinosaurio más grande, el más antiguo y el depredador terrestre más grande conocido.</p>
-  <div class="paleo-grid" id="paleo-grid"></div>
+<section id="paleontologia" style="padding-top:0">
+  <div class="paleo-hero-banner">
+    <img src="https://images.unsplash.com/photo-1599202860130-f600f4948364?w=1400&q=80&auto=format&fit=crop" alt="Paleontología Argentina"/>
+    <div class="paleo-hero-overlay"></div>
+    <div class="paleo-hero-text">
+      <div class="paleo-hero-label">Fósiles y vida antigua</div>
+      <div class="paleo-hero-title">Argentina:<br><em style="font-style:italic">cuna de dinosaurios</em></div>
+    </div>
+  </div>
+  <div style="padding:3rem 3rem 6rem">
+    <div class="section-header reveal">
+      <p class="sec-sub">Argentina es uno de los países con mayor riqueza paleontológica del mundo. Aquí se encontraron el dinosaurio más grande, el más antiguo y el depredador terrestre más grande conocido.</p>
+    </div>
+    <div class="paleo-grid reveal reveal-delay-2" id="paleo-grid"></div>
+  </div>
 </section>
+
+<!-- ══ SPOTLIGHT: ACONCAGUA / VACA MUERTA / ARGENTINOSAURUS ══ -->
+<div class="spotlight-section" id="spotlight">
+  <!-- Aconcagua -->
+  <div class="spotlight-item">
+    <div class="spotlight-img">
+      <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=80&auto=format&fit=crop" alt="Aconcagua"/>
+      <div class="spotlight-img-overlay"></div>
+    </div>
+    <div class="spotlight-content">
+      <div class="spotlight-number">01</div>
+      <div class="spotlight-label">Cordillera de los Andes · Mendoza</div>
+      <div class="spotlight-title">Aconcagua</div>
+      <p class="spotlight-desc">El techo del hemisferio occidental. Formado por la intensa subducción de la placa de Nazca bajo la Sudamericana, el Aconcagua es el resultado de millones de años de compresión cortical y alzamiento. Sus paredes acumulan capas sedimentarias marinas, testimonio de cuando esas rocas estaban bajo el mar del Tethys.</p>
+      <div class="spotlight-stats">
+        <div><div class="sp-stat-num">6.961 m</div><div class="sp-stat-label">Altura máxima</div></div>
+        <div><div class="sp-stat-num">~10 Ma</div><div class="sp-stat-label">Alzamiento andino</div></div>
+        <div><div class="sp-stat-num">100 Ma</div><div class="sp-stat-label">Inicio subducción</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- Vaca Muerta -->
+  <div class="spotlight-item">
+    <div class="spotlight-content">
+      <div class="spotlight-number">02</div>
+      <div class="spotlight-label">Formación Jurásica · Neuquén</div>
+      <div class="spotlight-title">Vaca Muerta</div>
+      <p class="spotlight-desc">Lutitas negras depositadas hace ~155 millones de años en un mar epicontinental jurásico. Ricas en materia orgánica que, bajo la presión y temperatura del enterramiento profundo, se transformó en petróleo y gas no convencional. Con ~30.000 km² de extensión, es el segundo yacimiento de shale gas del mundo.</p>
+      <div class="spotlight-stats">
+        <div><div class="sp-stat-num">2.°</div><div class="sp-stat-label">Shale gas mundial</div></div>
+        <div><div class="sp-stat-num">30.000 km²</div><div class="sp-stat-label">Extensión</div></div>
+        <div><div class="sp-stat-num">155 Ma</div><div class="sp-stat-label">Edad deposición</div></div>
+      </div>
+    </div>
+    <div class="spotlight-img">
+      <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=900&q=80&auto=format&fit=crop" alt="Yacimiento Vaca Muerta"/>
+      <div class="spotlight-img-overlay"></div>
+    </div>
+  </div>
+  <!-- Argentinosaurus -->
+  <div class="spotlight-item">
+    <div class="spotlight-img">
+      <img src="https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=900&q=80&auto=format&fit=crop" alt="Dinosaurios Argentina"/>
+      <div class="spotlight-img-overlay"></div>
+    </div>
+    <div class="spotlight-content">
+      <div class="spotlight-number">03</div>
+      <div class="spotlight-label">Cretácico · Plaza Huincul, Neuquén</div>
+      <div class="spotlight-title">Argentinosaurus</div>
+      <p class="spotlight-desc">El vertebrado terrestre más grande en la historia de la Tierra. Descubierto en 1987 por el productor rural Guillermo Heredia en la Formación Huincul. Sus vértebras dorsales miden más de 1,5 m y sus huesos de las extremidades superan los 2 m. Su peso estimado de hasta 80 toneladas supera a cualquier animal conocido.</p>
+      <div class="spotlight-stats">
+        <div><div class="sp-stat-num">~40 m</div><div class="sp-stat-label">Longitud estimada</div></div>
+        <div><div class="sp-stat-num">~80 tn</div><div class="sp-stat-label">Peso estimado</div></div>
+        <div><div class="sp-stat-num">96 Ma</div><div class="sp-stat-label">Cretácico Medio</div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ══ RECURSOS MINERALES ══ -->
 <section id="recursos">
-  <div class="sec-label">Geología económica</div>
-  <h2 class="sec-title">Recursos <em>minerales</em></h2>
-  <p class="sec-sub">El subsuelo argentino alberga enormes recursos metálicos y no metálicos, muchos aún en exploración.</p>
-  <div class="recursos-grid" id="recursos-grid"></div>
+  <div class="section-header reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-label">Geología económica</span></div>
+    <h2 class="sec-title">Recursos <em>minerales</em></h2>
+    <p class="sec-sub">El subsuelo argentino alberga enormes recursos metálicos y no metálicos, muchos aún en exploración.</p>
+  </div>
+  <img class="recursos-intro-img reveal" src="https://images.unsplash.com/photo-1604186838808-e7b2abd69d8a?w=1400&q=80&auto=format&fit=crop" alt="Recursos Minerales Argentina" style="margin-bottom:0;height:200px;object-fit:cover;width:100%"/>
+  <div class="recursos-grid reveal reveal-delay-2" id="recursos-grid"></div>
 </section>
 
 <!-- ══ VOLCANES ══ -->
-<section id="volcanes">
-  <div class="sec-label">Volcanismo activo</div>
-  <h2 class="sec-title">Volcanes <em>argentinos</em></h2>
-  <p class="sec-sub">La subducción de la placa de Nazca bajo la Sudamericana genera una cadena volcánica activa a lo largo de toda la Cordillera de los Andes.</p>
-  <div class="volcanes-grid" id="volcanes-grid"></div>
+<section id="volcanes" style="padding-top:0">
+  <div class="volcanes-banner">
+    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80&auto=format&fit=crop" alt="Volcanes Argentinos"/>
+    <div class="volcanes-banner-overlay"></div>
+    <div class="volcanes-banner-text">
+      <div>
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-light);margin-bottom:.5rem">Volcanismo activo</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:#fff;line-height:1;letter-spacing:-1px">Volcanes <em>argentinos</em></div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 3rem 6rem">
+    <div class="section-header reveal" style="padding-top:3rem">
+      <p class="sec-sub">La subducción de la placa de Nazca bajo la Sudamericana genera una cadena volcánica activa a lo largo de toda la Cordillera de los Andes.</p>
+    </div>
+    <div class="volcanes-grid reveal reveal-delay-2" id="volcanes-grid"></div>
+  </div>
 </section>
 
-<!-- MODAL -->
+<!-- ══ MODAL ══ -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-box">
+    <img class="modal-img" id="modal-img" src="" alt=""/>
     <div class="modal-header" id="modal-header">
       <button class="modal-close" onclick="closeModal()">✕</button>
       <div class="modal-tag" id="modal-tag"></div>
@@ -327,11 +693,11 @@
   </div>
 </div>
 
-<!-- FOOTER -->
+<!-- ══ FOOTER ══ -->
 <footer>
   <div>
     <div class="footer-logo">Geo<span>Knowledge</span></div>
-    <div style="font-size:12px;margin-top:4px;color:rgba(250,243,232,0.4)">Un proyecto estudiantil de divulgación geológica · Argentina</div>
+    <div class="footer-tagline">Un proyecto estudiantil de divulgación geológica · Argentina</div>
   </div>
   <ul class="footer-links">
     <li><a href="index.html">Inicio</a></li>
@@ -348,6 +714,7 @@
 
 const PROVINCIAS = [
   { id:1, color:'#2A5C8A', name:'Cordillera de los Andes', era:'Mesozoico–Cenozoico', badge:'Orogénica',
+    img:'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=600&q=75&auto=format&fit=crop',
     desc:'La cordillera andina es el rasgo geológico más joven y dinámico de Argentina. Se eleva por la subducción de la placa de Nazca bajo la placa Sudamericana, proceso iniciado hace ~100 Ma que se intensificó en el Mioceno. Alcanza su máxima expresión en el Aconcagua (6.961 m), el punto más alto del hemisferio occidental.',
     props:[
       {k:'Edad',v:'Cretácico–Presente (~100 Ma)'},
@@ -363,6 +730,7 @@ const PROVINCIAS = [
       {icon:'🛢',text:'Cuencas petroleras de antepaís (Neuquén, Cuyo, Noroeste) asociadas al alzamiento andino'},
     ]},
   { id:2, color:'#5C8A2A', name:'Sierras Pampeanas', era:'Proterozoico–Paleozoico', badge:'Cratónica',
+    img:'https://images.unsplash.com/photo-1569777623-d0e6ab84f5f5?w=600&q=75&auto=format&fit=crop',
     desc:'Las Sierras Pampeanas constituyen el basamento cristalino más antiguo expuesto de Argentina. Son bloques de basamento que ascendieron por fallas de alto ángulo durante el Cenozoico, exponiendo rocas metamórficas e ígneas de hasta 2.000 Ma de antigüedad. Representan la raíz profunda del antiguo Gondwana.',
     props:[
       {k:'Edad de las rocas',v:'Proterozoico–Paleozoico (2000–300 Ma)'},
@@ -378,6 +746,7 @@ const PROVINCIAS = [
       {icon:'⛏',text:'Yacimientos de fluorita (San Luis), tungsteno, wolframita y berilo en pegmatitas'},
     ]},
   { id:3, color:'#8A5C2A', name:'Precordillera', era:'Paleozoico', badge:'Alóctona',
+    img:'https://images.unsplash.com/photo-1489557568755-76e7c6dcb53c?w=600&q=75&auto=format&fit=crop',
     desc:'La Precordillera es un terreno alóctono de origen lauréntico: se desprendió del margen este de Norteamérica (región del actual Appalachian) hace ~465 Ma y colisionó con el margen activo de Gondwana. Contiene el registro paleozoico marino más completo de Sudamérica, con trilobites, conodontes y graptolites de clase mundial.',
     props:[
       {k:'Origen',v:'Terreno alóctono lauréntico (colisionó ~465 Ma)'},
@@ -393,6 +762,7 @@ const PROVINCIAS = [
       {icon:'🛢',text:'Dolomías como reservorios de petróleo en el subsuelo de Mendoza y San Juan'},
     ]},
   { id:4, color:'#2A5C5C', name:'Patagonia', era:'Precámbrico–Cenozoico', badge:'Cratón + Cuencas',
+    img:'https://images.unsplash.com/photo-1609183480405-3e4de3f6b0a3?w=600&q=75&auto=format&fit=crop',
     desc:'La Patagonia geológica es una de las regiones más complejas y fascinantes del mundo. Incluye el macizo cristalino del Deseado (Jurásico), el batolito patagónico (Cretácico), extensos basaltos cenozoicos y cuencas sedimentarias con registros mesozoicos extraordinarios. Es la región con mayor diversidad de dinosaurios del mundo.',
     props:[
       {k:'Edad',v:'Proterozoico–Presente (~700 Ma a hoy)'},
@@ -408,6 +778,7 @@ const PROVINCIAS = [
       {icon:'🏔',text:'Batolito Patagónico: 1.000 km de granitoides cretácicos formados durante la subducción activa'},
     ]},
   { id:5, color:'#5C2A5C', name:'Puna y NOA', era:'Proterozoico–Cenozoico', badge:'Altiplano',
+    img:'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=75&auto=format&fit=crop',
     desc:'La Puna argentina es el sector sur del altiplano andino, una meseta de alta altitud (3.500–4.700 m) sostenida por la engrosada corteza andina. Tiene un registro geológico que abarca desde el Proterozoico hasta volcanes activos. Es la región más rica en minerales críticos: litio, boro, potasio y cobre.',
     props:[
       {k:'Altitud media',v:'3.500–4.700 m s.n.m.'},
@@ -423,6 +794,7 @@ const PROVINCIAS = [
       {icon:'🌊',text:'Salares: Atacama, Jama, Pocitos, Rincón. Evaporitas cenozoicas con litio, boro y potasio de enorme valor económico'},
     ]},
   { id:6, color:'#5C5C2A', name:'Cuenca del Paraná', era:'Paleozoico–Cenozoico', badge:'Cuenca sedimentaria',
+    img:'https://images.unsplash.com/photo-1598935898639-81586f7d2129?w=600&q=75&auto=format&fit=crop',
     desc:'La Cuenca del Paraná es una cuenca intracratónica que cubre el noreste de Argentina y se extiende por Brasil, Paraguay y Uruguay. Contiene una secuencia sedimentaria del Paleozoico al Cenozoico, con el magmatismo de Serra Geral (Cretácico) intercalado. Bajo los basaltos se encuentran enormes reservas de agua dulce.',
     props:[
       {k:'Extensión total',v:'~1.500.000 km² (incluyendo países vecinos)'},
@@ -441,64 +813,133 @@ const PROVINCIAS = [
 
 const HISTORIA = [
   { color:'#3d246e', icon:'💫', era:'Proterozoico', ma:'~2000–600 Ma',
+    img:'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80&auto=format&fit=crop',
     title:'El basamento cristalino: las raíces de Gondwana',
     desc:'Las rocas más antiguas de Argentina se formaron durante el Proterozoico en lo que entonces era el margen activo de un continente precursor de Gondwana. Las Sierras Pampeanas registran eventos de metamorfismo y magmatismo entre 2.000 y 600 Ma. Hacia el Neoproterozoico, la región fue parte de la orogenia Brasiliano-Pampeana que terminó de consolidar el basamento gondwánico. Las migmatitas y ortogneis de Córdoba y Catamarca son los testimonios más antiguos.'},
   { color:'#1a6648', icon:'🌊', era:'Paleozoico', ma:'~540–250 Ma',
+    img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80&auto=format&fit=crop',
     title:'Mares paleozoicos y la llegada de la Precordillera',
     desc:'Durante el Cámbrico y Ordovícico, el noroeste argentino estaba cubierto por mares cálidos tropicales donde se depositaron calizas y dolomías ricas en trilobites y conodontes. El evento más espectacular fue la llegada del terreno de la Precordillera (~465 Ma), un bloque desprendido de Norteamérica que colisionó con el margen de Gondwana. En el Carbonífero, glaciaciones gondwánicas dejaron diamictitas y estrías glaciales. El Pérmico trajo el clima árido de Gondwana.'},
   { color:'#5c3a1a', icon:'🦕', era:'Mesozoico', ma:'~250–66 Ma',
+    img:'https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=800&q=80&auto=format&fit=crop',
     title:'La era de los dinosaurios: Gondwana se fragmenta',
     desc:'La ruptura de Pangea en el Triásico separó paulatinamente a Sudamérica. En el Triásico Tardío, la Cuenca de Ischigualasto (San Juan) y la de Los Colorados (La Rioja) acumularon sedimentos fluviales con los primeros dinosaurios conocidos (Eoraptor, Herrerasaurus). En el Jurásico y Cretácico, la apertura del Atlántico Sur y la subducción andina modelaron el paisaje. La Cuenca Neuquina acumuló miles de metros de sedimentos marinos y continentales, hoy repletos de dinosaurios y petróleo.'},
   { color:'#2a5c8a', icon:'🏔', era:'Cenozoico temprano', ma:'~66–10 Ma',
+    img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80&auto=format&fit=crop',
     title:'El alzamiento de los Andes y la fauna sudamericana',
     desc:'Tras la extinción del Cretácico, los mamíferos se diversificaron en el aislado continente sudamericano (gliptodontes, toxodontes, macrauquenias, marsupiales). El evento tectónico central fue el alzamiento andino en el Mioceno (~15–5 Ma): la Cordillera de los Andes alcanzó su altura actual por acortamiento cortical. Esto reorganizó completamente la red de drenaje, la circulación atmosférica y el clima del continente, creando la Patagonia árida y la Puna altiplánica.'},
   { color:'#8a5c2a', icon:'🌿', era:'Cenozoico tardío', ma:'~10 Ma–Presente',
+    img:'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80&auto=format&fit=crop',
     title:'La Argentina moderna: hielo, pampas y el litio de la Puna',
     desc:'Las glaciaciones del Pleistoceno (2,6 Ma–10.000 AP) tallaron los valles en U de la Patagonia andina, depositaron morrenas y formaron los lagos patagónicos. La llanura pampeana se cubrió de loess eólico durante los períodos glaciales, formando los suelos más fértiles del mundo. El Gran Intercambio Biótico Americano (3 Ma), cuando América Central se unió al sur, mezcló las faunas de los dos subcontinentes. Hoy, la actividad volcánica andina, los salares puneños y la erosión de los Andes son los procesos geológicos activos más importantes.'},
 ];
 
 const FORMACIONES = [
-  { color:'#5c2a2a', era:'Triásico Tardío (~230 Ma)', name:'Formación Ischigualasto', loc:'San Juan', desc:'Contiene los dinosaurios más antiguos conocidos: Eoraptor lunensis y Herrerasaurus ischigualastensis. Ambiente fluvial y lacustre en un clima semiárido. Patrimonio de la Humanidad (UNESCO).', tags:['Dinosaurios más antiguos','UNESCO','San Juan','Triásico'] },
-  { color:'#8a4a1a', era:'Triásico Tardío (~225 Ma)', name:'Formación Los Colorados', loc:'La Rioja', desc:'Depósitos aluviales y eólicos de color rojo intenso. Contiene Coloradisaurus y Riojasaurus, grandes saurópodos basales. Parte del Parque Provincial Ischigualasto-Talampaya.', tags:['Saurópodos basales','La Rioja','Parque Talampaya','Triásico'] },
-  { color:'#2a5c8a', era:'Jurásico Tardío (~155 Ma)', name:'Formación Vaca Muerta', loc:'Neuquén', desc:'Lutitas negras ricas en materia orgánica depositadas en un mar epicontinental. Es uno de los yacimientos de shale gas y shale oil no convencional más grandes del mundo. La producción petrolera argentina depende fundamentalmente de esta formación.', tags:['Shale oil','Shale gas','Neuquén','Jurásico','Hidrocarburos'] },
-  { color:'#1a6648', era:'Cretácico (~100–80 Ma)', name:'Formación Huincul', loc:'Neuquén', desc:'Sedimentos fluviales y palustres del Cretácico Medio. Contiene los dinosaurios más grandes conocidos: Argentinosaurus huinculensis (titanosaurio, ~70 tn) y Giganotosaurus carolinii (terópodo, ~8 tn). Localidad tipo en Plaza Huincul, Neuquén.', tags:['Argentinosaurus','Giganotosaurus','Cretácico','Titanosaurio'] },
-  { color:'#5c5c1a', era:'Cretácico (~70–66 Ma)', name:'Formación Allen', loc:'Río Negro', desc:'Una de las formaciones con mayor diversidad de dinosaurios de Argentina. Titanosaurios, anquilosaurios, hadrosáuridos y terópodos. También importantes registros de reptiles marinos y flora cretácica en la cuenca Neuquina terminal.', tags:['Hadrosáuridos','Río Negro','Titanosaurios','Diversidad'] },
-  { color:'#2a5c5c', era:'Jurásico Medio (~175 Ma)', name:'Formación La Junta', loc:'Mendoza', desc:'Depósitos marinos carbonáticos con ammonites, belemnites y bivalvos. Registra la incursión del mar del Tethys en la Cuenca Neuquina durante el Jurásico. Clave para correlaciones paleobiogeográficas entre América del Sur y Tetis.', tags:['Ammonites','Tethys','Mendoza','Jurásico'] },
-  { color:'#8a2a5c', era:'Paleógeno (~45 Ma)', name:'Formación Sarmiento', loc:'Chubut / Santa Cruz', desc:'Tobas volcánicas y paleosuelos con uno de los registros de mamíferos cenozoicos más ricos del mundo. Aquí se describieron Pyrotherium, Notohippus y decenas de taxones endémicos sudamericanos. Base de la fauna patagónica fósil.', tags:['Mamíferos fósiles','Paleosuelos','Chubut','Paleógeno'] },
-  { color:'#4a2e1a', era:'Cámbrico–Ordovícico (~530–470 Ma)', name:'Formación La Laja', loc:'San Juan', desc:'Calizas cámbricas con los trilobites más antiguos de Argentina. Depositadas en la plataforma carbonática del terreno Precordillera cuando aún era parte de Norteamérica. Clave para entender la paleogeografía del Paleozoico temprano de Gondwana.', tags:['Trilobites','Cámbrico','Calizas','Precordillera'] },
+  { color:'#5c2a2a', era:'Triásico Tardío (~230 Ma)', name:'Formación Ischigualasto', loc:'San Juan',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75&auto=format&fit=crop',
+    desc:'Contiene los dinosaurios más antiguos conocidos: Eoraptor lunensis y Herrerasaurus ischigualastensis. Ambiente fluvial y lacustre en un clima semiárido. Patrimonio de la Humanidad (UNESCO).', tags:['Dinosaurios más antiguos','UNESCO','San Juan','Triásico'] },
+  { color:'#8a4a1a', era:'Triásico Tardío (~225 Ma)', name:'Formación Los Colorados', loc:'La Rioja',
+    img:'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=75&auto=format&fit=crop',
+    desc:'Depósitos aluviales y eólicos de color rojo intenso. Contiene Coloradisaurus y Riojasaurus, grandes saurópodos basales. Parte del Parque Provincial Ischigualasto-Talampaya.', tags:['Saurópodos basales','La Rioja','Parque Talampaya','Triásico'] },
+  { color:'#2a5c8a', era:'Jurásico Tardío (~155 Ma)', name:'Formación Vaca Muerta', loc:'Neuquén',
+    img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=75&auto=format&fit=crop',
+    desc:'Lutitas negras ricas en materia orgánica depositadas en un mar epicontinental. Es uno de los yacimientos de shale gas y shale oil no convencional más grandes del mundo. La producción petrolera argentina depende fundamentalmente de esta formación.', tags:['Shale oil','Shale gas','Neuquén','Jurásico','Hidrocarburos'] },
+  { color:'#1a6648', era:'Cretácico (~100–80 Ma)', name:'Formación Huincul', loc:'Neuquén',
+    img:'https://images.unsplash.com/photo-1599202860130-f600f4948364?w=600&q=75&auto=format&fit=crop',
+    desc:'Sedimentos fluviales y palustres del Cretácico Medio. Contiene los dinosaurios más grandes conocidos: Argentinosaurus huinculensis (titanosaurio, ~70 tn) y Giganotosaurus carolinii (terópodo, ~8 tn). Localidad tipo en Plaza Huincul, Neuquén.', tags:['Argentinosaurus','Giganotosaurus','Cretácico','Titanosaurio'] },
+  { color:'#5c5c1a', era:'Cretácico (~70–66 Ma)', name:'Formación Allen', loc:'Río Negro',
+    img:'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?w=600&q=75&auto=format&fit=crop',
+    desc:'Una de las formaciones con mayor diversidad de dinosaurios de Argentina. Titanosaurios, anquilosaurios, hadrosáuridos y terópodos. También importantes registros de reptiles marinos y flora cretácica en la cuenca Neuquina terminal.', tags:['Hadrosáuridos','Río Negro','Titanosaurios','Diversidad'] },
+  { color:'#2a5c5c', era:'Jurásico Medio (~175 Ma)', name:'Formación La Junta', loc:'Mendoza',
+    img:'https://images.unsplash.com/photo-1476067897447-d0c9c38ced8c?w=600&q=75&auto=format&fit=crop',
+    desc:'Depósitos marinos carbonáticos con ammonites, belemnites y bivalvos. Registra la incursión del mar del Tethys en la Cuenca Neuquina durante el Jurásico. Clave para correlaciones paleobiogeográficas entre América del Sur y Tetis.', tags:['Ammonites','Tethys','Mendoza','Jurásico'] },
+  { color:'#8a2a5c', era:'Paleógeno (~45 Ma)', name:'Formación Sarmiento', loc:'Chubut / Santa Cruz',
+    img:'https://images.unsplash.com/photo-1568302900571-c93f06da2c3a?w=600&q=75&auto=format&fit=crop',
+    desc:'Tobas volcánicas y paleosuelos con uno de los registros de mamíferos cenozoicos más ricos del mundo. Aquí se describieron Pyrotherium, Notohippus y decenas de taxones endémicos sudamericanos. Base de la fauna patagónica fósil.', tags:['Mamíferos fósiles','Paleosuelos','Chubut','Paleógeno'] },
+  { color:'#4a2e1a', era:'Cámbrico–Ordovícico (~530–470 Ma)', name:'Formación La Laja', loc:'San Juan',
+    img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=75&auto=format&fit=crop',
+    desc:'Calizas cámbricas con los trilobites más antiguos de Argentina. Depositadas en la plataforma carbonática del terreno Precordillera cuando aún era parte de Norteamérica. Clave para entender la paleogeografía del Paleozoico temprano de Gondwana.', tags:['Trilobites','Cámbrico','Calizas','Precordillera'] },
 ];
 
 const PALEONTOLOGIA = [
-  { icon:'🦕', period:'Cretácico (~96 Ma)', name:'Argentinosaurus huinculensis', common:'El dinosaurio más grande conocido', loc:'Plaza Huincul, Neuquén', desc:'Titanosaurio saurópodo que alcanzaba ~35–40 m de longitud y estimaciones de hasta 70–80 toneladas. Descubierto en 1987 por el productor rural Guillermo Heredia. Aún es uno de los vertebrados terrestres más grandes en la historia de la Tierra.', props:[{k:'Grupo',v:'Titanosauria (Saurópoda)'},{k:'Longitud',v:'~35–40 m'},{k:'Peso estimado',v:'70–80 toneladas'},{k:'Formación',v:'Huincul (Neuquén)'}] },
-  { icon:'🦖', period:'Cretácico (~97 Ma)', name:'Giganotosaurus carolinii', common:'Uno de los mayores depredadores terrestres', loc:'El Chocón, Neuquén', desc:'Terópodo carnosaurio más grande que el T. rex. Alcanzaba ~12–13 m de longitud. Descubierto en 1993 por Rubén Carolini. Su descripción en 1995 demostró que Sudamérica tenía depredadores comparables a los del hemisferio norte.', props:[{k:'Grupo',v:'Carcharodontosauridae'},{k:'Longitud',v:'~12–13 m'},{k:'Peso estimado',v:'6–8 toneladas'},{k:'Formación',v:'Huincul (Neuquén)'}] },
-  { icon:'🐾', period:'Triásico Tardío (~231 Ma)', name:'Eoraptor lunensis', common:'Uno de los dinosaurios más antiguos', loc:'Valle de Ischigualasto, San Juan', desc:'Pequeño dinosaurio herbívoro/omnívoro de ~1 m de longitud. Es uno de los dinosaurios más basales conocidos y permite entender el origen del grupo. Su hallazgo en 1991 (Paul Sereno et al.) fue revolucionario para la paleontología.', props:[{k:'Grupo',v:'Dinosauria basal (Sauropodomorpha)'},{k:'Longitud',v:'~1 m'},{k:'Peso estimado',v:'~10 kg'},{k:'Formación',v:'Ischigualasto (San Juan)'}] },
-  { icon:'🦴', period:'Cretácico Tardío (~70 Ma)', name:'Patagotitan mayorum', common:'El titanosaurio más masivo', loc:'Egidio Feruglio, Chubut', desc:'Descubierto en 2014 en La Flecha (Chubut), puede ser el animal más pesado en haber caminado sobre la Tierra: estimaciones de hasta 76 toneladas y 37 m de longitud. Su descripción formal en 2017 (Carballido et al.) generó enorme repercusión mundial.', props:[{k:'Grupo',v:'Titanosauria (Saurópoda)'},{k:'Longitud',v:'~37 m'},{k:'Peso estimado',v:'~69–76 toneladas'},{k:'Formación',v:'Candeleros (Chubut)'}] },
-  { icon:'🐊', period:'Cretácico (~84 Ma)', name:'Dakotaraptor / Unenlagia comahuiensis', common:'Dromaeosáurido sudamericano', loc:'Neuquén', desc:'Unenlagia fue el primer dromaeosáurido descubierto en Sudamérica, llenando el vacío evolutivo entre los dromaeosáuridos norteamericanos y las aves. Su morfología del miembro posterior sugiere postura semiavial y amplió la comprensión del origen de las aves.', props:[{k:'Grupo',v:'Dromaeosauridae'},{k:'Longitud',v:'~2,5 m'},{k:'Peso estimado',v:'~75 kg'},{k:'Formación',v:'Portezuelo (Neuquén)'}] },
-  { icon:'🐟', period:'Triásico Tardío (~225 Ma)', name:'Herrerasaurus ischigualastensis', common:'Primer gran depredador dinosauriano', loc:'Valle de Ischigualasto, San Juan', desc:'Uno de los dinosaurios más antiguos y primitivos conocidos. Bípedo de unos 3–6 m, fue un depredador activo con dientes en forma de sierra. Su clasificación fue debatida durante décadas: hoy se acepta como terópodo muy basal o saurisquio basal.', props:[{k:'Grupo',v:'Herrerasauridae'},{k:'Longitud',v:'~3–6 m'},{k:'Peso estimado',v:'~210–350 kg'},{k:'Formación',v:'Ischigualasto (San Juan)'}] },
-  { icon:'🐢', period:'Cretácico (~83 Ma)', name:'Futalognkosaurus dukei', common:'Titanosaurio gigante de Neuquén', loc:'Lago Barreales, Neuquén', desc:'Uno de los dinosaurios más completos y masivos de Argentina. El esqueleto recuperado es uno de los más completos de un titanosaurio gigante. Su sitio de hallazgo, Lago Barreales, es hoy un museo y yacimiento activo donde los visitantes pueden ver excavaciones en curso.', props:[{k:'Grupo',v:'Titanosauria'},{k:'Longitud',v:'~32–34 m'},{k:'Peso estimado',v:'~74 toneladas'},{k:'Formación',v:'Portezuelo (Neuquén)'}] },
-  { icon:'🦏', period:'Mioceno (~15 Ma)', name:'Megatherium americanum', common:'El perezoso gigante', loc:'Luján, Buenos Aires', desc:'El mayor xenartro conocido, del tamaño de un elefante. Vivió en las llanuras pampeanas y se extinguió hace ~10.000 años, probablemente por la caza humana y el cambio climático post-glacial. El primer ejemplar fue descripto por Cuvier en 1796 a partir de material hallado en Luján.', props:[{k:'Grupo',v:'Pilosa (Xenarthra)'},{k:'Longitud',v:'~6 m'},{k:'Peso estimado',v:'~4–6 toneladas'},{k:'Época',v:'Pleistoceno–Holoceno'}] },
+  { period:'Cretácico (~96 Ma)', name:'Argentinosaurus huinculensis', common:'El dinosaurio más grande conocido', loc:'Plaza Huincul, Neuquén',
+    img:'https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=600&q=75&auto=format&fit=crop',
+    desc:'Titanosaurio saurópodo que alcanzaba ~35–40 m de longitud y estimaciones de hasta 70–80 toneladas. Descubierto en 1987 por el productor rural Guillermo Heredia. Aún es uno de los vertebrados terrestres más grandes en la historia de la Tierra.', props:[{k:'Grupo',v:'Titanosauria (Saurópoda)'},{k:'Longitud',v:'~35–40 m'},{k:'Peso estimado',v:'70–80 toneladas'},{k:'Formación',v:'Huincul (Neuquén)'}] },
+  { period:'Cretácico (~97 Ma)', name:'Giganotosaurus carolinii', common:'Uno de los mayores depredadores terrestres', loc:'El Chocón, Neuquén',
+    img:'https://images.unsplash.com/photo-1525877442103-5ddb2089b2bb?w=600&q=75&auto=format&fit=crop',
+    desc:'Terópodo carnosaurio más grande que el T. rex. Alcanzaba ~12–13 m de longitud. Descubierto en 1993 por Rubén Carolini. Su descripción en 1995 demostró que Sudamérica tenía depredadores comparables a los del hemisferio norte.', props:[{k:'Grupo',v:'Carcharodontosauridae'},{k:'Longitud',v:'~12–13 m'},{k:'Peso estimado',v:'6–8 toneladas'},{k:'Formación',v:'Huincul (Neuquén)'}] },
+  { period:'Triásico Tardío (~231 Ma)', name:'Eoraptor lunensis', common:'Uno de los dinosaurios más antiguos', loc:'Valle de Ischigualasto, San Juan',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75&auto=format&fit=crop',
+    desc:'Pequeño dinosaurio herbívoro/omnívoro de ~1 m de longitud. Es uno de los dinosaurios más basales conocidos y permite entender el origen del grupo. Su hallazgo en 1991 (Paul Sereno et al.) fue revolucionario para la paleontología.', props:[{k:'Grupo',v:'Dinosauria basal (Sauropodomorpha)'},{k:'Longitud',v:'~1 m'},{k:'Peso estimado',v:'~10 kg'},{k:'Formación',v:'Ischigualasto (San Juan)'}] },
+  { period:'Cretácico Tardío (~70 Ma)', name:'Patagotitan mayorum', common:'El titanosaurio más masivo', loc:'Egidio Feruglio, Chubut',
+    img:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=75&auto=format&fit=crop',
+    desc:'Descubierto en 2014 en La Flecha (Chubut), puede ser el animal más pesado en haber caminado sobre la Tierra: estimaciones de hasta 76 toneladas y 37 m de longitud. Su descripción formal en 2017 (Carballido et al.) generó enorme repercusión mundial.', props:[{k:'Grupo',v:'Titanosauria (Saurópoda)'},{k:'Longitud',v:'~37 m'},{k:'Peso estimado',v:'~69–76 toneladas'},{k:'Formación',v:'Candeleros (Chubut)'}] },
+  { period:'Cretácico (~84 Ma)', name:'Unenlagia comahuiensis', common:'Dromaeosáurido sudamericano', loc:'Neuquén',
+    img:'https://images.unsplash.com/photo-1599202860130-f600f4948364?w=600&q=75&auto=format&fit=crop',
+    desc:'Unenlagia fue el primer dromaeosáurido descubierto en Sudamérica, llenando el vacío evolutivo entre los dromaeosáuridos norteamericanos y las aves. Su morfología del miembro posterior sugiere postura semiavial y amplió la comprensión del origen de las aves.', props:[{k:'Grupo',v:'Dromaeosauridae'},{k:'Longitud',v:'~2,5 m'},{k:'Peso estimado',v:'~75 kg'},{k:'Formación',v:'Portezuelo (Neuquén)'}] },
+  { period:'Triásico Tardío (~231 Ma)', name:'Herrerasaurus ischigualastensis', common:'Primer gran depredador dinosauriano', loc:'Valle de Ischigualasto, San Juan',
+    img:'https://images.unsplash.com/photo-1596455607563-ad6193f76b17?w=600&q=75&auto=format&fit=crop',
+    desc:'Uno de los dinosaurios más antiguos y primitivos conocidos. Bípedo de unos 3–6 m, fue un depredador activo con dientes en forma de sierra. Su clasificación fue debatida durante décadas: hoy se acepta como terópodo muy basal o saurisquio basal.', props:[{k:'Grupo',v:'Herrerasauridae'},{k:'Longitud',v:'~3–6 m'},{k:'Peso estimado',v:'~210–350 kg'},{k:'Formación',v:'Ischigualasto (San Juan)'}] },
+  { period:'Cretácico (~83 Ma)', name:'Futalognkosaurus dukei', common:'Titanosaurio gigante de Neuquén', loc:'Lago Barreales, Neuquén',
+    img:'https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=600&q=75&auto=format&fit=crop',
+    desc:'Uno de los dinosaurios más completos y masivos de Argentina. El esqueleto recuperado es uno de los más completos de un titanosaurio gigante. Su sitio de hallazgo, Lago Barreales, es hoy un museo y yacimiento activo donde los visitantes pueden ver excavaciones en curso.', props:[{k:'Grupo',v:'Titanosauria'},{k:'Longitud',v:'~32–34 m'},{k:'Peso estimado',v:'~74 toneladas'},{k:'Formación',v:'Portezuelo (Neuquén)'}] },
+  { period:'Mioceno (~15 Ma)', name:'Megatherium americanum', common:'El perezoso gigante', loc:'Luján, Buenos Aires',
+    img:'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?w=600&q=75&auto=format&fit=crop',
+    desc:'El mayor xenartro conocido, del tamaño de un elefante. Vivió en las llanuras pampeanas y se extinguió hace ~10.000 años, probablemente por la caza humana y el cambio climático post-glacial. El primer ejemplar fue descripto por Cuvier en 1796 a partir de material hallado en Luján.', props:[{k:'Grupo',v:'Pilosa (Xenarthra)'},{k:'Longitud',v:'~6 m'},{k:'Peso estimado',v:'~4–6 toneladas'},{k:'Época',v:'Pleistoceno–Holoceno'}] },
 ];
 
 const RECURSOS = [
-  { icon:'🔋', mineral:'Litio', name:'Triángulo del Litio', desc:'Argentina posee las segundas reservas mundiales de litio en salmueras de los salares puneños. Fundamentales para baterías de vehículos eléctricos. Salares del Rincón, Atacama, Cauchari-Olaroz (Jujuy y Salta).', loc:'Jujuy · Salta · Catamarca', color:'#27ae60' },
-  { icon:'🥇', mineral:'Oro / Plata', name:'Yacimientos epitermales', desc:'Veladero y Pascua-Lama (San Juan) son dos de los yacimientos de Au-Ag más grandes de Sudamérica. Cerro Negro (Santa Cruz) y Lindero (Salta) también son productores significativos.', loc:'San Juan · Santa Cruz · Salta', color:'#f1c40f' },
-  { icon:'🔩', mineral:'Cobre', name:'Pórfidos andinos', desc:'Los Azules, El Pachón y Altar (San Juan) son pórfidos de cobre-molibdeno de escala mundial en proceso de evaluación. Agua Rica (Catamarca) suma cobre, molibdeno y oro.', loc:'San Juan · Catamarca', color:'#e67e22' },
-  { icon:'🛢', mineral:'Petróleo y Gas', name:'Vaca Muerta', desc:'La Formación Vaca Muerta (Jurásico, Neuquén) es el segundo yacimiento de shale gas y el cuarto de shale oil más grandes del mundo. Producción convencional también en Cuya, NOA y Golfo San Jorge.', loc:'Neuquén · Santa Cruz · Mendoza', color:'#2c3e50' },
-  { icon:'💎', mineral:'Rodocrosita', name:'Capillitas, Catamarca', desc:'Los mejores cristales de rodocrosita (MnCO₃) del mundo provienen de Capillitas. Es la piedra nacional argentina desde 1989. Formada en venas hidrotermales de manganeso asociadas a minerales de cobre y plata.', loc:'Catamarca', color:'#e84888' },
-  { icon:'💜', mineral:'Amatista', name:'Misiones y Corrientes', desc:'Argentina es uno de los principales productores mundiales de amatista, en geodos asociados a los basaltos de la Formación Serra Geral (Cretácico). Se exportan en grandes cantidades a mercados europeos y asiáticos.', loc:'Misiones · Corrientes', color:'#9b59b6' },
-  { icon:'⚗️', mineral:'Boro', name:'Salares puneños', desc:'La Puna argentina contiene enormes depósitos de borato (ulexita, colemanita) en los salares y cuencas lacustres. Salta y Jujuy son productores históricos. El boro es esencial para vidrio, cerámica y fertilizantes.', loc:'Jujuy · Salta', color:'#16a085' },
-  { icon:'⚙️', mineral:'Hierro', name:'Sierra Grande, Río Negro', desc:'Uno de los mayores yacimientos de hierro del país, con magnetita y hematita como minerales principales. La planta fue históricamente la base de la siderurgia patagónica. Actualmente en evaluación para reactivación.', loc:'Río Negro', color:'#7f8c8d' },
+  { mineral:'Litio', name:'Triángulo del Litio',
+    img:'https://images.unsplash.com/photo-1604186838808-e7b2abd69d8a?w=400&q=75&auto=format&fit=crop',
+    desc:'Argentina posee las segundas reservas mundiales de litio en salmueras de los salares puneños. Fundamentales para baterías de vehículos eléctricos. Salares del Rincón, Atacama, Cauchari-Olaroz (Jujuy y Salta).', loc:'Jujuy · Salta · Catamarca', color:'#27ae60' },
+  { mineral:'Oro / Plata', name:'Yacimientos epitermales',
+    img:'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=400&q=75&auto=format&fit=crop',
+    desc:'Veladero y Pascua-Lama (San Juan) son dos de los yacimientos de Au-Ag más grandes de Sudamérica. Cerro Negro (Santa Cruz) y Lindero (Salta) también son productores significativos.', loc:'San Juan · Santa Cruz · Salta', color:'#f1c40f' },
+  { mineral:'Cobre', name:'Pórfidos andinos',
+    img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=75&auto=format&fit=crop',
+    desc:'Los Azules, El Pachón y Altar (San Juan) son pórfidos de cobre-molibdeno de escala mundial en proceso de evaluación. Agua Rica (Catamarca) suma cobre, molibdeno y oro.', loc:'San Juan · Catamarca', color:'#e67e22' },
+  { mineral:'Petróleo y Gas', name:'Vaca Muerta',
+    img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&q=75&auto=format&fit=crop',
+    desc:'La Formación Vaca Muerta (Jurásico, Neuquén) es el segundo yacimiento de shale gas y el cuarto de shale oil más grandes del mundo. Producción convencional también en Cuyo, NOA y Golfo San Jorge.', loc:'Neuquén · Santa Cruz · Mendoza', color:'#2c3e50' },
+  { mineral:'Rodocrosita', name:'Capillitas, Catamarca',
+    img:'https://images.unsplash.com/photo-1567446537708-ac4aa75c9c28?w=400&q=75&auto=format&fit=crop',
+    desc:'Los mejores cristales de rodocrosita (MnCO₃) del mundo provienen de Capillitas. Es la piedra nacional argentina desde 1989. Formada en venas hidrotermales de manganeso asociadas a minerales de cobre y plata.', loc:'Catamarca', color:'#e84888' },
+  { mineral:'Amatista', name:'Misiones y Corrientes',
+    img:'https://images.unsplash.com/photo-1568302900571-c93f06da2c3a?w=400&q=75&auto=format&fit=crop',
+    desc:'Argentina es uno de los principales productores mundiales de amatista, en geodos asociados a los basaltos de la Formación Serra Geral (Cretácico). Se exportan en grandes cantidades a mercados europeos y asiáticos.', loc:'Misiones · Corrientes', color:'#9b59b6' },
+  { mineral:'Boro', name:'Salares puneños',
+    img:'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400&q=75&auto=format&fit=crop',
+    desc:'La Puna argentina contiene enormes depósitos de borato (ulexita, colemanita) en los salares y cuencas lacustres. Salta y Jujuy son productores históricos. El boro es esencial para vidrio, cerámica y fertilizantes.', loc:'Jujuy · Salta', color:'#16a085' },
+  { mineral:'Hierro', name:'Sierra Grande, Río Negro',
+    img:'https://images.unsplash.com/photo-1569777623-d0e6ab84f5f5?w=400&q=75&auto=format&fit=crop',
+    desc:'Uno de los mayores yacimientos de hierro del país, con magnetita y hematita como minerales principales. La planta fue históricamente la base de la siderurgia patagónica. Actualmente en evaluación para reactivación.', loc:'Río Negro', color:'#7f8c8d' },
 ];
 
 const VOLCANES = [
-  { estado:'activo', nombre:'Copahue', alt:'2.997 m', prov:'Neuquén', desc:'Volcán con actividad permanente y un lago ácido en su cráter, uno de los más ácidos del mundo. Sus aguas termales son el fundamento del termalismo de Caviahue-Copahue. Registra erupciones periódicas con emisión de gases y cenizas.' },
-  { estado:'activo', nombre:'Llullaillaco', alt:'6.739 m', prov:'Salta', desc:'El volcán activo más alto del mundo. En su cumbre se encontraron en 1999 las momias incas mejor conservadas del mundo (Los Niños del Llullaillaco), actualmente en el Museo de Arqueología de Alta Montaña de Salta.' },
-  { estado:'activo', nombre:'Villarrica / Lanín', alt:'3.776 m', prov:'Neuquén', desc:'El Lanín es un volcán de estructura cónica perfecta en la frontera con Chile. Se mantiene potencialmente activo. El Villarrica (Chile) tiene impacto directo sobre el territorio argentino en caso de erupción, por los vientos predominantes.' },
-  { estado:'potencialmente', nombre:'Domuyo', alt:'4.709 m', prov:'Neuquén', desc:'El volcán más alto de la Patagonia. Tiene un importante campo geotérmico con fumarolas, géiseres y surgentes termales. Es considerado un sistema volcánico activo en estado de reposo, con registro de actividad en tiempos históricos.' },
-  { estado:'activo', nombre:'Peteroa', alt:'4.092 m', prov:'Mendoza', desc:'Complejo volcánico en la frontera con Chile con actividad reciente. En 2010-2011 registró erupciones con columnas de ceniza que afectaron ciudades del sur de Mendoza. Tiene un lago cratérico activo.' },
-  { estado:'activo', nombre:'Socompa', alt:'6.051 m', prov:'Salta', desc:'Estratovolcán de la Puna que registró hace ~7.200 AP uno de los mayores deslizamientos volcánicos de la historia: el colapso del flanco norte generó una avalancha de 26 km³ de material que cubrió 500 km² de la Puna.' },
-  { estado:'potencialmente', nombre:'Tromen', alt:'3.978 m', prov:'Neuquén', desc:'Escudo volcánico en el norte de Neuquén con erupciones históricas documentadas. Su actividad holocena incluye flujos de lava y eventos explosivos. Monitorizado por el Observatorio Argentino de Vigilancia Volcánica (OAVV).' },
-  { estado:'potencialmente', nombre:'Payún Matrú', alt:'3.680 m', prov:'Mendoza', desc:'Gran caldera volcánica en la meseta de Payunia (Mendoza), rodeada por el mayor campo de conos basálticos del hemisferio sur. Los flujos de lava más recientes son holocenos y algunos tienen solo ~200 años de antigüedad.' },
+  { estado:'activo', nombre:'Copahue', alt:'2.997 m', prov:'Neuquén',
+    img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=75&auto=format&fit=crop',
+    desc:'Volcán con actividad permanente y un lago ácido en su cráter, uno de los más ácidos del mundo. Sus aguas termales son el fundamento del termalismo de Caviahue-Copahue. Registra erupciones periódicas con emisión de gases y cenizas.' },
+  { estado:'activo', nombre:'Llullaillaco', alt:'6.739 m', prov:'Salta',
+    img:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=500&q=75&auto=format&fit=crop',
+    desc:'El volcán activo más alto del mundo. En su cumbre se encontraron en 1999 las momias incas mejor conservadas del mundo (Los Niños del Llullaillaco), actualmente en el Museo de Arqueología de Alta Montaña de Salta.' },
+  { estado:'activo', nombre:'Lanín', alt:'3.776 m', prov:'Neuquén',
+    img:'https://images.unsplash.com/photo-1609183480405-3e4de3f6b0a3?w=500&q=75&auto=format&fit=crop',
+    desc:'El Lanín es un volcán de estructura cónica perfecta en la frontera con Chile. Se mantiene potencialmente activo. El Villarrica (Chile) tiene impacto directo sobre el territorio argentino en caso de erupción, por los vientos predominantes.' },
+  { estado:'potencialmente', nombre:'Domuyo', alt:'4.709 m', prov:'Neuquén',
+    img:'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=500&q=75&auto=format&fit=crop',
+    desc:'El volcán más alto de la Patagonia. Tiene un importante campo geotérmico con fumarolas, géiseres y surgentes termales. Es considerado un sistema volcánico activo en estado de reposo, con registro de actividad en tiempos históricos.' },
+  { estado:'activo', nombre:'Peteroa', alt:'4.092 m', prov:'Mendoza',
+    img:'https://images.unsplash.com/photo-1489557568755-76e7c6dcb53c?w=500&q=75&auto=format&fit=crop',
+    desc:'Complejo volcánico en la frontera con Chile con actividad reciente. En 2010-2011 registró erupciones con columnas de ceniza que afectaron ciudades del sur de Mendoza. Tiene un lago cratérico activo.' },
+  { estado:'activo', nombre:'Socompa', alt:'6.051 m', prov:'Salta',
+    img:'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=500&q=75&auto=format&fit=crop',
+    desc:'Estratovolcán de la Puna que registró hace ~7.200 AP uno de los mayores deslizamientos volcánicos de la historia: el colapso del flanco norte generó una avalancha de 26 km³ de material que cubrió 500 km² de la Puna.' },
+  { estado:'potencialmente', nombre:'Tromen', alt:'3.978 m', prov:'Neuquén',
+    img:'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=500&q=75&auto=format&fit=crop',
+    desc:'Escudo volcánico en el norte de Neuquén con erupciones históricas documentadas. Su actividad holocena incluye flujos de lava y eventos explosivos. Monitorizado por el Observatorio Argentino de Vigilancia Volcánica (OAVV).' },
+  { estado:'potencialmente', nombre:'Payún Matrú', alt:'3.680 m', prov:'Mendoza',
+    img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=75&auto=format&fit=crop',
+    desc:'Gran caldera volcánica en la meseta de Payunia (Mendoza), rodeada por el mayor campo de conos basálticos del hemisferio sur. Los flujos de lava más recientes son holocenos y algunos tienen solo ~200 años de antigüedad.' },
 ];
 
 // ════════════════════════════════════════════
@@ -522,7 +963,11 @@ function buildProvincias() {
 }
 
 function showProvincia(p) {
+  const imgHtml = p.img
+    ? `<img class="pd-img" src="${p.img}" alt="${p.name}" loading="lazy"/>`
+    : `<div class="pd-img-placeholder">🗺</div>`;
   document.getElementById('prov-detail').innerHTML = `
+    ${imgHtml}
     <div class="pd-header">
       <div class="pd-title">${p.name}</div>
       <div class="pd-badge" style="background:${p.color}">${p.badge}</div>
@@ -531,18 +976,19 @@ function showProvincia(p) {
     <div class="pd-props">
       ${p.props.map(pr=>`<div class="pd-prop"><div class="pd-prop-key">${pr.k}</div><div class="pd-prop-val">${pr.v}</div></div>`).join('')}
     </div>
-    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:.6rem">Aspectos destacados</div>
+    <div class="pd-highlights-title">Aspectos destacados</div>
     <div class="pd-highlights">
       ${p.highlights.map(h=>`<div class="pd-highlight"><span class="pd-hi-icon">${h.icon}</span><span>${h.text}</span></div>`).join('')}
     </div>
   `;
 }
 
+let activeHistItem = null;
 function buildHistoria() {
   const wrap = document.getElementById('historia-timeline');
-  HISTORIA.forEach(h => {
+  HISTORIA.forEach((h, i) => {
     const div = document.createElement('div');
-    div.className = 'hist-item';
+    div.className = 'hist-item' + (i===0?' active':'');
     div.innerHTML = `
       <div class="hist-dot" style="background:${h.color}">${h.icon}</div>
       <div class="hist-body">
@@ -552,8 +998,23 @@ function buildHistoria() {
         <div class="hist-desc">${h.desc}</div>
       </div>
     `;
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.hist-item').forEach(x=>x.classList.remove('active'));
+      div.classList.add('active');
+      updateHistVisual(h);
+    });
     wrap.appendChild(div);
   });
+  updateHistVisual(HISTORIA[0]);
+}
+
+function updateHistVisual(h) {
+  const img = document.getElementById('hist-visual-img');
+  const era = document.getElementById('hist-visual-era');
+  const title = document.getElementById('hist-visual-title');
+  if(img) { img.style.opacity='0'; setTimeout(()=>{img.src=h.img;img.style.transition='opacity .4s';img.style.opacity='1';},200); }
+  if(era) era.textContent = h.era + ' · ' + h.ma;
+  if(title) title.textContent = h.title;
 }
 
 function buildFormaciones() {
@@ -562,13 +1023,15 @@ function buildFormaciones() {
     const card = document.createElement('div');
     card.className = 'form-card';
     card.innerHTML = `
+      <div class="form-card-img">
+        <img src="${f.img}" alt="${f.name}" loading="lazy"/>
+        <div class="form-card-img-overlay"></div>
+        <div class="form-card-era-badge">${f.era.split('(')[0].trim()}</div>
+      </div>
       <div class="form-bar" style="background:${f.color}"></div>
-      <div class="form-card-top">
-        <div class="form-card-era">${f.era}</div>
+      <div class="form-card-content">
         <div class="form-card-name">${f.name}</div>
         <div class="form-card-loc">📍 ${f.loc}</div>
-      </div>
-      <div class="form-card-body">
         <div class="form-card-desc">${f.desc}</div>
         <div class="form-tags">${f.tags.map(t=>`<span class="form-tag">${t}</span>`).join('')}</div>
       </div>
@@ -583,13 +1046,16 @@ function buildPaleontologia() {
     const card = document.createElement('div');
     card.className = 'paleo-card';
     card.innerHTML = `
-      <div class="paleo-icon">${p.icon}</div>
+      <div class="paleo-card-img">
+        <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+        <div class="paleo-card-img-overlay"></div>
+        <div class="paleo-period-badge">${p.period}</div>
+      </div>
       <div class="paleo-body">
-        <div class="paleo-period">${p.period}</div>
-        <div class="paleo-name">${p.name}</div>
         <div class="paleo-common">${p.common}</div>
+        <div class="paleo-name">${p.name}</div>
         <div class="paleo-desc">${p.desc}</div>
-        <div class="paleo-loc">📍 ${p.loc}</div>
+        <div class="paleo-loc">${p.loc}</div>
       </div>
     `;
     card.addEventListener('click', () => openPaleoModal(p));
@@ -603,7 +1069,8 @@ function buildRecursos() {
     const card = document.createElement('div');
     card.className = 'rec-card';
     card.innerHTML = `
-      <div class="rec-icon">${r.icon}</div>
+      <div class="rec-accent" style="background:${r.color}"></div>
+      <img class="rec-img" src="${r.img}" alt="${r.name}" loading="lazy"/>
       <div class="rec-mineral">${r.mineral}</div>
       <div class="rec-name">${r.name}</div>
       <div class="rec-desc">${r.desc}</div>
@@ -619,13 +1086,17 @@ function buildVolcanes() {
     const card = document.createElement('div');
     card.className = 'volc-card';
     card.innerHTML = `
+      <div class="volc-img">
+        <img src="${v.img}" alt="${v.nombre}" loading="lazy"/>
+        <div class="volc-img-overlay"></div>
+        <div class="volc-estado-badge ${v.estado}">${v.estado === 'activo' ? '● Activo' : '◐ Potencialmente activo'}</div>
+        <div class="volc-alt-badge">${v.alt}</div>
+      </div>
       <div class="volc-top">
-        <div class="volc-estado ${v.estado}">${v.estado === 'activo' ? '🔴 Activo' : '🟡 Potencialmente activo'}</div>
         <div class="volc-nombre">${v.nombre}</div>
-        <div class="volc-alt">${v.alt} s.n.m.</div>
       </div>
       <div class="volc-body">
-        <div class="volc-prov">📍 ${v.prov}</div>
+        <div class="volc-prov">${v.prov}</div>
         <div class="volc-desc">${v.desc}</div>
       </div>
     `;
@@ -634,7 +1105,8 @@ function buildVolcanes() {
 }
 
 function openPaleoModal(p) {
-  document.getElementById('modal-header').style.background = '#1a1a2e';
+  const modalImg = document.getElementById('modal-img');
+  if(modalImg) { modalImg.src = p.img || ''; modalImg.alt = p.name; }
   document.getElementById('modal-tag').textContent = p.period;
   document.getElementById('modal-title').textContent = p.name;
   document.getElementById('modal-sub').textContent = p.common + ' · ' + p.loc;
@@ -677,12 +1149,28 @@ window.addEventListener('scroll', () => {
   let current = sections[0];
   sections.forEach(id => {
     const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top <= 120) current = id;
+    if (el && el.getBoundingClientRect().top <= 130) current = id;
   });
   document.querySelectorAll('.inav-btn').forEach((btn,i) => {
     btn.classList.toggle('active', sections[i] === current);
   });
+
+  // Nav scrolled
+  const nav = document.getElementById('main-nav');
+  if(nav) nav.classList.toggle('scrolled', window.scrollY > 80);
 }, { passive:true });
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ── INIT ──
 buildProvincias();
@@ -691,6 +1179,11 @@ buildFormaciones();
 buildPaleontologia();
 buildRecursos();
 buildVolcanes();
+
+// Re-observe dynamically added elements
+setTimeout(() => {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+}, 100);
 </script>
 </body>
 </html>
